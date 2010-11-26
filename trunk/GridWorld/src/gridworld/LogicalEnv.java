@@ -316,6 +316,7 @@ public class LogicalEnv implements ObsVectListener
         {
         	System.out.println(sAgent+" puts the bomb in a trap");
             signalBombTrapped.emit();
+            agent.dropBomb();
             return true;
         }
 
