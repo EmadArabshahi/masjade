@@ -41,9 +41,10 @@ public class BombRemovalBehaviour extends CyclicBehaviour{
 	
 	private void moveTowardsBombAndPickItUp()
 	{
+		Point agentLocation = Environment.getPosition(_myAgent.getLocalName());
 		// If target is on the target bomb pick it up.
-		if (_myAgent.currentLocation.x == _myAgent.targetBombLocation.x &&
-			_myAgent.currentLocation.y == _myAgent.targetBombLocation.y)
+		if (agentLocation.x == _myAgent.targetBombLocation.x &&
+			agentLocation.y == _myAgent.targetBombLocation.y)
 		{
 			Environment.takeBomb(_myAgent.getLocalName());
 			// Set the target bomb location to null to indicate that there's
@@ -52,34 +53,31 @@ public class BombRemovalBehaviour extends CyclicBehaviour{
 			_myAgent.hasBomb = true;
 		}
 		// Otherwise move towards target bomb
-		else if (_myAgent.currentLocation.x > _myAgent.targetBombLocation.x)
+		else if (agentLocation.x > _myAgent.targetBombLocation.x)
 		{
 			Environment.west(myAgent.getLocalName());
-			_myAgent.currentLocation.x--;
 		}
-		else if (_myAgent.currentLocation.x < _myAgent.targetBombLocation.x)
+		else if (agentLocation.x < _myAgent.targetBombLocation.x)
 		{
 			Environment.east(myAgent.getLocalName());
-			_myAgent.currentLocation.x++;
 		}
-		else if (_myAgent.currentLocation.y > _myAgent.targetBombLocation.y)
+		else if (agentLocation.y > _myAgent.targetBombLocation.y)
 		{
 			Environment.north(myAgent.getLocalName());
-			_myAgent.currentLocation.y--;
 		}
-		else if (_myAgent.currentLocation.y < _myAgent.targetBombLocation.y)
+		else if (agentLocation.y < _myAgent.targetBombLocation.y)
 		{
 			Environment.south(myAgent.getLocalName());
-			_myAgent.currentLocation.y++;
 		}
 	}
 	
 	private void moveTowardsBinAndDropBomb()
 	{
+		Point agentLocation = Environment.getPosition(_myAgent.getLocalName());
 		// move towards trap to and drop the bomb into it.
 		// If target is on the target bomb pick it up.
-		if (_myAgent.currentLocation.x == _myAgent.targetTrapLocation.x &&
-			_myAgent.currentLocation.y == _myAgent.targetTrapLocation.y)
+		if (agentLocation.x == _myAgent.targetTrapLocation.x &&
+				agentLocation.y == _myAgent.targetTrapLocation.y)
 		{
 			Environment.dropBomb(_myAgent.getLocalName());
 			// Set the target bomb location to null to indicate that there's
@@ -88,25 +86,21 @@ public class BombRemovalBehaviour extends CyclicBehaviour{
 			_myAgent.hasBomb = false;
 		}
 		// Otherwise move towards target bomb
-		else if (_myAgent.currentLocation.x > _myAgent.targetTrapLocation.x)
+		else if (agentLocation.x > _myAgent.targetTrapLocation.x)
 		{
 			Environment.west(myAgent.getLocalName());
-			_myAgent.currentLocation.x--;
 		}
-		else if (_myAgent.currentLocation.x < _myAgent.targetTrapLocation.x)
+		else if (agentLocation.x < _myAgent.targetTrapLocation.x)
 		{
 			Environment.east(myAgent.getLocalName());
-			_myAgent.currentLocation.x++;
 		}
-		else if (_myAgent.currentLocation.y > _myAgent.targetTrapLocation.y)
+		else if (agentLocation.y > _myAgent.targetTrapLocation.y)
 		{
 			Environment.north(myAgent.getLocalName());
-			_myAgent.currentLocation.y--;
 		}
-		else if (_myAgent.currentLocation.y < _myAgent.targetTrapLocation.y)
+		else if (agentLocation.y < _myAgent.targetTrapLocation.y)
 		{
 			Environment.south(myAgent.getLocalName());
-			_myAgent.currentLocation.y++;
 		}
 	}
 	
