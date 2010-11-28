@@ -1,4 +1,4 @@
-package exerc1;
+package exerc1a;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;

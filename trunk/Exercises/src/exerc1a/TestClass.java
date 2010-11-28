@@ -1,4 +1,4 @@
-package exerc1;
+package exerc1a;
 
 public class TestClass 
 {
