@@ -1,4 +1,4 @@
-package exerc1;
+package exerc1a;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -21,6 +21,7 @@ public class BombRemovalBehaviour extends CyclicBehaviour{
 	{
 		// todo: find nearest
 		Iterator<Point> i = _myAgent.knownTraps.iterator();
+		
 		while (i.hasNext())
 		{
 			_myAgent.targetTrapLocation = i.next();
