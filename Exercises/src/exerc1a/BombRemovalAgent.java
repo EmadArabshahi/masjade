@@ -9,7 +9,6 @@ import gridworld.Environment;
 import jade.core.Agent;
 
 public class BombRemovalAgent extends Agent {
-	public Point currentLocation;
 	public boolean hasBomb;
 	public Point targetBombLocation;
 	public Point targetTrapLocation;
@@ -19,11 +18,10 @@ public class BombRemovalAgent extends Agent {
 	{
 		addBehaviour(new BombRemovalBehaviour(this));
 		// todo: get starting and trap locations from arguments.
-		currentLocation = new Point(5, 5);
 		knownTraps = new ArrayList<Point>();
 		knownTraps.add(new Point(0, 0));
 
-		Environment.enter(getLocalName(), currentLocation, "blue");
+		Environment.enter(getLocalName(), new Point(5, 5), "blue");
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
