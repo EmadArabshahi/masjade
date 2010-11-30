@@ -9,7 +9,9 @@ import gridworld.LogicalEnv;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 
-public class BombRemovalBehaviour extends CyclicBehaviour{
+public class BombRemovalBehaviour extends CyclicBehaviour
+{
+	
 	private BombRemovalAgent _myAgent;
 	
 	public BombRemovalBehaviour(BombRemovalAgent owner)
@@ -105,7 +107,8 @@ public class BombRemovalBehaviour extends CyclicBehaviour{
 	}
 	
 	@Override
-	public void action() {
+	public void action() 
+	{
 		if (_myAgent.targetBombLocation == null)
 		{
 			if (_myAgent.hasBomb)
