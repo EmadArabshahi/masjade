@@ -3,15 +3,15 @@ package exerc1a;
 import java.awt.Point;
 import java.util.*; 
 import gridworld.Environment;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.Agent;
 
-public class MemoryRandomWalkBehaviour extends CyclicBehaviour
+public class MemoryRandomStepBehaviour extends OneShotBehaviour
 {
 
 	private BombRemovalAgent _owner;
 	
-	public MemoryRandomWalkBehaviour(BombRemovalAgent owner) 
+	public MemoryRandomStepBehaviour(BombRemovalAgent owner) 
 	{
 		this._owner = owner;
 	}
