@@ -48,12 +48,18 @@ public class BombRemovalAgent extends Agent
 		//addBehaviour(new BombRemovalBehaviour(this));
 		
 
-		addBehaviour(new MemoryRandomWalkBehaviour(this));
+		addBehaviour(new ExploreBombsBehaviour(this));
 		
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
 
+	
+	
+	public boolean knowsBombs()
+	{
+		return _knownBombs.size() > 0;
+	}
 	
 	/**
 	 * Gets a random position to where the agent can move too. 
