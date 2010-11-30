@@ -1,6 +1,9 @@
 package exerc1a;
 import java.awt.Point;
+
 import java.util.*;
+
+
 
 import gridworld.Environment;
 import jade.core.Agent;
@@ -20,12 +23,18 @@ public class BombRemovalAgent extends Agent
 	/** A random number generator.
 	 * 
 	 */
-	private Random _randomGenerator;
+	private static Random _randomGenerator;
 	
-	/** The last position of the agent.
+	/** The last positions of the agent.
 	 * 
 	 */
-	private Point _lastPosition;
+	private List<Point> _positionHistory;
+	
+	/**
+	 * The number of positions to remember in the positionhistory.
+	 */
+	private int _positionHistorySize;
+	
 	
 	protected void setup()
 	{
@@ -34,7 +43,10 @@ public class BombRemovalAgent extends Agent
 		long seed = this.getName().hashCode();
 		this._randomGenerator = new Random(seed);
 		
-		_lastPosition = null;
+		//set the history size, should be read from arguments.
+		_positionHistorySize = 100;
+		//construct empty list, with _positionHistorySize capacity.
+		_positionHistory = new ArrayList<Point>(_positionHistorySize);
 		
 		// todo: get starting and trap locations from arguments.
 		knownTraps = new ArrayList<Point>();
@@ -44,6 +56,8 @@ public class BombRemovalAgent extends Agent
 		//Enter the environment
 		Environment.enter(getLocalName(), new Point(5, 5), "blue");
 		
+		//Sets the current location.
+		addPositionToHistory(Environment.getPosition(getLocalName()));
 		
 		//addBehaviour(new BombRemovalBehaviour(this));
 		
@@ -53,46 +67,14 @@ public class BombRemovalAgent extends Agent
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
+	
+	
 
 	
 	
 	public boolean knowsBombs()
 	{
 		return _knownBombs.size() > 0;
-	}
-	
-	/**
-	 * Gets a random position to where the agent can move too. 
-	 * The last position of the agent is excluded from the posible moves, except if its the only option.
-	 * @return
-	 */
-	public Point getRandomMoveablePosition()
-	{
-		//Gets the positions where the agent can move to.
-		Set<Point> moveablePositions = getMoveablePositions();
-		
-		//Removes the last positions from the list, if there are other options.
-		//So the agent doesnt move back to its last position.
-		if(moveablePositions.size() > 1)
-			moveablePositions.remove(getLastPosition());
-		
-		//Generates a random number between 0 and the number of movable positions.
-		int randomNumber = _randomGenerator.nextInt(moveablePositions.size());
-		
-		Point randomPosition = null;
-		
-		int i=0;
-		for(Point position : moveablePositions)
-		{
-			if(i==randomNumber)
-			{
-				randomPosition = position;
-				break;
-			}
-			i++;
-		}
-		
-		return randomPosition;
 	}
 	
 	
@@ -107,28 +89,110 @@ public class BombRemovalAgent extends Agent
 	
 	
 	/**
-	 * Gets the last position of the agent. This can be null, if the agent just entered.!
-	 * @return A point indicating the last position of the agent.
+	 * Gets the position history of the agent.
+	 * The first item in the list is the current position, the second item its previous position etc.
+	 * @return A list with positions.
 	 */
-	public Point getLastPosition()
+	public List<Point> getPositionHistory()
 	{
-		return this._lastPosition;
+		return _positionHistory;
 	}
 	
 	/**
-	 * Returns a set of positions where the agent can move to.
+	 * Gets the previous position of the agent. This can be null, if the agent just entered.!
+	 * @return A point indicating the previous position of the agent.
+	 */
+	public Point getPreviousPosition()
+	{
+		if(_positionHistory.size() > 1)
+			return _positionHistory.get(1);
+		else
+			return null;
+	}
+	
+	/**
+	 * Gets the current position of the agent. 
+	 * @return A point indicating the current position of the agent.
+	 */
+	public Point getCurrentPosition()
+	{
+		if(_positionHistory.size() > 0)
+			return _positionHistory.get(0);
+		else
+			return null;
+	}
+	
+	
+	/**
+	 * Adds a new point to the position history, meaning this point is the new current point.
+	 * @param position The new current position of the agent.
+	 */
+	private void addPositionToHistory(Point position)
+	{
+		//Make sure there is room for another item in the list.
+		while(_positionHistory.size() >= _positionHistorySize)
+		{
+			//Remove the last item.
+			_positionHistory.remove(_positionHistory.size()-1);
+		}
+		
+		//adds the element to the end of the list.
+		_positionHistory.add(position);
+		
+		//rotates the list with distance -1, which will move the latest element first.
+		//and all other elements switch 1 to the right.
+		Collections.rotate(_positionHistory, -1);
+	}
+	
+	
+	/**
+	 * Returns a list of positions where the agent can move to in a random order.
+	 * @return
+	 */
+	public List<Point> getRandomMoveablePositions()
+	{
+		List<Point> moveablePositions = getMoveablePositions();
+		
+		// i is the number of items remaining to be shuffled.
+	    for (int i = moveablePositions.size(); i > 1; i--) 
+	    {
+	        // Pick a random element to swap with the i-th element.
+	        int j = _randomGenerator.nextInt(i);  // 0 <= j <= i-1 (0-based array)
+	        // Swap array elements.
+	        Point tmp = moveablePositions.get(j);
+	        moveablePositions.set(j, moveablePositions.get(i-1));
+	        moveablePositions.set(i-1, tmp);
+	    }
+	    
+	    System.out.print("The moveable positions in random order:");
+	    for(int i=0; i<moveablePositions.size(); i++)
+	    {
+	    	System.out.print("" + moveablePositions.get(i) + ", ");
+	    }
+	    System.out.println();
+	    
+	    return moveablePositions;
+	}
+	
+	/**
+	 * Returns a set of positions where the agent can move to in a deterministic order.
 	 * TODO: add avoid bombs/walls mechanism.
 	 * @return
 	 */
-	public Set<Point> getMoveablePositions()
+	public List<Point> getMoveablePositions()
 	{
 		Point current = Environment.getPosition(getLocalName());
-		Set<Point> moveablePositions = new HashSet<Point>();
+		List<Point> moveablePositions = new ArrayList<Point>();
 		
-		moveablePositions.add(new Point(current.x-1, current.y));
-		moveablePositions.add(new Point(current.x, current.y-1));
-		moveablePositions.add(new Point(current.x+1, current.y));
-		moveablePositions.add(new Point(current.x, current.y+1));
+		//shuffles the list.
+		Collections.shuffle(moveablePositions, _randomGenerator);
+		
+		System.out.print("The moveable positions in order:");
+	    for(int i=0; i<moveablePositions.size(); i++)
+	    {
+	    	System.out.print("" + moveablePositions.get(i) + ", ");
+	    }
+	    System.out.println();
 		
 		return moveablePositions;
 	}
@@ -136,9 +200,10 @@ public class BombRemovalAgent extends Agent
 	/**
 	 * Moves the agent to the position specified, if its adjacent.
 	 * @param newPosition The new position to move too.
-	 * @return A boolean indicating wether the move was succesfull.
+	 * @return A boolean indicating whether the move was successful.
+	 * TODO: test function
 	 */
-	public boolean move(Point newPosition)
+	public boolean step(Point newPosition)
 	{
 		Point current = Environment.getPosition(getLocalName());
 		
@@ -146,11 +211,11 @@ public class BombRemovalAgent extends Agent
 		{
 			if(current.y - newPosition.y == 1)
 			{
-				return moveNorth();
+				return stepNorth();
 			}
 			else if(current.y - newPosition.y == -1)
 			{
-				return moveSouth();
+				return stepSouth();
 			}
 			else
 			{
@@ -161,11 +226,11 @@ public class BombRemovalAgent extends Agent
 		{
 			if(current.x - newPosition.x == 1)
 			{
-				return moveWest();
+				return stepWest();
 			}
 			else if(current.x - newPosition.x == -1)
 			{
-				return moveEast();
+				return stepEast();
 			}
 			else
 			{
@@ -180,7 +245,7 @@ public class BombRemovalAgent extends Agent
 	 * @param i Indicates the direction (0 = North, 1 = East, 2 = South, 3 = West)
 	 * @return Returns a boolean indicating wether the move was succesfull.
 	 */
-	public boolean move(int i)
+	public boolean step(int i)
 	{
 		Point oldPosition = Environment.getPosition(getLocalName());
 		boolean succesfullyMoved = false;
@@ -194,7 +259,12 @@ public class BombRemovalAgent extends Agent
 		}
 	
 		if(succesfullyMoved)
-			this._lastPosition = oldPosition;
+		{
+			//retrieve new current location.(this can i.e. be different than expected)
+			Point newPosition = Environment.getPosition(getLocalName());
+			//Set the position as new current location.
+			addPositionToHistory(newPosition);
+		}
 		
 		return succesfullyMoved;
 	}
@@ -203,34 +273,34 @@ public class BombRemovalAgent extends Agent
 	 * Moves the agent north.
 	 * @return A boolean indicating wether the move was succesfull.
 	 */
-	public boolean moveNorth()
+	public boolean stepNorth()
 	{
-		return move(0);
+		return step(0);
 	}
 	
 	/**
 	 * Moves the agent east.
-	 * @return A boolean indicating wether the move was succesfull.
+	 * @return A boolean indicating whether the move was succesfull.
 	 */
-	public boolean moveEast()
+	public boolean stepEast()
 	{
-		return move(1);
+		return step(1);
 	}
 	
 	/** Moves the agent south.
 	 * @return A boolean indicating wether the move was succesfull.
 	 */
-	public boolean moveSouth()
+	public boolean stepSouth()
 	{
-		return move(2);
+		return step(2);
 	}
 	
 	/** Moves the agent west.
-	 * @return A boolean indicating wether the move was succesfull.
+	 * @return A boolean indicating whether the move was succesfull.
 	 */
-	public boolean moveWest()
+	public boolean stepWest()
 	{
-		return move(3);
+		return step(3);
 	}
 	
 }
