@@ -2,9 +2,7 @@ package exerc1a;
 
 import java.awt.Point;
 import java.util.*; 
-import gridworld.Environment;
 import jade.core.behaviours.OneShotBehaviour;
-import jade.core.Agent;
 
 public class MemoryRandomStepBehaviour extends OneShotBehaviour
 {
@@ -19,12 +17,26 @@ public class MemoryRandomStepBehaviour extends OneShotBehaviour
 	@Override
 	public void action() 
 	{
-		Point randomPosition = _owner.getRandomMoveablePosition();
+		List<Point> moveablePositions = _owner.getRandomMoveablePositions();
+		List<Point> visitedPositions = _owner.getPositionHistory();
 		
-		if(randomPosition == null)
-			System.out.println("NextRandomPosition is null wtf.");
+		moveablePositions.removeAll(visitedPositions);
 		
-		if(_owner.move(randomPosition));
+		//If there are no moveable positions left, then get new random moveable positions.
+		if(moveablePositions.size() == 0)
+		{
+			moveablePositions = _owner.getRandomMoveablePositions();
+		}
+		
+		//If there are still no positions left, agent is trapped and cant move..
+		if(moveablePositions.size() == 0)
+		{
+			System.out.println("unable to move.!!");
+		}
+			
+		
+		if(!_owner.step(moveablePositions.get(0)))
+			System.out.println("Agent tried to move but was unable too.!!!!");
 	}
 	
 	
