@@ -69,9 +69,6 @@ public class BombRemovalAgent extends Agent
 	}
 	
 	
-
-	
-	
 	public boolean knowsBombs()
 	{
 		return _knownBombs.size() > 0;
@@ -87,6 +84,16 @@ public class BombRemovalAgent extends Agent
 		_knownBombs.addAll(bombPositions);
 	}
 	
+	/**
+	 * This method is called by a behaviour to pass the stones that are sensed.
+	 * @param stonesPositions A set with the locations of the stones that are sensed.
+	 */
+	public void stonesSensed(Set<Point> stonesPositions)
+	{
+		if(stonesPositions.size() > 0)
+			System.out.println(stonesPositions + " is where stones were found!!!!");
+	}
+	
 	
 	/**
 	 * Gets the position history of the agent.
@@ -95,7 +102,9 @@ public class BombRemovalAgent extends Agent
 	 */
 	public List<Point> getPositionHistory()
 	{
-		return _positionHistory;
+		//Make the list readonly, so an exception occurs if there is messed with.
+		List<Point> readOnlyHistory  = Collections.unmodifiableList(_positionHistory);
+		return readOnlyHistory;
 	}
 	
 	/**
@@ -139,9 +148,10 @@ public class BombRemovalAgent extends Agent
 		//adds the element to the end of the list.
 		_positionHistory.add(position);
 		
-		//rotates the list with distance -1, which will move the latest element first.
+		//rotates the list with distance 1, which will move the latest element first.
 		//and all other elements switch 1 to the right.
-		Collections.rotate(_positionHistory, -1);
+		Collections.rotate(_positionHistory, 1);
+		
 	}
 	
 	
@@ -153,23 +163,9 @@ public class BombRemovalAgent extends Agent
 	{
 		List<Point> moveablePositions = getMoveablePositions();
 		
-		// i is the number of items remaining to be shuffled.
-	    for (int i = moveablePositions.size(); i > 1; i--) 
-	    {
-	        // Pick a random element to swap with the i-th element.
-	        int j = _randomGenerator.nextInt(i);  // 0 <= j <= i-1 (0-based array)
-	        // Swap array elements.
-	        Point tmp = moveablePositions.get(j);
-	        moveablePositions.set(j, moveablePositions.get(i-1));
-	        moveablePositions.set(i-1, tmp);
-	    }
-	    
-	    System.out.print("The moveable positions in random order:");
-	    for(int i=0; i<moveablePositions.size(); i++)
-	    {
-	    	System.out.print("" + moveablePositions.get(i) + ", ");
-	    }
-	    System.out.println();
+		//shuffles the list.
+		Collections.shuffle(moveablePositions, _randomGenerator);
+		
 	    
 	    return moveablePositions;
 	}
@@ -181,19 +177,15 @@ public class BombRemovalAgent extends Agent
 	 */
 	public List<Point> getMoveablePositions()
 	{
-		Point current = Environment.getPosition(getLocalName());
+		Point current = getCurrentPosition();
 		List<Point> moveablePositions = new ArrayList<Point>();
 		
-		//shuffles the list.
-		Collections.shuffle(moveablePositions, _randomGenerator);
-		
-		System.out.print("The moveable positions in order:");
-	    for(int i=0; i<moveablePositions.size(); i++)
-	    {
-	    	System.out.print("" + moveablePositions.get(i) + ", ");
-	    }
-	    System.out.println();
-		
+		//add adjacent cells to the list.
+		moveablePositions.add(new Point(current.x-1, current.y));
+		moveablePositions.add(new Point(current.x, current.y-1));
+		moveablePositions.add(new Point(current.x+1, current.y));
+		moveablePositions.add(new Point(current.x, current.y+1));
+				
 		return moveablePositions;
 	}
 	
@@ -247,7 +239,6 @@ public class BombRemovalAgent extends Agent
 	 */
 	public boolean step(int i)
 	{
-		Point oldPosition = Environment.getPosition(getLocalName());
 		boolean succesfullyMoved = false;
 		
 		switch(i)
