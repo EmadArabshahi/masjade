@@ -57,6 +57,13 @@ public class Environment {
 		return LogicalEnv.getEnv().getPosition(sAgent);
 	}
 	
+	public static Set<Point> senseBins(String sAgent)
+	{
+		System.out.println(sAgent+" tries to sense Bins");
+		return LogicalEnv.getEnv( 
+	}
+	
+	
 	public static Set<Point> senseBombs(String sAgent)
 	{
 		System.out.println(sAgent+" tries to sense bombs");
