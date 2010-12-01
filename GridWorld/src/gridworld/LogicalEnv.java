@@ -477,7 +477,51 @@ public class LogicalEnv implements ObsVectListener
         
         return visible;
     }
-
+    
+    //Senses traps in the sense range of the agent.
+    public Set<Point> senseTraps(String agent)
+    {
+    	//gets the agent his position.
+    	Point position = getAgent(agent).getPosition();
+    	
+    	// iterate over all traps and decide according to distance if it is in
+        // vision range
+    	Set<Point> visible = new java.util.HashSet<Point>();
+    	synchronized(_traps)
+    	{
+    		Iterator i = _traps.iterator();
+    		while(i.hasNext())
+    		{
+    			TypeObject trap = (TypeObject) i.next();
+    			if( position.distance(trap.getPosition()) <= _senserange )
+    				visible.add(trap.getPosition());
+    		}
+    	}
+    	return visible;
+    }
+    
+    //Senses stones in the sense range of the agent.
+    public Set<Point> senseStones(String agent)
+    {
+    	//gets the agent his position.
+    	Point position = getAgent(agent).getPosition();
+    	
+    	// iterate over all traps and decide according to distance if it is in
+        // vision range
+    	Set<Point> visible = new java.util.HashSet<Point>();
+    	synchronized(_stones)
+    	{
+    		Iterator i = _stones.iterator();
+    		while(i.hasNext())
+    		{
+    			TypeObject stone = (TypeObject) i.next();
+    			if( position.distance(stone.getPosition()) <= _senserange )
+    				visible.add(stone.getPosition());
+    		}
+    	}
+    	return visible;
+    }
+    
     
     // check if point is within environment boundaries
     // return false is p is within bounds
