@@ -1,5 +1,7 @@
 package exerc1a;
 
+import gridworld.Environment;
+
 import java.awt.Point;
 import java.util.*; 
 import jade.core.behaviours.OneShotBehaviour;
@@ -32,11 +34,15 @@ public class MemoryRandomStepBehaviour extends OneShotBehaviour
 		if(moveablePositions.size() == 0)
 		{
 			System.out.println("unable to move.!!");
+			return;
 		}
 			
 		
 		if(!_owner.step(moveablePositions.get(0)))
-			System.out.println("Agent tried to move but was unable too.!!!!");
+		{	
+			Point current = Environment.getPosition(_owner.getLocalName());
+			System.out.println("Agent tried to move from" + current + " to" + moveablePositions.get(0) + " thinking it was at" + _owner.getCurrentPosition() + "but was unable too.!!!!");
+		}
 	}
 	
 	
