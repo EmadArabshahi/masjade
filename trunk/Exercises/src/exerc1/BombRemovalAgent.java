@@ -1,7 +1,9 @@
-package exerc1a;
+package exerc1;
 import java.awt.Point;
 
 import java.util.*;
+
+import exerc1.behaviours.*;
 
 
 
@@ -19,6 +21,11 @@ public class BombRemovalAgent extends Agent
 	 * 
 	 */
 	private Set<Point> _knownBombs;
+	
+	/**
+	 * A set to hold the known stone locations.
+	 */
+	private Set<Point> _knownStones;
 	
 	/** A random number generator.
 	 * 
@@ -39,6 +46,7 @@ public class BombRemovalAgent extends Agent
 	protected void setup()
 	{
 		_knownBombs = new HashSet<Point>();
+		_knownStones = new HashSet<Point>();
 		
 		long seed = this.getName().hashCode();
 		this._randomGenerator = new Random(seed);
@@ -90,6 +98,8 @@ public class BombRemovalAgent extends Agent
 	 */
 	public void stonesSensed(Set<Point> stonesPositions)
 	{
+		_knownStones.addAll(stonesPositions);
+		
 		if(stonesPositions.size() > 0)
 			System.out.println(stonesPositions + " is where stones were found!!!!");
 	}
@@ -185,7 +195,9 @@ public class BombRemovalAgent extends Agent
 		moveablePositions.add(new Point(current.x, current.y-1));
 		moveablePositions.add(new Point(current.x+1, current.y));
 		moveablePositions.add(new Point(current.x, current.y+1));
-				
+			
+		moveablePositions.removeAll(_knownStones);
+		
 		return moveablePositions;
 	}
 	

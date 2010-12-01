@@ -1,5 +1,6 @@
-package exerc1a;
+package exerc1.behaviours;
 
+import exerc1.BombRemovalAgent;
 import gridworld.Environment;
 import jade.core.behaviours.OneShotBehaviour;
 
