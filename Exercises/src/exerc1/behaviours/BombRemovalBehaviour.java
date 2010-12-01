@@ -1,8 +1,10 @@
-package exerc1a;
+package exerc1.behaviours;
 
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.Set;
+
+import exerc1.BombRemovalAgent;
 
 import gridworld.Environment;
 import gridworld.LogicalEnv;

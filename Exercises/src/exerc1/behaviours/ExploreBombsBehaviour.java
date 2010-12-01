@@ -1,5 +1,6 @@
-package exerc1a;
+package exerc1.behaviours;
 
+import exerc1.BombRemovalAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.Agent;
@@ -27,6 +28,7 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 		else
 			_firstTimeUse = false;
 		
+		_owner.addBehaviour(new StoneSensingBehaviour(_owner));
 		_owner.addBehaviour(new BombSensingBehaviour(_owner));
 			
 	}
