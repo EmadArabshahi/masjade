@@ -506,9 +506,53 @@ public class LogicalEnv implements ObsVectListener
     	//gets the agent his position.
     	Point position = getAgent(agent).getPosition();
     	
+    	//The set to store the positions of the stone.
+    	Set<Point> visible = new java.util.HashSet<Point>();
+    	
+    	//place artificial stones at the border of the environment.
+    	//is inneffient for large grid.
+    	//loop through x-axis start by -1, because the border width is 2 squares longer than the actual width.
+    	// As you can see in this picture: S=square, B = border.
+    	//B B B B B B
+    	//B S S S S B
+    	//B S S S S B
+    	//B S S S S B
+    	//B B B B B B
+    	
+    	//first loop for y=-1
+    	for(int x=-1; x<m_size.width+1; x++)
+    	{
+    		Point artificialStone = new Point(x,-1);
+    		if (position.distance(artificialStone) <= _senserange)
+    			visible.add(artificialStone);
+    	}
+    	//for y = m_size.height
+    	for(int x=-1; x<m_size.width+1; x++)
+    	{
+    		Point artificialStone = new Point(x,m_size.height);
+    		if (position.distance(artificialStone) <= _senserange)
+    			visible.add(artificialStone);
+    	}
+    	
+    	//now loop through y axis for x = -1
+    	for(int y=0; y<m_size.height; y++)
+    	{
+    		Point artificialStone = new Point(-1,y);
+    		if (position.distance(artificialStone) <= _senserange)
+    			visible.add(artificialStone);
+    	}
+    	
+    	//now loop through y axis for x = m_size.width
+    	for(int y=0; y<m_size.height; y++)
+    	{
+    		Point artificialStone = new Point(m_size.width,y);
+    		if (position.distance(artificialStone) <= _senserange)
+    			visible.add(artificialStone);
+    	}
+    	
     	// iterate over all traps and decide according to distance if it is in
         // vision range
-    	Set<Point> visible = new java.util.HashSet<Point>();
+    	
     	synchronized(_stones)
     	{
     		Iterator i = _stones.iterator();
