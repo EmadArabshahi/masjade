@@ -7,12 +7,12 @@ import java.awt.Point;
 import java.util.*; 
 import jade.core.behaviours.OneShotBehaviour;
 
-public class MemoryRandomStepBehaviour extends OneShotBehaviour
+public class MemoryRandomStepAction extends OneShotBehaviour
 {
 
 	private BombRemovalAgent _owner;
 	
-	public MemoryRandomStepBehaviour(BombRemovalAgent owner) 
+	public MemoryRandomStepAction(BombRemovalAgent owner) 
 	{
 		this._owner = owner;
 	}
@@ -20,6 +20,8 @@ public class MemoryRandomStepBehaviour extends OneShotBehaviour
 	@Override
 	public void action() 
 	{
+		System.out.println("In MemoryRandomStepBehaviour action");
+		
 		List<Point> moveablePositions = _owner.getRandomMoveablePositions();
 		List<Point> visitedPositions = _owner.getPositionHistory();
 		

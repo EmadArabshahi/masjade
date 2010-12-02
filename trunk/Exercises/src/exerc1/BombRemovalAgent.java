@@ -55,7 +55,7 @@ public class BombRemovalAgent extends Agent
 		_knownStones = new HashSet<Point>();
 		_knownTraps = new HashSet<Point>();
 		
-		long seed = this.getName().hashCode();
+		long seed = hashCode() + System.currentTimeMillis();
 		this._randomGenerator = new Random(seed);
 		
 		//set the history size, should be read from arguments.
@@ -71,14 +71,14 @@ public class BombRemovalAgent extends Agent
 		//Enter the environment
 		Environment.enter(getLocalName(), new Point(5, 5), "blue");
 		
-		//Sets the current location.
-		addPositionToHistory(Environment.getPosition(getLocalName()));
+		////Sets the current location.
+		//addPositionToHistory(Environment.getPosition(getLocalName()));
 		
 		//addBehaviour(new BombRemovalBehaviour(this));
 		
 
-		addBehaviour(new ExploreBombsBehaviour(this));
-		
+		//addBehaviour(new ExploreBombsBehaviour(this));
+		addBehaviour(new WalkToPositionBehaviour(this, new Point(0,0)));
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
@@ -115,9 +115,6 @@ public class BombRemovalAgent extends Agent
 	public void stonesSensed(Set<Point> stonesPositions)
 	{
 		_knownStones.addAll(stonesPositions);
-		
-		if(stonesPositions.size() > 0)
-			System.out.println(stonesPositions + " is where stones were found!!!!");
 	}
 	
 	/**
@@ -230,6 +227,20 @@ public class BombRemovalAgent extends Agent
 		return moveablePositions;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Moves the agent to the position specified, if its adjacent.
 	 * @param newPosition The new position to move too.
@@ -238,7 +249,7 @@ public class BombRemovalAgent extends Agent
 	 */
 	public boolean step(Point newPosition)
 	{
-		Point current = Environment.getPosition(getLocalName());
+		Point current = getCurrentPosition();//Environment.getPosition(getLocalName());
 		
 		if(current.x == newPosition.x)
 		{
@@ -290,6 +301,7 @@ public class BombRemovalAgent extends Agent
 		case 3: succesfullyMoved = Environment.west(getLocalName()); break;
 		}
 	
+		/* the new location is sensed.
 		if(succesfullyMoved)
 		{
 			//retrieve new current location.(this can i.e. be different than expected)
@@ -297,6 +309,7 @@ public class BombRemovalAgent extends Agent
 			//Set the position as new current location.
 			addPositionToHistory(newPosition);
 		}
+		*/
 		
 		return succesfullyMoved;
 	}
