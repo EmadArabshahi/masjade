@@ -28,8 +28,9 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 		else
 			_firstTimeUse = false;
 		
-		_owner.addBehaviour(new StoneSensingBehaviour(_owner));
-		_owner.addBehaviour(new BombSensingBehaviour(_owner));
+		_owner.addBehaviour(new SensingBehaviour(_owner));
+		//_owner.addBehaviour(new StoneSensingBehaviour(_owner));
+		//_owner.addBehaviour(new BombSensingBehaviour(_owner));
 			
 	}
 
