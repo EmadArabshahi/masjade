@@ -27,10 +27,16 @@ public class BombRemovalAgent extends Agent
 	 */
 	private Set<Point> _knownStones;
 	
+	
+	/**
+	 * A set to hold the know traps locations.
+	 */
+	private Set<Point> _knownTraps;
+	
 	/** A random number generator.
 	 * 
 	 */
-	private static Random _randomGenerator;
+	private Random _randomGenerator;
 	
 	/** The last positions of the agent.
 	 * 
@@ -47,6 +53,7 @@ public class BombRemovalAgent extends Agent
 	{
 		_knownBombs = new HashSet<Point>();
 		_knownStones = new HashSet<Point>();
+		_knownTraps = new HashSet<Point>();
 		
 		long seed = this.getName().hashCode();
 		this._randomGenerator = new Random(seed);
@@ -90,6 +97,15 @@ public class BombRemovalAgent extends Agent
 	public void bombsSensed(Set<Point> bombPositions) 
 	{
 		_knownBombs.addAll(bombPositions);
+	}
+	
+	/**
+	 * This method is called by a behaviour to pass the traps that are sensed.
+	 * @param trapsPositions A set with the locations of the traps that are sensed.
+	 */
+	public void trapsSensed(Set<Point> trapsPositions)
+	{
+		_knownTraps.addAll(trapsPositions);
 	}
 	
 	/**
