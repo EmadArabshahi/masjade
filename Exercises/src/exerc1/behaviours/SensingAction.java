@@ -4,7 +4,7 @@ import exerc1.BombRemovalAgent;
 import gridworld.Environment;
 import jade.core.behaviours.OneShotBehaviour;
 
-public class SensingBehaviour extends OneShotBehaviour
+public class SensingAction extends OneShotBehaviour
 {
 	
 	/**
@@ -21,12 +21,12 @@ public class SensingBehaviour extends OneShotBehaviour
 	 * Constructs a new SensingBehaviour that will senses all objects in the environment.
 	 * @param owner The agent that performs the behaviour.
 	 */
-	public SensingBehaviour(BombRemovalAgent owner)
+	public SensingAction(BombRemovalAgent owner)
 	{
 		this(owner, true, true, true, true);
 	}
 	
-	public SensingBehaviour(BombRemovalAgent owner, boolean senseLocation, boolean senseStones, boolean senseBombs, boolean senseTraps)
+	public SensingAction(BombRemovalAgent owner, boolean senseLocation, boolean senseStones, boolean senseBombs, boolean senseTraps)
 	{
 		this._owner = owner;
 		this._senseLocation = senseLocation;
@@ -34,7 +34,7 @@ public class SensingBehaviour extends OneShotBehaviour
 		this._senseBombs = senseBombs;
 		this._senseTraps = senseTraps;
 	}
-	@Override
+
 	public void action() 
 	{
 		if(_senseLocation)

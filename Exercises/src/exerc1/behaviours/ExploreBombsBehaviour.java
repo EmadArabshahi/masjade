@@ -21,16 +21,16 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 	@Override
 	public void action() 
 	{
+		System.out.println("In ExploreBombsBehaviour action");
+		
 		///If its the first time this behaviour is used, then the random step is not performed.
 		///In that case only the Sensing is performed, so always the area is first sensed and then explored.
 		if(!_firstTimeUse)
-			_owner.addBehaviour(new MemoryRandomStepBehaviour(_owner));
+			new MemoryRandomStepAction(_owner).action();
 		else
 			_firstTimeUse = false;
 		
-		_owner.addBehaviour(new SensingBehaviour(_owner));
-		//_owner.addBehaviour(new StoneSensingBehaviour(_owner));
-		//_owner.addBehaviour(new BombSensingBehaviour(_owner));
+		new SensingAction(_owner).action();
 			
 	}
 
