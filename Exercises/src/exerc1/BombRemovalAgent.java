@@ -120,6 +120,15 @@ public class BombRemovalAgent extends Agent
 			System.out.println(stonesPositions + " is where stones were found!!!!");
 	}
 	
+	/**
+	 * This method is called by a behaviour to pass the current location to the agent.
+	 * This location is then set as current, and added to the position history.
+	 * @param currentLocation The current location of the agent.
+	 */
+	public void locationSensed(Point currentLocation)
+	{
+		this.addPositionToHistory(currentLocation);
+	}
 	
 	/**
 	 * Gets the position history of the agent.
@@ -164,6 +173,10 @@ public class BombRemovalAgent extends Agent
 	 */
 	private void addPositionToHistory(Point position)
 	{
+		//If the position allready is the current position, it doenst need to be added.
+		if(position.equals(getCurrentPosition()))
+			return;
+		
 		//Make sure there is room for another item in the list.
 		while(_positionHistory.size() >= _positionHistorySize)
 		{
