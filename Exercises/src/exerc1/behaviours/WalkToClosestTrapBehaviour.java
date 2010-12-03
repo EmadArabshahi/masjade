@@ -3,19 +3,19 @@ package exerc1.behaviours;
 import java.awt.Point;
 import java.util.Set;
 
-import exerc1.GridWorldAgent;
+import exerc1.BombRemovalAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 
 
-public class WalkToClosestBombBehaviour extends SimpleBehaviour
+public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 {
 	
-	private GridWorldAgent _owner;
+	private BombRemovalAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
-	public WalkToClosestBombBehaviour(GridWorldAgent owner)
+	public WalkToClosestTrapBehaviour(BombRemovalAgent owner)
 	{
 		this._owner = owner;
 		this._firstTimeUse = true;
@@ -24,11 +24,11 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 	@Override
 	public void action()
 	{
-		System.out.println("In WalkToClosestBombBehaviour action");
+		System.out.println("In WalkToClosestTrapBehaviour action");
 		
-		if(!_owner.knowsBombs())
+		if(!_owner.knowsTraps())
 		{
-			System.out.println("Agent doenst know bombs. returning.");
+			System.out.println("Agent doenst know traps. returning.");
 			return;
 		}
 		
@@ -36,30 +36,25 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 		///In that case only the Sensing is performed, so always the area is first sensed and then walke
 		if(!_firstTimeUse)
 		{
-			System.out.println("2nd time use..");
-			
 			Point currentPosition = _owner.getCurrentPosition();
-			Set<Point> knownBombs = _owner.getKnownBombs();
+			Set<Point> knownTraps = _owner.getKnownTraps();
 			
-			System.out.println("2nd time use.. positions retrived");
-			Point minimalDistanceBomb = null;
+			Point minimalDistanceTrap = null;
 			double minimalDistance = Double.MAX_VALUE;
 			
-			System.out.println("Going to loop..");
-			
-			for (Point bombPosition : knownBombs)
+			for (Point trapPosition : knownTraps)
 			{
-				double distance = bombPosition.distance(currentPosition);
+				double distance = trapPosition.distance(currentPosition);
 				if(distance < minimalDistance)
 				{
-					minimalDistanceBomb = bombPosition;
+					minimalDistanceTrap = trapPosition;
 					minimalDistance = distance;
 				}
 			}
 			
 			
 			
-			new StepToPositionAction(_owner, minimalDistanceBomb).action();
+			new StepToPositionAction(_owner, minimalDistanceTrap).action();
 			
 		}
 		else
@@ -71,24 +66,22 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 	@Override
 	public boolean done() 
 	{
-		System.out.println("in WalkToClosestBombBehaviour DONE");
+		System.out.println("in WalkToClosestTrapBehaviour DONE");
 		
 		
-		if(!_owner.knowsBombs())
+		if(!_owner.knowsTraps())
 		{
-			System.out.println("Agent doenst known bomb quiting!");
+			System.out.println("Agent doenst known trap quiting!");
 			return true;
 		}
-		System.out.println("Agent does know at leat 1 bomb!!");
+		System.out.println("Agent does know at leat 1 trap!!");		
+		System.out.println("Going to loop through known traps");
 		
-		System.out.println("Going to loop through known bombs");
-		
-		for(Point bombPosition : _owner.getKnownBombs())
+		for(Point trapPosition : _owner.getKnownTraps())
 		{
-			System.out.println("In the loop.");
 			if(_owner.getCurrentPosition() != null)
-			{
-				if (bombPosition.equals(_owner.getCurrentPosition()))
+			{ 
+				if (trapPosition.equals(_owner.getCurrentPosition()))
 				{
 					System.out.println("Agent is on bomb.. quiting!");
 					return true;
@@ -114,3 +107,4 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 	
 	
 }
+

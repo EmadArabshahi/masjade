@@ -78,6 +78,10 @@ public abstract class GridWorldAgent extends Agent
 		return _knownBombs.size() > 0;
 	}
 	
+	public boolean knowsTraps()
+	{
+		return _knownTraps.size() > 0;
+	}
 	
 	/**
 	 * This method is called by a behaviour to pass the bombs that are sensed.
@@ -146,6 +150,26 @@ public abstract class GridWorldAgent extends Agent
 		}
 		
 		return copyOfKnownBombs;
+	}
+	
+	/**
+	 * Gets a set with the known trap locations.
+	 * @return A set with Positions of known trap locations.
+	 */
+	public Set<Point> getKnownTraps()
+	{
+		System.out.println("In getKnowntraps");
+		//Make a deep/shallow? copy of the traps!!
+		Set<Point> copyOfKnownTraps = new HashSet<Point>();
+		
+		System.out.println("Going in while loop.");
+		
+		for(Point trapPosition : _knownTraps)
+		{
+			copyOfKnownTraps.add(trapPosition);
+		}
+		
+		return copyOfKnownTraps;
 	}
 	
 	/**
