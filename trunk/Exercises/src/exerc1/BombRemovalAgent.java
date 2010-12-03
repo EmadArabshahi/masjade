@@ -4,6 +4,7 @@ import jade.core.behaviours.SequentialBehaviour;
 
 import java.awt.Point;
 
+import exerc1.behaviours.*;
 import exerc1.behaviours.ExploreBombsBehaviour;
 import exerc1.behaviours.WalkToClosestBombBehaviour;
 import exerc1.behaviours.WalkToPositionBehaviour;
@@ -16,7 +17,7 @@ public class BombRemovalAgent extends GridWorldAgent
 		SequentialBehaviour mainBehaviour = new SequentialBehaviour(this);
 		mainBehaviour.addSubBehaviour(new ExploreBombsBehaviour(this));
 		mainBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
-		mainBehaviour.addSubBehaviour(new WalkToPositionBehaviour(this, new Point(0,0)));
+		mainBehaviour.addSubBehaviour(new WalkToClosestTrapBehaviour(this));
 		addBehaviour(mainBehaviour);
 	}
 }
