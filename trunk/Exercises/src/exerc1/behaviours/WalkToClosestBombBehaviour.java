@@ -15,6 +15,11 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 	
 	private boolean _firstTimeUse;
 	
+	private int _endState = -1;
+	
+	public static final int ON_BOMB = 1;
+	public static final int NO_BOMBS_FOUND = 2;
+	
 	public WalkToClosestBombBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
@@ -77,12 +82,14 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 		if(!_owner.knowsBombs())
 		{
 			System.out.println("Agent doenst known bomb quiting!");
+			this._endState  = NO_BOMBS_FOUND; // No bombs.
 			return true;
 		}
 		
 		if(_owner.IsOnBomb())
 		{
 			System.out.println("AGent is on bomb, quiting!");
+			this._endState = ON_BOMB; // On Bomb.
 			return true;
 		}
 		
@@ -92,5 +99,10 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 		
 	}
 	
+	@Override
+	public int onEnd()
+	{
+		return _endState;
+	}
 	
 }

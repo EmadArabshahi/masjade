@@ -12,6 +12,8 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 	
 	private boolean _firstTimeUse;
 	
+	public static int BOMB_AND_TRAP_FOUND =1;
+	
 	public ExploreBombsBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
@@ -37,7 +39,14 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 	@Override
 	public boolean done() 
 	{
-		return _owner.knowsBombs();
+		
+		return _owner.knowsBombs() && _owner.knowsTraps();
 	}
-
+	
+	@Override
+	public int onEnd()
+	{
+		return BOMB_AND_TRAP_FOUND;
+	}
+	
 }

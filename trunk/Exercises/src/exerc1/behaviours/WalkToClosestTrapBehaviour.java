@@ -15,6 +15,11 @@ public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 	
 	private boolean _firstTimeUse;
 	
+	private int _endState = -1;
+	
+	public static final int ON_TRAP = 1;
+	public static final int NO_TRAPS_FOUND = 2;
+	
 	public WalkToClosestTrapBehaviour(BombRemovalAgent owner)
 	{
 		this._owner = owner;
@@ -72,12 +77,14 @@ public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 		if(!_owner.knowsTraps())
 		{
 			System.out.println("Agent doenst known trap quiting!");
+			this._endState = NO_TRAPS_FOUND;
 			return true;
 		}
 		
 		if(_owner.isOnTrap())
 		{
 			System.out.println("Agent is on trap, quiting!");
+			this._endState = ON_TRAP;
 			return true;
 		}
 		
@@ -87,6 +94,11 @@ public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 		
 	}
 	
+	@Override
+	public int onEnd()
+	{
+		return _endState;
+	}
 	
 }
 
