@@ -124,10 +124,29 @@ public abstract class GridWorldAgent extends Agent
 		this.addPositionToHistory(currentLocation);
 	}
 	
+	public boolean hasBomb()
+	{
+		return this._hasBomb;
+	}
+
+	
 	
 	public void bombPickedUp(boolean success)
 	{
-		this._hasBomb = success;
+		if(!_hasBomb)
+		if(success)
+		{
+			_hasBomb = true;
+			_knownBombs.remove(getCurrentPosition());
+		}
+		else
+			_hasBomb = false;
+	}
+	
+	public void bombDropped(boolean success)
+	{
+		if(_hasBomb)
+			_hasBomb = !success;
 	}
 	
 	/**

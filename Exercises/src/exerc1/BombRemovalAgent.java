@@ -1,25 +1,53 @@
 package exerc1;
 
-import jade.core.behaviours.SequentialBehaviour;
-
+import jade.core.behaviours.*;
 import java.awt.Point;
 
+import javax.print.attribute.standard.Finishings;
+
 import exerc1.behaviours.*;
-import exerc1.behaviours.ExploreBombsBehaviour;
-import exerc1.behaviours.WalkToClosestBombBehaviour;
-import exerc1.behaviours.WalkToPositionBehaviour;
 
 public class BombRemovalAgent extends GridWorldAgent
 {
+	
+	
 	protected void addBehaviours()
 	{
-		//addBehaviour(new BombRemovalBehaviour(this));
-		SequentialBehaviour mainBehaviour = new SequentialBehaviour(this);
-		mainBehaviour.addSubBehaviour(new ExploreBombsBehaviour(this));
-		mainBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
-		mainBehaviour.addSubBehaviour(new PickupBombAction(this));
-		mainBehaviour.addSubBehaviour(new WalkToClosestTrapBehaviour(this));
+		FSMBehaviour fsm =new FSMBehaviour();
+		fsm.registerFirstState(new ExploreBombsBehaviour(this), "explore");
+		fsm.registerState(new WalkToClosestBombBehaviour(this), "walkToBomb");
+		fsm.registerState(new PickupBombAction(this), "pickupBomb");
+		fsm.registerState(new WalkToClosestTrapBehaviour(this),"walkToTrap");
+		fsm.registerState(new DropBombAction(this), "dropBomb");
+		fsm.registerTransition("explore", "walkToBomb", ExploreBombsBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("walkToBomb", "pickupBomb", WalkToClosestBombBehaviour.ON_BOMB);
+		fsm.registerTransition("walkToBomb", "explore", WalkToClosestBombBehaviour.NO_BOMBS_FOUND);
+		fsm.registerTransition("pickupBomb", "walkToTrap", PickupBombAction.AGENT_HAS_BOMB);
+		fsm.registerTransition("pickupBomb", "walkToBomb", PickupBombAction.AGENT_HAS_NO_BOMB);
+		fsm.registerTransition("walkToTrap", "dropBomb", WalkToClosestTrapBehaviour.ON_TRAP);
+		fsm.registerTransition("walkToTrap", "explore", WalkToClosestTrapBehaviour.NO_TRAPS_FOUND);
+		fsm.registerTransition("dropBomb", "walkToBomb", DropBombAction.AGENT_HAS_NO_BOMB);
+		fsm.registerTransition("dropBomb", "walkToTrap", DropBombAction.AGENT_HAS_BOMB);
 		
-		addBehaviour(mainBehaviour);
+		addBehaviour(fsm);
+		
+		/*
+		SequentialBehaviour seqBehaviour = new SequentialBehaviour(this);
+		seqBehaviour.addSubBehaviour(new ExploreBombsBehaviour(this));
+		seqBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
+		seqBehaviour.addSubBehaviour(new PickupBombAction(this));
+		seqBehaviour.addSubBehaviour(new WalkToClosestTrapBehaviour(this));
+		seqBehaviour.addSubBehaviour(new DropBombAction(this));
+		//seqBehaviour.addSubBehaviour(new ResetBehaviour(seqBehaviour));
+		CyclicBehaviour cb=new CyclicBehaviour() {
+			
+			@Override
+			public void action() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		*/
+		
 	}
 }
