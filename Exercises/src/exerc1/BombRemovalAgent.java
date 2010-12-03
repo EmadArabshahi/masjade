@@ -4,11 +4,9 @@ import java.awt.Point;
 import java.util.*;
 
 import exerc1.behaviours.*;
-
-
-
 import gridworld.Environment;
 import jade.core.Agent;
+import jade.core.behaviours.*;
 
 public class BombRemovalAgent extends Agent 
 {
@@ -75,10 +73,15 @@ public class BombRemovalAgent extends Agent
 		//addPositionToHistory(Environment.getPosition(getLocalName()));
 		
 		//addBehaviour(new BombRemovalBehaviour(this));
+		SequentialBehaviour mainBehaviour = new SequentialBehaviour(this);
+		mainBehaviour.addSubBehaviour(new ExploreBombsBehaviour(this));
+		mainBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
+		mainBehaviour.addSubBehaviour(new WalkToPositionBehaviour(this, new Point(0,0))); 
 		
-
+		addBehaviour(mainBehaviour);
+		
 		//addBehaviour(new ExploreBombsBehaviour(this));
-		addBehaviour(new WalkToPositionBehaviour(this, new Point(0,0)));
+		//addBehaviour(new WalkToPositionBehaviour(this, new Point(0,0)));
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
@@ -137,6 +140,22 @@ public class BombRemovalAgent extends Agent
 		//Make the list readonly, so an exception occurs if there is messed with.
 		List<Point> readOnlyHistory  = Collections.unmodifiableList(_positionHistory);
 		return readOnlyHistory;
+	}
+	
+	/**
+	 * Gets a set with the known bomb locations.
+	 * @return A set with Positions of known bomb locations.
+	 */
+	public Set<Point> getKnownBombs()
+	{
+		//Make a deep/shallow? copy of the bombs!!
+		Set<Point> copyOfKnownBombs = new HashSet<Point>();
+		while(_knownBombs.iterator().hasNext())
+		{
+			Point bombPosition = _knownBombs.iterator().next();
+			copyOfKnownBombs.add(bombPosition);
+		}
+		return copyOfKnownBombs;
 	}
 	
 	/**
