@@ -21,6 +21,7 @@ public class BombRemovalBehaviour extends CyclicBehaviour
 		_myAgent = owner;
 	}
 	
+	/*
 	private void findNearestTrap()
 	{
 		// todo: find nearest
@@ -30,7 +31,7 @@ public class BombRemovalBehaviour extends CyclicBehaviour
 		{
 			_myAgent.targetTrapLocation = i.next();
 		}
-	}
+	}*/
 	
 	private void findNearestBomb(Set<Point> bombsFound)
 	{
@@ -118,7 +119,7 @@ public class BombRemovalBehaviour extends CyclicBehaviour
 				if (_myAgent.targetTrapLocation == null)
 				{
 					// if there's no trap location find one
-					findNearestTrap();
+					//findNearestTrap();
 				}
 				else
 				{

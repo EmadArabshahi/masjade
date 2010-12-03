@@ -1,6 +1,6 @@
 package exerc1.behaviours;
 
-import exerc1.BombRemovalAgent;
+import exerc1.GridWorldAgent;
 import gridworld.Environment;
 
 import java.awt.Point;
@@ -10,11 +10,11 @@ import jade.core.behaviours.OneShotBehaviour;
 public class StepToPositionAction extends OneShotBehaviour
 {
 
-	private BombRemovalAgent _owner;
+	private GridWorldAgent _owner;
 	
 	private Point _targetPosition;
 	
-	public StepToPositionAction(BombRemovalAgent owner, Point targetPosition) 
+	public StepToPositionAction(GridWorldAgent owner, Point targetPosition) 
 	{
 		this._owner = owner;
 		this._targetPosition = targetPosition;
