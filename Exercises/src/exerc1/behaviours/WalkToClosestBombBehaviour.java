@@ -3,7 +3,7 @@ package exerc1.behaviours;
 import java.awt.Point;
 import java.util.Set;
 
-import exerc1.BombRemovalAgent;
+import exerc1.GridWorldAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 
@@ -11,11 +11,11 @@ import jade.core.behaviours.SimpleBehaviour;
 public class WalkToClosestBombBehaviour extends SimpleBehaviour
 {
 	
-	private BombRemovalAgent _owner;
+	private GridWorldAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
-	public WalkToClosestBombBehaviour(BombRemovalAgent owner)
+	public WalkToClosestBombBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
 		this._firstTimeUse = true;

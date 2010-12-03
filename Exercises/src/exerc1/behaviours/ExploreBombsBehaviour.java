@@ -1,6 +1,6 @@
 package exerc1.behaviours;
 
-import exerc1.BombRemovalAgent;
+import exerc1.GridWorldAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.Agent;
@@ -8,11 +8,11 @@ import jade.core.Agent;
 public class ExploreBombsBehaviour extends SimpleBehaviour
 {
 
-	private BombRemovalAgent _owner;
+	private GridWorldAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
-	public ExploreBombsBehaviour(BombRemovalAgent owner)
+	public ExploreBombsBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
 		this._firstTimeUse = true;

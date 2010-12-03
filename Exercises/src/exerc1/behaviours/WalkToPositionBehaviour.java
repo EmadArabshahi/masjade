@@ -1,7 +1,7 @@
 package exerc1.behaviours;
 
 import java.awt.Point;
-import exerc1.BombRemovalAgent;
+import exerc1.GridWorldAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 
@@ -10,13 +10,13 @@ public class WalkToPositionBehaviour extends SimpleBehaviour
 {
 	
 	
-	private BombRemovalAgent _owner;
+	private GridWorldAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
 	private Point _targetPosition;
 	
-	public WalkToPositionBehaviour(BombRemovalAgent owner, Point targetPosition)
+	public WalkToPositionBehaviour(GridWorldAgent owner, Point targetPosition)
 	{
 		this._owner = owner;
 		this._targetPosition = targetPosition;
