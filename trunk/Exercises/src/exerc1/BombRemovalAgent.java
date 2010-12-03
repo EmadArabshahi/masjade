@@ -148,13 +148,17 @@ public class BombRemovalAgent extends Agent
 	 */
 	public Set<Point> getKnownBombs()
 	{
+		System.out.println("In getKnownBombs");
 		//Make a deep/shallow? copy of the bombs!!
 		Set<Point> copyOfKnownBombs = new HashSet<Point>();
-		while(_knownBombs.iterator().hasNext())
+		
+		System.out.println("Going in while loop.");
+		
+		for(Point bombPosition : _knownBombs)
 		{
-			Point bombPosition = _knownBombs.iterator().next();
 			copyOfKnownBombs.add(bombPosition);
 		}
+		
 		return copyOfKnownBombs;
 	}
 	
