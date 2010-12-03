@@ -11,6 +11,9 @@ import jade.core.behaviours.*;
 public abstract class GridWorldAgent extends Agent 
 {
 	public boolean hasBomb;
+	
+	private boolean _hasBomb;
+	
 	public Point targetBombLocation;
 	public Point targetTrapLocation;
 	
@@ -19,6 +22,7 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	private Set<Point> _knownBombs;
 	
+		
 	/**
 	 * A set to hold the known stone locations.
 	 */
@@ -120,6 +124,12 @@ public abstract class GridWorldAgent extends Agent
 		this.addPositionToHistory(currentLocation);
 	}
 	
+	
+	public void bombPickedUp(boolean success)
+	{
+		this._hasBomb = success;
+	}
+	
 	/**
 	 * Gets the position history of the agent.
 	 * The first item in the list is the current position, the second item its previous position etc.
@@ -138,11 +148,8 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	public Set<Point> getKnownBombs()
 	{
-		System.out.println("In getKnownBombs");
 		//Make a deep/shallow? copy of the bombs!!
 		Set<Point> copyOfKnownBombs = new HashSet<Point>();
-		
-		System.out.println("Going in while loop.");
 		
 		for(Point bombPosition : _knownBombs)
 		{
@@ -158,11 +165,8 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	public Set<Point> getKnownTraps()
 	{
-		System.out.println("In getKnowntraps");
 		//Make a deep/shallow? copy of the traps!!
 		Set<Point> copyOfKnownTraps = new HashSet<Point>();
-		
-		System.out.println("Going in while loop.");
 		
 		for(Point trapPosition : _knownTraps)
 		{
@@ -171,6 +175,45 @@ public abstract class GridWorldAgent extends Agent
 		
 		return copyOfKnownTraps;
 	}
+	
+	/***
+	 * Checks if the agents current position is on a bomb.
+	 * @return A boolean indicating whether the agent is on a bomb.
+	 */
+	public boolean IsOnBomb()
+	{
+		for(Point bombPosition : getKnownBombs())
+		{
+			if(getCurrentPosition() != null)
+			{
+				if (bombPosition.equals(getCurrentPosition()))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/***
+	 * Checks if the agents current position is on a bomb.
+	 * @return A boolean indicating whether the agent is on a bomb.
+	 */
+	public boolean isOnTrap()
+	{
+		for(Point trapPosition : getKnownTraps())
+		{
+			if(getCurrentPosition() != null)
+			{
+				if (trapPosition.equals(getCurrentPosition()))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Gets the previous position of the agent. This can be null, if the agent just entered.!

@@ -74,33 +74,15 @@ public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 			System.out.println("Agent doenst known trap quiting!");
 			return true;
 		}
-		System.out.println("Agent does know at leat 1 trap!!");		
-		System.out.println("Going to loop through known traps");
 		
-		for(Point trapPosition : _owner.getKnownTraps())
+		if(_owner.isOnTrap())
 		{
-			if(_owner.getCurrentPosition() != null)
-			{ 
-				if (trapPosition.equals(_owner.getCurrentPosition()))
-				{
-					System.out.println("Agent is on bomb.. quiting!");
-					return true;
-				}
-				else
-				{
-					System.out.println("Agent is not on bomb ... continuing.");
-				}
-			}
-			else
-			{
-				System.out.println("Agent current position is null so not on bomb.");
-				return false;
-			}	
-			
+			System.out.println("Agent is on trap, quiting!");
+			return true;
 		}
 		
 		
-		System.out.println("Agent not on bomb returning false");
+		System.out.println("Agent not on trap returning false");
 		return false;
 		
 	}

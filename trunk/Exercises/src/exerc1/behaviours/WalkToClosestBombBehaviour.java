@@ -79,31 +79,11 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 			System.out.println("Agent doenst known bomb quiting!");
 			return true;
 		}
-		System.out.println("Agent does know at leat 1 bomb!!");
 		
-		System.out.println("Going to loop through known bombs");
-		
-		for(Point bombPosition : _owner.getKnownBombs())
+		if(_owner.IsOnBomb())
 		{
-			System.out.println("In the loop.");
-			if(_owner.getCurrentPosition() != null)
-			{
-				if (bombPosition.equals(_owner.getCurrentPosition()))
-				{
-					System.out.println("Agent is on bomb.. quiting!");
-					return true;
-				}
-				else
-				{
-					System.out.println("Agent is not on bomb ... continuing.");
-				}
-			}
-			else
-			{
-				System.out.println("Agent current position is null so not on bomb.");
-				return false;
-			}	
-			
+			System.out.println("AGent is on bomb, quiting!");
+			return true;
 		}
 		
 		
