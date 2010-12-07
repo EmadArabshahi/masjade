@@ -64,15 +64,17 @@ public abstract class GridWorldAgent extends Agent
 		//construct empty list, with _positionHistorySize capacity.
 		_positionHistory = new ArrayList<Point>(_positionHistorySize);
 		
-		//Enter the environment
-		Environment.enter(getLocalName(), new Point(5, 5), "blue");
-		
 		////Sets the current location.
 		//addPositionToHistory(Environment.getPosition(getLocalName())); 
 		
 		addBehaviours();
 		
 		System.out.println(getLocalName() + " is ready.");
+	}
+	
+	protected void enter(Point startingPoint)
+	{
+		Environment.enter(getLocalName(), startingPoint, "blue");
 	}
 	
 	protected abstract void addBehaviours();
@@ -96,6 +98,11 @@ public abstract class GridWorldAgent extends Agent
 		_knownBombs.addAll(bombPositions);
 	}
 	
+	public void bombSensed(Point bombPosition) 
+	{
+		_knownBombs.add(bombPosition);
+	}
+	
 	/**
 	 * This method is called by a behaviour to pass the traps that are sensed.
 	 * @param trapsPositions A set with the locations of the traps that are sensed.
@@ -103,6 +110,11 @@ public abstract class GridWorldAgent extends Agent
 	public void trapsSensed(Set<Point> trapsPositions)
 	{
 		_knownTraps.addAll(trapsPositions);
+	}
+	
+	public void trapSensed(Point trapPosition)
+	{
+		_knownTraps.add(trapPosition);
 	}
 	
 	/**

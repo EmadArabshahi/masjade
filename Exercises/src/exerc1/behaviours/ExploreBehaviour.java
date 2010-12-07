@@ -5,16 +5,15 @@ import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.Agent;
 
-public class ExploreBombsBehaviour extends SimpleBehaviour
+public class ExploreBehaviour extends SimpleBehaviour
 {
-
 	private GridWorldAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
 	public static int BOMB_AND_TRAP_FOUND =1;
 	
-	public ExploreBombsBehaviour(GridWorldAgent owner)
+	public ExploreBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
 		this._firstTimeUse = true;
@@ -32,14 +31,12 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 		else
 			_firstTimeUse = false;
 		
-		new SensingAction(_owner).action();
-			
+		new SensingAction(_owner).action();			
 	}
 
 	@Override
 	public boolean done() 
 	{
-		
 		return _owner.knowsBombs() && _owner.knowsTraps();
 	}
 	
@@ -48,5 +45,4 @@ public class ExploreBombsBehaviour extends SimpleBehaviour
 	{
 		return BOMB_AND_TRAP_FOUND;
 	}
-	
 }

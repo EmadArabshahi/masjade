@@ -9,17 +9,17 @@ import exerc1.behaviours.*;
 
 public class BombRemovalAgent extends GridWorldAgent
 {
-	
-	
 	protected void addBehaviours()
 	{
-		FSMBehaviour fsm =new FSMBehaviour();
-		fsm.registerFirstState(new ExploreBombsBehaviour(this), "explore");
+		enter(new Point(5, 5));
+		
+		FSMBehaviour fsm = new FSMBehaviour();
+		fsm.registerFirstState(new ExploreBehaviour(this), "explore");
 		fsm.registerState(new WalkToClosestBombBehaviour(this), "walkToBomb");
 		fsm.registerState(new PickupBombAction(this), "pickupBomb");
 		fsm.registerState(new WalkToClosestTrapBehaviour(this),"walkToTrap");
 		fsm.registerState(new DropBombAction(this), "dropBomb");
-		fsm.registerTransition("explore", "walkToBomb", ExploreBombsBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("explore", "walkToBomb", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
 		fsm.registerTransition("walkToBomb", "pickupBomb", WalkToClosestBombBehaviour.ON_BOMB);
 		fsm.registerTransition("walkToBomb", "explore", WalkToClosestBombBehaviour.NO_BOMBS_FOUND);
 		fsm.registerTransition("pickupBomb", "walkToTrap", PickupBombAction.AGENT_HAS_BOMB);
