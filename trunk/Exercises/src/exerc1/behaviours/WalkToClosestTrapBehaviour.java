@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.Set;
 
 import exerc1.BombRemovalAgent;
+import exerc1.GridWorldAgent;
 import gridworld.Environment;
 import jade.core.behaviours.SimpleBehaviour;
 
@@ -11,7 +12,7 @@ import jade.core.behaviours.SimpleBehaviour;
 public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 {
 	
-	private BombRemovalAgent _owner;
+	private GridWorldAgent _owner;
 	
 	private boolean _firstTimeUse;
 	
@@ -20,7 +21,7 @@ public class WalkToClosestTrapBehaviour extends SimpleBehaviour
 	public static final int ON_TRAP = 1;
 	public static final int NO_TRAPS_FOUND = 2;
 	
-	public WalkToClosestTrapBehaviour(BombRemovalAgent owner)
+	public WalkToClosestTrapBehaviour(GridWorldAgent owner)
 	{
 		this._owner = owner;
 		this._firstTimeUse = true;
