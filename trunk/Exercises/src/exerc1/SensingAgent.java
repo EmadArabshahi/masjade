@@ -39,9 +39,9 @@ public class SensingAgent extends GridWorldAgent
 		fsm.registerState(new BroadcastNewPositionsAction(this), "informDisposers");
 		fsm.registerState(new ReceiveRemovedBombsAction(this), "receiveClearedBombs");
 		
-		fsm.registerTransition("explore", "informDisposers", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
-		fsm.registerTransition("informDisposers", "receiveClearedBombs", BroadcastNewPositionsAction.BROADCAST_DONE);
-		fsm.registerTransition("receiveClearedBombs", "explore", ReceiveRemovedBombsAction.RECEIVE_DONE);
+		fsm.registerTransition("explore", "receiveClearedBombs", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("receiveClearedBombs", "informDisposers", ReceiveRemovedBombsAction.RECEIVE_DONE);
+		fsm.registerTransition("informDisposers", "explore", BroadcastNewPositionsAction.BROADCAST_DONE);
 		
 		addBehaviour(fsm);
 	}

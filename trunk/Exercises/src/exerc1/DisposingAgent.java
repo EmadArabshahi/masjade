@@ -22,20 +22,8 @@ public class DisposingAgent extends GridWorldAgent
 	@Override
 	protected void setupAgent() {
 		enter(new Point(3, 3), "blue");
-		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType("bomb-disposing");
-		sd.setName("bomb-disposing");
-		dfd.addServices(sd);
-		try
-		{
-			DFService.register(this, dfd);
-		}
-		catch (FIPAException fe)
-		{
-			fe.printStackTrace();
-		}
+		
+		registerService();
 		
 		FSMBehaviour fsm = new FSMBehaviour();
 		
@@ -57,5 +45,28 @@ public class DisposingAgent extends GridWorldAgent
 		fsm.registerTransition("dropBomb", "walkToTrap", DropBombAction.AGENT_HAS_BOMB);
 		
 		addBehaviour(fsm);
+	}
+	
+	/**
+	 * Register the agent with the DF, so it
+	 * other agents can sent it info about bomb
+	 * and trap locations.
+	 */
+	private void registerService()
+	{
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("bomb-disposing");
+		sd.setName("bomb-disposing");
+		dfd.addServices(sd);
+		try
+		{
+			DFService.register(this, dfd);
+		}
+		catch (FIPAException fe)
+		{
+			fe.printStackTrace();
+		}
 	}
 }

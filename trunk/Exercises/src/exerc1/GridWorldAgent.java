@@ -185,6 +185,11 @@ public abstract class GridWorldAgent extends Agent
 		return readOnlyHistory;
 	}
 	
+	public void removeKnownBomb(Point location)
+	{
+		_knownBombs.remove(location);
+	}
+	
 	/**
 	 * Gets a set with the known bomb locations.
 	 * @return A set with Positions of known bomb locations.
