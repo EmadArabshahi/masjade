@@ -9,9 +9,9 @@ import exerc1.behaviours.*;
 
 public class BombRemovalAgent extends GridWorldAgent
 {
-	protected void addBehaviours()
+	protected void setupAgent()
 	{
-		enter(new Point(5, 5));
+		enter(new Point(5, 5), "blue");
 		
 		FSMBehaviour fsm = new FSMBehaviour();
 		fsm.registerFirstState(new ExploreBehaviour(this), "explore");

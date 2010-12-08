@@ -13,7 +13,7 @@ import exerc1.SensingAgent;
 
 public class BroadcastNewPositionsAction extends OneShotBehaviour
 {
-	public static int INFORM_DONE = 1;
+	public static int BROADCAST_DONE = 1;
 	
 	private SensingAgent _owner;
 	
@@ -24,7 +24,7 @@ public class BroadcastNewPositionsAction extends OneShotBehaviour
 	
 	public int onEnd()
 	{
-		return INFORM_DONE;
+		return BROADCAST_DONE;
 	}
 
 	@Override

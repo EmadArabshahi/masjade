@@ -2,6 +2,7 @@ package exerc1;
 
 import java.awt.Point;
 
+import exerc1.behaviours.BroadcastClearedBombLocationsAction;
 import exerc1.behaviours.BroadcastNewPositionsAction;
 import exerc1.behaviours.DropBombAction;
 import exerc1.behaviours.ExploreBehaviour;
@@ -19,8 +20,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 public class DisposingAgent extends GridWorldAgent
 {
 	@Override
-	protected void addBehaviours() {
-		enter(new Point(3, 3));
+	protected void setupAgent() {
+		enter(new Point(3, 3), "blue");
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -41,10 +42,12 @@ public class DisposingAgent extends GridWorldAgent
 		fsm.registerFirstState(new ReceivePositionBehaviour(this), "receivePositions");
 		fsm.registerState(new WalkToClosestBombBehaviour(this), "walkToBomb");
 		fsm.registerState(new PickupBombAction(this), "pickupBomb");
+		fsm.registerState(new BroadcastClearedBombLocationsAction(this), "sendClearedPositions");
 		fsm.registerState(new WalkToClosestTrapBehaviour(this),"walkToTrap");
 		fsm.registerState(new DropBombAction(this), "dropBomb");
 		fsm.registerTransition("receivePositions", "walkToBomb", ReceivePositionBehaviour.BOMB_AND_TRAP_KNOWN);
-		fsm.registerTransition("walkToBomb", "pickupBomb", WalkToClosestBombBehaviour.ON_BOMB);
+		fsm.registerTransition("walkToBomb", "sendClearedPositions", WalkToClosestBombBehaviour.ON_BOMB);
+		fsm.registerTransition("sendClearedPositions", "pickupBomb", BroadcastClearedBombLocationsAction.BROADCAST_DONE);
 		fsm.registerTransition("walkToBomb", "receivePositions", WalkToClosestBombBehaviour.NO_BOMBS_FOUND);
 		fsm.registerTransition("pickupBomb", "walkToTrap", PickupBombAction.AGENT_HAS_BOMB);
 		fsm.registerTransition("pickupBomb", "walkToBomb", PickupBombAction.AGENT_HAS_NO_BOMB);

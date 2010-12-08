@@ -17,6 +17,8 @@ public abstract class GridWorldAgent extends Agent
 	public Point targetBombLocation;
 	public Point targetTrapLocation;
 	
+	
+	private ArrayList<Point> _removedBombLocations;
 	/** A set to hold the known bomb locations.
 	 * 
 	 */
@@ -55,6 +57,7 @@ public abstract class GridWorldAgent extends Agent
 		_knownBombs = new HashSet<Point>();
 		_knownStones = new HashSet<Point>();
 		_knownTraps = new HashSet<Point>();
+		_removedBombLocations = new ArrayList<Point>();
 		
 		long seed = hashCode() + System.currentTimeMillis();
 		this._randomGenerator = new Random(seed);
@@ -67,17 +70,17 @@ public abstract class GridWorldAgent extends Agent
 		////Sets the current location.
 		//addPositionToHistory(Environment.getPosition(getLocalName())); 
 		
-		addBehaviours();
+		setupAgent();
 		
 		System.out.println(getLocalName() + " is ready.");
 	}
 	
-	protected void enter(Point startingPoint)
+	protected void enter(Point startingPoint, String colour)
 	{
-		Environment.enter(getLocalName(), startingPoint, "blue");
+		Environment.enter(getLocalName(), startingPoint, colour);
 	}
 	
-	protected abstract void addBehaviours();
+	protected abstract void setupAgent();
 	
 	public boolean knowsBombs()
 	{
@@ -141,7 +144,15 @@ public abstract class GridWorldAgent extends Agent
 		return this._hasBomb;
 	}
 
+	public ArrayList<Point> getRemovedBombLocations()
+	{
+		return _removedBombLocations;
+	}
 	
+	public void clearRemovedBombLocations()
+	{
+		_removedBombLocations.clear();
+	}
 	
 	public void bombPickedUp(boolean success)
 	{
@@ -150,6 +161,7 @@ public abstract class GridWorldAgent extends Agent
 		{
 			_hasBomb = true;
 			_knownBombs.remove(getCurrentPosition());
+			_removedBombLocations.add(getCurrentPosition());
 		}
 		else
 			_hasBomb = false;
@@ -333,20 +345,6 @@ public abstract class GridWorldAgent extends Agent
 		
 		return moveablePositions;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Moves the agent to the position specified, if its adjacent.
