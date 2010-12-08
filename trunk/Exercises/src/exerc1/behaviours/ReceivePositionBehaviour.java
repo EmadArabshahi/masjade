@@ -23,7 +23,7 @@ public class ReceivePositionBehaviour extends SimpleBehaviour
 			String[] splitMsg = msg.getContent().split(",");
 			Point location = new Point();
 			location.x = Integer.parseInt(splitMsg[0]);
-			location.y = Integer.parseInt(splitMsg[0]);
+			location.y = Integer.parseInt(splitMsg[1]);
 			
 			if (msg.getOntology() == "bomb-inform-onthology")
 			{
@@ -42,7 +42,6 @@ public class ReceivePositionBehaviour extends SimpleBehaviour
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return _owner.knowsBombs() && _owner.knowsTraps();
 	}
 	

@@ -7,6 +7,7 @@ import exerc1.behaviours.BroadcastNewPositionsAction;
 import exerc1.behaviours.DropBombAction;
 import exerc1.behaviours.ExploreBehaviour;
 import exerc1.behaviours.PickupBombAction;
+import exerc1.behaviours.ReceiveRemovedBombsAction;
 import exerc1.behaviours.WalkToClosestBombBehaviour;
 import exerc1.behaviours.WalkToClosestTrapBehaviour;
 import jade.core.Agent;
@@ -24,8 +25,10 @@ public class SensingAgent extends GridWorldAgent
 	public ArrayList<Point> broadcastedBombPositions;
 	
 	@Override
-	protected void addBehaviours() {
-		enter(new Point(4, 4));
+	protected void setupAgent() {
+		enter(new Point(10, 10), "red");
+		
+		registerService();
 		
 		broadcastedTrapPositions = new ArrayList<Point>();
 		broadcastedBombPositions = new ArrayList<Point>();
@@ -34,10 +37,34 @@ public class SensingAgent extends GridWorldAgent
 		
 		fsm.registerFirstState(new ExploreBehaviour(this), "explore");
 		fsm.registerState(new BroadcastNewPositionsAction(this), "informDisposers");
+		fsm.registerState(new ReceiveRemovedBombsAction(this), "receiveClearedBombs");
 		
 		fsm.registerTransition("explore", "informDisposers", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
-		fsm.registerTransition("informDisposers", "explore", BroadcastNewPositionsAction.INFORM_DONE);
+		fsm.registerTransition("informDisposers", "receiveClearedBombs", BroadcastNewPositionsAction.BROADCAST_DONE);
+		fsm.registerTransition("receiveClearedBombs", "explore", ReceiveRemovedBombsAction.RECEIVE_DONE);
 		
 		addBehaviour(fsm);
+	}
+	
+	/**
+	 * setup the service for receiving information
+ 	 * about with bombs are cleared by other agents.
+	 */
+	private void registerService()
+	{ 
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("bomb-managing");
+		sd.setName("bomb-managing");
+		dfd.addServices(sd);
+		try
+		{
+			DFService.register(this, dfd);
+		}
+		catch (FIPAException fe)
+		{
+			fe.printStackTrace();
+		}
 	}
 }
