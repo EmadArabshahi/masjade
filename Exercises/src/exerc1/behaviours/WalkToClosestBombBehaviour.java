@@ -41,7 +41,7 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 		///In that case only the Sensing is performed, so always the area is first sensed and then walke
 		if(!_firstTimeUse)
 		{
-			System.out.println("2nd time use..");
+			System.out.println("2nd time use.. " + _owner.getKnownBombs().size());
 			
 			Point currentPosition = _owner.getCurrentPosition();
 			Set<Point> knownBombs = _owner.getKnownBombs();

@@ -1,6 +1,7 @@
 package exerc1.behaviours;
 
 import java.awt.Point;
+import java.util.Set;
 
 import exerc1.DisposingAgent;
 import exerc1.GridWorldAgent;
@@ -34,6 +35,7 @@ public class ReceiveRemovedBombsAction extends OneShotBehaviour {
 				location.y = Integer.parseInt(splitMsg[1]);
 			
 				_owner.broadcastedBombPositions.remove(location);
+				_owner.removeKnownBomb(location);
 			}
 		}
 	}
