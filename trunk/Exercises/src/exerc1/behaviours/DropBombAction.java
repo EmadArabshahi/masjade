@@ -6,12 +6,10 @@ import jade.core.behaviours.*;
 
 public class DropBombAction extends OneShotBehaviour
 {
+	public static final int DROPPED_BOMB = 1;
+	public static final int FOUND_NO_TRAP = 2;
 
 	private GridWorldAgent _owner;
-	
-	public static int AGENT_HAS_BOMB = 1;
-	public static int AGENT_HAS_NO_BOMB = 2;
-	
 	
 	public DropBombAction(GridWorldAgent owner)
 	{
@@ -24,6 +22,9 @@ public class DropBombAction extends OneShotBehaviour
 		if(_owner.isOnTrap() && _owner.hasBomb())
 		{
 			_owner.bombDropped(Environment.dropBomb((_owner.getLocalName())));
+			_owner.hasBomb = false;
+			_owner.targetBombLocation = null;
+			_owner.targetTrapLocation = null;
 		}
 		else
 			_owner.bombDropped(false);
@@ -33,8 +34,8 @@ public class DropBombAction extends OneShotBehaviour
 	public int onEnd()
 	{
 		if(_owner.hasBomb())
-			return AGENT_HAS_BOMB;
+			return FOUND_NO_TRAP;
 		else
-			return AGENT_HAS_NO_BOMB;
+			return DROPPED_BOMB;
 	}
 }

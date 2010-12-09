@@ -5,6 +5,7 @@ import java.awt.Point;
 import exerc1.DisposingAgent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 public class ReceivePositionBehaviour extends SimpleBehaviour 
 {
@@ -17,7 +18,10 @@ public class ReceivePositionBehaviour extends SimpleBehaviour
 	}
 	@Override
 	public void action() {
-		ACLMessage msg = _owner.receive();
+		MessageTemplate templateBomb = MessageTemplate.MatchOntology("bomb-inform-onthology");
+		MessageTemplate templateTrap = MessageTemplate.MatchOntology("trap-inform-onthology");
+		MessageTemplate template = MessageTemplate.or(templateBomb, templateTrap);
+		ACLMessage msg = _owner.receive(template);
 		if (msg != null)
 		{
 			String[] splitMsg = msg.getContent().split(",");
@@ -27,11 +31,11 @@ public class ReceivePositionBehaviour extends SimpleBehaviour
 			
 			if (msg.getOntology() == "bomb-inform-onthology")
 			{
-				_owner.bombSensed(location);
+				_owner.addKnownBomb(location);
 			}
 			else if (msg.getOntology() == "trap-inform-onthology")
 			{
-				_owner.trapSensed(location);
+				_owner.addKnownTrap(location);
 			}
 		}
 		else
