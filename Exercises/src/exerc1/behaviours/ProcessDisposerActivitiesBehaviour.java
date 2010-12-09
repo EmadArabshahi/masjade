@@ -33,17 +33,17 @@ public class ProcessDisposerActivitiesBehaviour extends SimpleBehaviour {
 		ACLMessage msg = _owner.receive();
 		if (msg != null)
 		{
-			System.out.println("has no bomb.");
 			_owner.currentMessage = msg;
 			_endState = RECEIVED_MESSAGE;
 			_done = true;
 		}
 		else if (_owner.targetBombLocation == null && !_owner.hasBomb)
 		{
+			System.out.println("has no target.");
 			_endState = HAS_NO_TARGET_BOMB;
 			_done = true;
 		}
-		else if (_owner.targetTrapLocation == null && _owner.hasBomb)
+		else if (_owner.targetTrapLocation == null)
 		{
 			_endState = HAS_NO_TARGET_TRAP;
 			_done = true;
@@ -58,14 +58,14 @@ public class ProcessDisposerActivitiesBehaviour extends SimpleBehaviour {
 			_endState = IS_ON_TRAP;
 			_done = true;
 		}
-		else if (!_owner.hasBomb)
+		else if (!_owner.hasBomb && _owner.targetBombLocation != null)
 		{
 			// If the agent does not have a bomb, walk towards the target bomb location to pick one up.
 			new SensingAction(_owner).action();
 			new StepToPositionAction(_owner, _owner.targetBombLocation).action();
 			new SensingAction(_owner).action();
 		}
-		else if (_owner.hasBomb)
+		else if (_owner.hasBomb && _owner.targetTrapLocation != null)
 		{
 			// If the agent has a bomb in its possession, move towards the trap.
 			new SensingAction(_owner).action();
