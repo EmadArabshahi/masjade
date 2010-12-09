@@ -46,13 +46,11 @@ public class SlaveDisposerAgent extends GridWorldAgent {
 		fsm.registerTransition("processActivities", "dropBomb", ProcessDisposerActivitiesBehaviour.IS_ON_TRAP);
 		fsm.registerTransition("processActivities", "processMessage", ProcessDisposerActivitiesBehaviour.RECEIVED_MESSAGE);
 		
-		fsm.registerTransition("processActivities", "processTargetBombRequest", ProcessDisposerActivitiesBehaviour.HAS_NO_TARGET_BOMB);
 		fsm.registerTransition("processTargetBombRequest", "processActivities", ProcessSlaveTargetBombRequestBehaviour.PROCESSED_TARGET_BOMB_REQUEST);
 		
 		fsm.registerTransition("processMessage", "processTargetBombPosition", ProcessSlaveDisposerMessagesAction.RECEIVED_TARGET_BOMB_POSITION);
 		fsm.registerTransition("processMessage", "processTrapPosition", ProcessSlaveDisposerMessagesAction.RECEIVED_TRAP_POSITION);
 		
-		fsm.registerTransition("processTargetBombPosition", "processActivities", ProcessTargetBombPositionAction.PROCESSED_TARGET_BOMB_POSITION);
 		fsm.registerTransition("processTrapPosition", "processActivities", ProcessTrapPositionAction.PROCESSED_TRAP_POSITION);
 		
 		fsm.registerTransition("pickTargetTrap", "processActivities", PickTargetTrapAction.PICKED_TARGET_TRAP);
