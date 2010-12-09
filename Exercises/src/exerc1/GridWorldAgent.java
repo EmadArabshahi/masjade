@@ -7,6 +7,7 @@ import exerc1.behaviours.*;
 import gridworld.Environment;
 import jade.core.Agent;
 import jade.core.behaviours.*;
+import jade.lang.acl.ACLMessage;
 
 public abstract class GridWorldAgent extends Agent 
 {
@@ -17,6 +18,7 @@ public abstract class GridWorldAgent extends Agent
 	public Point targetBombLocation;
 	public Point targetTrapLocation;
 	
+	public ACLMessage currentMessage;
 	
 	private ArrayList<Point> _removedBombLocations;
 	/** A set to hold the known bomb locations.
@@ -29,6 +31,11 @@ public abstract class GridWorldAgent extends Agent
 	 * A set to hold the known stone locations.
 	 */
 	private Set<Point> _knownStones;
+	
+	/**
+	 * A set to hold the current agent locations.
+	 */
+	private Set<Point> _knownAgents;
 	
 	
 	/**
@@ -51,12 +58,21 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	private int _positionHistorySize;
 	
+	protected Point startingPoint;
+	
 	
 	protected void setup()
 	{
+		Object[] args = getArguments();
+		int x = Integer.parseInt(args[0].toString());
+		int y = Integer.parseInt(args[0].toString());
+		
+		startingPoint = new Point(x, y);
+		
 		_knownBombs = new HashSet<Point>();
 		_knownStones = new HashSet<Point>();
 		_knownTraps = new HashSet<Point>();
+		_knownAgents = new HashSet<Point>();
 		_removedBombLocations = new ArrayList<Point>();
 		
 		long seed = hashCode() + System.currentTimeMillis();
@@ -66,6 +82,7 @@ public abstract class GridWorldAgent extends Agent
 		_positionHistorySize = 100;
 		//construct empty list, with _positionHistorySize capacity.
 		_positionHistory = new ArrayList<Point>(_positionHistorySize);
+		_positionHistory.add(startingPoint);
 		
 		////Sets the current location.
 		//addPositionToHistory(Environment.getPosition(getLocalName())); 
@@ -101,7 +118,7 @@ public abstract class GridWorldAgent extends Agent
 		_knownBombs.addAll(bombPositions);
 	}
 	
-	public void bombSensed(Point bombPosition) 
+	public void addKnownBomb(Point bombPosition) 
 	{
 		_knownBombs.add(bombPosition);
 	}
@@ -115,7 +132,7 @@ public abstract class GridWorldAgent extends Agent
 		_knownTraps.addAll(trapsPositions);
 	}
 	
-	public void trapSensed(Point trapPosition)
+	public void addKnownTrap(Point trapPosition)
 	{
 		_knownTraps.add(trapPosition);
 	}
@@ -127,6 +144,16 @@ public abstract class GridWorldAgent extends Agent
 	public void stonesSensed(Set<Point> stonesPositions)
 	{
 		_knownStones.addAll(stonesPositions);
+	}
+	
+	/**
+	 * This method is called by a behaviour to pass the stones that are sensed.
+	 * @param stonesPositions A set with the locations of the stones that are sensed.
+	 */
+	public void agentsSensed(Set<Point> agentsPositions)
+	{
+		_knownAgents.clear();
+		_knownAgents.addAll(agentsPositions);
 	}
 	
 	/**
@@ -228,7 +255,7 @@ public abstract class GridWorldAgent extends Agent
 	 * Checks if the agents current position is on a bomb.
 	 * @return A boolean indicating whether the agent is on a bomb.
 	 */
-	public boolean IsOnBomb()
+	public boolean isOnBomb()
 	{
 		for(Point bombPosition : getKnownBombs())
 		{
@@ -347,6 +374,7 @@ public abstract class GridWorldAgent extends Agent
 		moveablePositions.add(new Point(current.x, current.y+1));
 			
 		moveablePositions.removeAll(_knownStones);
+		moveablePositions.removeAll(_knownAgents);
 		
 		return moveablePositions;
 	}

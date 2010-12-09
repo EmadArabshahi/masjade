@@ -29,14 +29,19 @@ public class BroadcastNewPositionsAction extends OneShotBehaviour
 
 	@Override
 	public void action() {
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType("bomb-disposing");
-		dfd.addServices(sd);
+		DFAgentDescription dfdBomb = new DFAgentDescription();
+		ServiceDescription sdBomb = new ServiceDescription();
+		sdBomb.setType("receive-bomb-position");
+		dfdBomb.addServices(sdBomb);
+		
+		DFAgentDescription dfdTrap = new DFAgentDescription();
+		ServiceDescription sdTrap = new ServiceDescription();
+		sdTrap.setType("receive-trap-position");
+		dfdTrap.addServices(sdTrap);
 		
 		try
 		{
-			DFAgentDescription[] result = DFService.search(_owner, dfd);
+			DFAgentDescription[] resultBomb = DFService.search(_owner, dfdBomb);
 			for (Point location : _owner.getKnownBombs())
 			{
 				if (!_owner.broadcastedBombPositions.contains(location))
@@ -44,17 +49,18 @@ public class BroadcastNewPositionsAction extends OneShotBehaviour
 					_owner.broadcastedBombPositions.add(location);
 					ACLMessage bombsInform = new ACLMessage(ACLMessage.INFORM);
 					
-					for (int i = 0; i < result.length; i++)
+					for (int i = 0; i < resultBomb.length; i++)
 					{
-						bombsInform.addReceiver(result[i].getName());
+						bombsInform.addReceiver(resultBomb[i].getName());
 					}
 					
-					bombsInform.setOntology("bomb-inform-onthology");
+					bombsInform.setOntology("bomb-position");
 					bombsInform.setContent(String.format("%s,%s", location.x, location.y));
 					_owner.send(bombsInform);
 				}
 			}
 			
+			DFAgentDescription[] resultTrap = DFService.search(_owner, dfdTrap);
 			for (Point location : _owner.getKnownTraps())
 			{
 				if (!_owner.broadcastedTrapPositions.contains(location))
@@ -62,12 +68,12 @@ public class BroadcastNewPositionsAction extends OneShotBehaviour
 					_owner.broadcastedTrapPositions.add(location);
 					ACLMessage trapInformMsg = new ACLMessage(ACLMessage.INFORM);
 					
-					for (int i = 0; i < result.length; i++)
+					for (int i = 0; i < resultTrap.length; i++)
 					{
-						trapInformMsg.addReceiver(result[i].getName());
+						trapInformMsg.addReceiver(resultTrap[i].getName());
 					}
 					
-					trapInformMsg.setOntology("trap-inform-onthology");
+					trapInformMsg.setOntology("trap-position");
 					trapInformMsg.setContent(String.format("%s,%s", location.x, location.y));
 					_owner.send(trapInformMsg);
 				}

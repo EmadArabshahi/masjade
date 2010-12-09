@@ -4,7 +4,7 @@ import exerc1.GridWorldAgent;
 import gridworld.Environment;
 import jade.core.behaviours.*;
 
-public class PickupBombAction extends OneShotBehaviour
+public class PickupBombAction_Old extends OneShotBehaviour
 {
 
 	private GridWorldAgent _owner;
@@ -13,7 +13,7 @@ public class PickupBombAction extends OneShotBehaviour
 	public static int AGENT_HAS_BOMB = 1;
 	public static int AGENT_HAS_NO_BOMB = 2;
 	
-	public PickupBombAction(GridWorldAgent owner)
+	public PickupBombAction_Old(GridWorldAgent owner)
 	{
 		this._owner = owner;
 	}
@@ -21,7 +21,7 @@ public class PickupBombAction extends OneShotBehaviour
 	@Override
 	public void action()
 	{
-		if(_owner.IsOnBomb() && !_owner.hasBomb())
+		if(_owner.isOnBomb() && !_owner.hasBomb())
 		{
 			_owner.bombPickedUp(Environment.takeBomb(_owner.getLocalName()));
 		}

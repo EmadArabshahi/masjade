@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import exerc1.behaviours.BroadcastNewPositionsAction;
 import exerc1.behaviours.DropBombAction;
 import exerc1.behaviours.ExploreBehaviour;
-import exerc1.behaviours.PickupBombAction;
+import exerc1.behaviours.PickupBombAction_Old;
 import exerc1.behaviours.ReceiveRemovedBombsAction;
 import exerc1.behaviours.WalkToClosestBombBehaviour;
 import exerc1.behaviours.WalkToClosestTrapBehaviour;
@@ -26,7 +26,7 @@ public class SensingAgent extends GridWorldAgent
 	
 	@Override
 	protected void setupAgent() {
-		enter(new Point(10, 10), "red");
+		enter(startingPoint, "red");
 		
 		registerService();
 		
