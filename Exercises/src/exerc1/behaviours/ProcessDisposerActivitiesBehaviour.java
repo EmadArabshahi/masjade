@@ -39,7 +39,6 @@ public class ProcessDisposerActivitiesBehaviour extends SimpleBehaviour {
 		}
 		else if (_owner.targetBombLocation == null && !_owner.hasBomb)
 		{
-			System.out.println("has no target.");
 			_endState = HAS_NO_TARGET_BOMB;
 			_done = true;
 		}

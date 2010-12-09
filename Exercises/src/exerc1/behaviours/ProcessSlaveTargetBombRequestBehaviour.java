@@ -13,7 +13,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class ProcessSlaveTargetBombRequestBehaviour extends SimpleBehaviour {
+public class ProcessSlaveTargetBombRequestBehaviour extends Behaviour {
 
 	public static final int PROCESSED_TARGET_BOMB_REQUEST = 1;
 	
@@ -36,7 +36,7 @@ public class ProcessSlaveTargetBombRequestBehaviour extends SimpleBehaviour {
 			ServiceDescription sd = new ServiceDescription();
 			sd.setType("receive-target-bomb-request");
 			dfd.addServices(sd);
-			
+			System.out.println("attempting to send request!!!!!!!!!!!!");
 			try
 			{
 				DFAgentDescription[] result = DFService.search(_owner, dfd);
@@ -63,21 +63,20 @@ public class ProcessSlaveTargetBombRequestBehaviour extends SimpleBehaviour {
 		else
 		{
 			// wait for reply
-			ACLMessage msg = _owner.receive(MessageTemplate.MatchOntology("target-bomb-reply"));
+			System.out.println("attempting to get reply!!!!!!!!!!!!");
+			ACLMessage msg = _owner.blockingReceive(MessageTemplate.MatchOntology("target-bomb-reply"));
 			if (msg != null)
 			{
+				System.out.println("got reply!!!!!!!!!!!!");
 				String[] splitMsg = msg.getContent().split(",");
 				Point location = new Point();
 				location.x = Integer.parseInt(splitMsg[0]);
 				location.y = Integer.parseInt(splitMsg[1]);
-			
+
 				_owner.targetBombLocation = location;
 				
 				_done = true;
-			}
-			else
-			{
-				block();
+				_requestSend = false;
 			}
 		}
 	}
