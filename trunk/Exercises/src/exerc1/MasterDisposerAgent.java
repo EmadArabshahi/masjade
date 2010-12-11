@@ -23,6 +23,11 @@ import exerc1.behaviours.ProcessMasterDisposerMessagesAction;
 import exerc1.behaviours.ProcessMasterTargetBombRequestAction;
 import exerc1.behaviours.ProcessTrapPositionAction;
 
+/**
+ * This agent is responsible for disposing bombs as well as informing slave disposers
+ * about the bombs they have to dispose of.
+ *
+ */
 public class MasterDisposerAgent extends GridWorldAgent
 {
 	public HashMap<AID, Point> disposerTargets;
