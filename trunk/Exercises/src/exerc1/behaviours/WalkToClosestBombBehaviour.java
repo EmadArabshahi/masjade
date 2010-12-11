@@ -31,11 +31,41 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 	{
 		System.out.println("In WalkToClosestBombBehaviour action");
 		
+		if(!_owner.knowsBombs())
+		{
+			System.out.println("Agent doenst know bombs. returning.");
+			return;
+		}
+		
 		///If its the first time this behaviour is used, then the step is not performed.
 		///In that case only the Sensing is performed, so always the area is first sensed and then walke
 		if(!_firstTimeUse)
 		{
-			new StepToPositionAction(_owner, _owner.targetBombLocation).action();
+			System.out.println("2nd time use..");
+			
+			Point currentPosition = _owner.getCurrentPosition();
+			Set<Point> knownBombs = _owner.getKnownBombs();
+			
+			System.out.println("2nd time use.. positions retrived");
+			Point minimalDistanceBomb = null;
+			double minimalDistance = Double.MAX_VALUE;
+			
+			System.out.println("Going to loop..");
+			
+			for (Point bombPosition : knownBombs)
+			{
+				double distance = bombPosition.distance(currentPosition);
+				if(distance < minimalDistance)
+				{
+					minimalDistanceBomb = bombPosition;
+					minimalDistance = distance;
+				}
+			}
+			
+			
+			
+			new StepToPositionAction(_owner, minimalDistanceBomb).action();
+			
 		}
 		else
 			_firstTimeUse = false;
@@ -55,7 +85,6 @@ public class WalkToClosestBombBehaviour extends SimpleBehaviour
 			this._endState  = NO_BOMBS_FOUND; // No bombs.
 			return true;
 		}
-		
 		if(_owner.isOnBomb())
 		{
 			System.out.println("AGent is on bomb, quiting!");

@@ -62,6 +62,8 @@ public abstract class GridWorldAgent extends Agent
 	protected void setup()
 	{
 		Object[] args = getArguments();
+		if(args == null || args.length < 2)
+			throw new IllegalArgumentException("Please provide the starting location of the agent.");
 		int x = Integer.parseInt(args[0].toString());
 		int y = Integer.parseInt(args[1].toString());
 		
