@@ -41,7 +41,7 @@ public class ProcessMasterTargetBombRequestAction extends OneShotBehaviour {
 			
 			if (newTarget != null)
 			{
-				new SendTargetBombReply(_owner, request, newTarget).action();
+				new SendTargetBombReplyAction(_owner, request, newTarget).action();
 			}
 			else
 			{

@@ -36,7 +36,7 @@ public class ProcessBombPositionAction extends OneShotBehaviour {
 				Point newTarget = _owner.getNewBombTarget();
 				if (newTarget != null)
 				{
-					new SendTargetBombReply(_owner, request, newTarget).action();
+					new SendTargetBombReplyAction(_owner, request, newTarget).action();
 					processedRequests.add(request);
 				}
 			}

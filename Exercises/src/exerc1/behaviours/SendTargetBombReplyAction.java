@@ -10,13 +10,12 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
-public class SendTargetBombReply extends OneShotBehaviour {
-
+public class SendTargetBombReplyAction extends OneShotBehaviour {
 	private MasterDisposerAgent _owner;
 	private ACLMessage _request;
 	private Point _target;
 
-	public SendTargetBombReply(MasterDisposerAgent owner, ACLMessage request, Point target) {
+	public SendTargetBombReplyAction(MasterDisposerAgent owner, ACLMessage request, Point target) {
 		_owner = owner;
 		_request = request;
 		_target = target;
@@ -33,8 +32,6 @@ public class SendTargetBombReply extends OneShotBehaviour {
 		ACLMessage reply = _request.createReply();
 		reply.setOntology("target-bomb-reply");
 		reply.setContent(String.format("%s,%s", _target.x, _target.y));
-		_owner.send(reply);
-		
+		_owner.send(reply);	
 	}
-
 }
