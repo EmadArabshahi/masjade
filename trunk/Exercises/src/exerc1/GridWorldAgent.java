@@ -63,7 +63,7 @@ public abstract class GridWorldAgent extends Agent
 	{
 		Object[] args = getArguments();
 		int x = Integer.parseInt(args[0].toString());
-		int y = Integer.parseInt(args[0].toString());
+		int y = Integer.parseInt(args[1].toString());
 		
 		startingPoint = new Point(x, y);
 		
