@@ -23,6 +23,7 @@ public class SendTargetBombReplyAction extends OneShotBehaviour {
 
 	@Override
 	public void action() {
+		_owner.removeKnownBomb(_target);
 		System.out.println("NEW TARGET SENT!!!!!!!!!!!!!!!!");
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
