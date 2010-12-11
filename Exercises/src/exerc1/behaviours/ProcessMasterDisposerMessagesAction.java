@@ -11,6 +11,7 @@ public class ProcessMasterDisposerMessagesAction extends OneShotBehaviour {
 	public static final int RECEIVED_TRAP_POSITION = 2;
 	public static final int RECEIVED_DISPOSER_CURRENT_POSITION = 3;
 	public static final int RECEIVED_TARGET_BOMB_REQUEST = 4;
+	public static final int RECEIVED_BOMB_PICKED_UP = 5;
 	
 	private MasterDisposerAgent _owner;
 	private int _endState;
@@ -42,6 +43,10 @@ public class ProcessMasterDisposerMessagesAction extends OneShotBehaviour {
 			else if (msg.getOntology().equals("target-bomb-request"))
 			{
 				_endState = RECEIVED_TARGET_BOMB_REQUEST;
+			}
+			else if (msg.getOntology().equals("bomb-picked-up"))
+			{
+				_endState = RECEIVED_BOMB_PICKED_UP;
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package exerc1;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import exerc1.behaviours.ProcessBombPickedUpAction;
+import exerc1.behaviours.ProcessSenserBombPickedUpAction;
 import exerc1.behaviours.SendNewPositionsAction;
 import exerc1.behaviours.ExploreBehaviour;
 import jade.core.behaviours.FSMBehaviour;
@@ -32,10 +32,10 @@ public class SensingAgent extends GridWorldAgent
 		
 		fsm.registerFirstState(new ExploreBehaviour(this), "explore");
 		fsm.registerState(new SendNewPositionsAction(this), "informDisposers");
-		fsm.registerState(new ProcessBombPickedUpAction(this), "receiveBombPickedUp");
+		fsm.registerState(new ProcessSenserBombPickedUpAction(this), "receiveBombPickedUp");
 		
 		fsm.registerTransition("explore", "receiveBombPickedUp", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
-		fsm.registerTransition("receiveBombPickedUp", "informDisposers", ProcessBombPickedUpAction.RECEIVE_DONE);
+		fsm.registerTransition("receiveBombPickedUp", "informDisposers", ProcessSenserBombPickedUpAction.RECEIVE_DONE);
 		fsm.registerTransition("informDisposers", "explore", SendNewPositionsAction.BROADCAST_DONE);
 		
 		addBehaviour(fsm);

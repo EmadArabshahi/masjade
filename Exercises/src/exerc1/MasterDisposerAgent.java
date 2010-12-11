@@ -19,6 +19,7 @@ import exerc1.behaviours.PickUpBombAction;
 import exerc1.behaviours.ProcessBombPositionAction;
 import exerc1.behaviours.ProcessDisposerCurrentPositionAction;
 import exerc1.behaviours.ProcessDisposerActivitiesBehaviour;
+import exerc1.behaviours.ProcessMasterBombPickedUpAction;
 import exerc1.behaviours.ProcessMasterDisposerMessagesAction;
 import exerc1.behaviours.ProcessMasterTargetBombRequestAction;
 import exerc1.behaviours.ProcessTrapPositionAction;
@@ -60,6 +61,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		fsm.registerState(new DropBombAction(this), "dropBomb");
 		fsm.registerState(new PickTargetBombAction(this), "pickTargetBomb");
 		fsm.registerState(new PickTargetTrapAction(this), "pickTargetTrap");
+		fsm.registerState(new ProcessMasterBombPickedUpAction(this), "processBombPickedUp");
 		fsm.registerState(new WalkAwayFromTrapBehaviour(this), "walkAwayFromTrap");
 		// Processing activities means that the disposer will do it's own disposing work (walk bomb, 
 		// pick it up, walk to trap, drop bomb) while it keeps listening for incoming messages.
@@ -82,6 +84,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		fsm.registerTransition("processMessage", "processTrapPosition", ProcessMasterDisposerMessagesAction.RECEIVED_TRAP_POSITION);
 		fsm.registerTransition("processMessage", "processDisposerCurrentPosition", ProcessMasterDisposerMessagesAction.RECEIVED_DISPOSER_CURRENT_POSITION);
 		fsm.registerTransition("processMessage", "processTargetBombRequest", ProcessMasterDisposerMessagesAction.RECEIVED_TARGET_BOMB_REQUEST);
+		fsm.registerTransition("processMessage", "processBombPickedUp", ProcessMasterDisposerMessagesAction.RECEIVED_BOMB_PICKED_UP);
 		
 		// Once the new bomb position is stored, the agent will return to its disposing activities.
 		fsm.registerTransition("processBombPosition", "processActivities", ProcessBombPositionAction.PROCESSED_BOMB_POSITION);
@@ -91,6 +94,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		fsm.registerTransition("processDisposerCurrentPosition", "processActivities", ProcessDisposerCurrentPositionAction.PROCESSED_DISPOSER_CURRENT_POSITION);
 		// The agent receives a message telling that the sender requires a new target bomb. It responds with a new target.
 		fsm.registerTransition("processTargetBombRequest", "processActivities", ProcessMasterTargetBombRequestAction.PROCESSED_TARGET_BOMB_REQUEST);
+		fsm.registerTransition("processBombPickedUp", "processActivities", ProcessMasterBombPickedUpAction.PROCESSED_BOMB_PICKED_UP);
 		
 		// If the agent has successfully picked up a bomb, it returns to its activities.
 		fsm.registerTransition("pickupBomb", "processActivities", PickUpBombAction.PICKED_UP_BOMB);
@@ -132,13 +136,19 @@ public class MasterDisposerAgent extends GridWorldAgent
 		sdReceiveTrapPosition.setName("receive-trap-position");
 		
 		// describe receive-target-bomb-request service
+		ServiceDescription sdReceiveTargetBombRequest = new ServiceDescription();
+		sdReceiveTargetBombRequest.setType("receive-target-bomb-request");
+		sdReceiveTargetBombRequest.setName("receive-target-bomb-request");
+		
+		// describe receive-target-bomb-request service
 		ServiceDescription sdReceiveBombPickedUp = new ServiceDescription();
-		sdReceiveBombPickedUp.setType("receive-target-bomb-request");
-		sdReceiveBombPickedUp.setName("receive-target-bomb-request");
+		sdReceiveBombPickedUp.setType("receive-bomb-picked-up");
+		sdReceiveBombPickedUp.setName("receive-bomb-picked-up");
 		
 		// register services with the agent
 		dfd.addServices(sdReceiveBombPosition);
 		dfd.addServices(sdReceiveTrapPosition);
+		dfd.addServices(sdReceiveTargetBombRequest);
 		dfd.addServices(sdReceiveBombPickedUp);
 		
 		// register the agent with the DF
