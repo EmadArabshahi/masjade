@@ -11,11 +11,7 @@ import jade.lang.acl.ACLMessage;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import exerc1.behaviours.BroadcastClearedBombLocationsAction;
-import exerc1.behaviours.BroadcastTargetBombAction;
 import exerc1.behaviours.DropBombAction;
 import exerc1.behaviours.PickTargetBombAction;
 import exerc1.behaviours.PickTargetTrapAction;
@@ -26,11 +22,6 @@ import exerc1.behaviours.ProcessDisposerActivitiesBehaviour;
 import exerc1.behaviours.ProcessMasterDisposerMessagesAction;
 import exerc1.behaviours.ProcessMasterTargetBombRequestAction;
 import exerc1.behaviours.ProcessTrapPositionAction;
-import exerc1.behaviours.ReceivePositionBehaviour;
-import exerc1.behaviours.ReceiveTargetBombAction;
-import exerc1.behaviours.SendTargetBombPositionAction;
-import exerc1.behaviours.WalkToClosestBombBehaviour;
-import exerc1.behaviours.WalkToClosestTrapBehaviour;
 
 public class MasterDisposerAgent extends GridWorldAgent
 {

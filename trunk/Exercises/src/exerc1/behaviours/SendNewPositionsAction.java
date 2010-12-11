@@ -11,13 +11,13 @@ import jade.lang.acl.ACLMessage;
 import exerc1.GridWorldAgent;
 import exerc1.SensingAgent;
 
-public class BroadcastNewPositionsAction extends OneShotBehaviour
+public class SendNewPositionsAction extends OneShotBehaviour
 {
 	public static int BROADCAST_DONE = 1;
 	
 	private SensingAgent _owner;
 	
-	public BroadcastNewPositionsAction(SensingAgent owner)
+	public SendNewPositionsAction(SensingAgent owner)
 	{
 		_owner = owner;
 	}
