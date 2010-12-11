@@ -63,6 +63,12 @@ public class Environment {
 		return LogicalEnv.getEnv().senseStones(sAgent); 
 	}
 	
+	public static Set<Point> senseAgents(String sAgent)
+	{
+		System.out.println(sAgent + " tries to sense Agents");
+		return LogicalEnv.getEnv().senseAgents(sAgent); 
+	}
+	
 	public static Set<Point> senseTraps(String sAgent)
 	{
 		System.out.println(sAgent+" tries to sense Traps");
