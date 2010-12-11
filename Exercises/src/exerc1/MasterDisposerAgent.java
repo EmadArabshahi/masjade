@@ -22,6 +22,7 @@ import exerc1.behaviours.ProcessDisposerActivitiesBehaviour;
 import exerc1.behaviours.ProcessMasterDisposerMessagesAction;
 import exerc1.behaviours.ProcessMasterTargetBombRequestAction;
 import exerc1.behaviours.ProcessTrapPositionAction;
+import exerc1.behaviours.WalkAwayFromTrapBehaviour;
 
 /**
  * This agent is responsible for disposing bombs as well as informing slave disposers
@@ -59,7 +60,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		fsm.registerState(new DropBombAction(this), "dropBomb");
 		fsm.registerState(new PickTargetBombAction(this), "pickTargetBomb");
 		fsm.registerState(new PickTargetTrapAction(this), "pickTargetTrap");
-		
+		fsm.registerState(new WalkAwayFromTrapBehaviour(this), "walkAwayFromTrap");
 		// Processing activities means that the disposer will do it's own disposing work (walk bomb, 
 		// pick it up, walk to trap, drop bomb) while it keeps listening for incoming messages.
 		
@@ -96,10 +97,14 @@ public class MasterDisposerAgent extends GridWorldAgent
 		// If the agent is unable to pick up a bomb here, it will choose a new target.
 		fsm.registerTransition("pickupBomb", "pickTargetBomb", PickUpBombAction.FOUND_NO_BOMB);
 		
-		// If the agent has successfully dropped a bomb into a trap, it starts over.
-		fsm.registerTransition("dropBomb", "processActivities", DropBombAction.DROPPED_BOMB);
+		
+		//If the agent has successfully dropped a bomb into a trap, it walks away from the trap.
+		fsm.registerTransition("dropBomb", "walkAwayFromTrap", DropBombAction.DROPPED_BOMB);
 		// If the agent tries to drop the bomb, but there's no trap it picks a new target trap.
 		fsm.registerTransition("dropBomb", "pickTargetTrap", DropBombAction.FOUND_NO_TRAP);
+		
+		//If the agent walked away from trap, start over.
+		fsm.registerTransition("walkAwayFromTrap", "processActivities", WalkAwayFromTrapBehaviour.NOT_ON_TRAP);
 		
 		// The agent chooses a new target bomb and resumes its activities. It could be so that there's no target bomb.
 		// Which means the agent will just continue to listen for incoming messages.

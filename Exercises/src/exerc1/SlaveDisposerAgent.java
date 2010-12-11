@@ -15,6 +15,7 @@ import exerc1.behaviours.ProcessTargetBombPositionAction;
 import exerc1.behaviours.ProcessSlaveTargetBombRequestBehaviour;
 import exerc1.behaviours.ProcessTrapPositionAction;
 import exerc1.behaviours.SendTargetBombPositionAction;
+import exerc1.behaviours.WalkAwayFromTrapBehaviour;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -39,6 +40,7 @@ public class SlaveDisposerAgent extends GridWorldAgent {
 		fsm.registerState(new ProcessTargetBombPositionAction(this), "processTargetBombPosition");
 		fsm.registerState(new PickTargetTrapAction(this), "pickTargetTrap");
 		fsm.registerState(new ProcessSlaveTargetBombRequestBehaviour(this), "processTargetBombRequest");
+		fsm.registerState(new WalkAwayFromTrapBehaviour(this), "walkAwayFromTrap");
 		
 		fsm.registerTransition("processActivities", "processTargetBombRequest", ProcessDisposerActivitiesBehaviour.HAS_NO_TARGET_BOMB);
 		fsm.registerTransition("processActivities", "pickTargetTrap", ProcessDisposerActivitiesBehaviour.HAS_NO_TARGET_TRAP);
@@ -56,10 +58,22 @@ public class SlaveDisposerAgent extends GridWorldAgent {
 		fsm.registerTransition("pickTargetTrap", "processActivities", PickTargetTrapAction.PICKED_TARGET_TRAP);
 		
 		fsm.registerTransition("pickupBomb", "processActivities", PickUpBombAction.PICKED_UP_BOMB);
+		
+		
+		
 		fsm.registerTransition("pickupBomb", "processActivities", PickUpBombAction.FOUND_NO_BOMB);
 		
-		fsm.registerTransition("dropBomb", "processActivities", DropBombAction.DROPPED_BOMB);
+		
+		
+		//If the agent has successfully dropped a bomb into a trap, it walks away from the trap.
+		fsm.registerTransition("dropBomb", "walkAwayFromTrap", DropBombAction.DROPPED_BOMB);
+		// If the agent tries to drop the bomb, but there's no trap it picks a new target trap.
 		fsm.registerTransition("dropBomb", "processActivities", DropBombAction.FOUND_NO_TRAP);
+		
+		//If the agent walked away from trap, start over.
+		fsm.registerTransition("walkAwayFromTrap", "processActivities", WalkAwayFromTrapBehaviour.NOT_ON_TRAP);
+		
+		
 		
 		addBehaviour(fsm);
 	}
