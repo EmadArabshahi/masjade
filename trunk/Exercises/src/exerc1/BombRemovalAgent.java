@@ -27,12 +27,12 @@ public class BombRemovalAgent extends GridWorldAgent
 		
 		addBehaviour(fsm);
 		
-		SequentialBehaviour seqBehaviour = new SequentialBehaviour(this);
-		seqBehaviour.addSubBehaviour(new ExploreBehaviour(this));
-		seqBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
-		seqBehaviour.addSubBehaviour(new PickUpBombAction(this));
-		seqBehaviour.addSubBehaviour(new WalkToClosestTrapBehaviour(this));
-		seqBehaviour.addSubBehaviour(new DropBombAction(this));
+		//SequentialBehaviour seqBehaviour = new SequentialBehaviour(this);
+		//seqBehaviour.addSubBehaviour(new ExploreBehaviour(this));
+		//seqBehaviour.addSubBehaviour(new WalkToClosestBombBehaviour(this));
+		//seqBehaviour.addSubBehaviour(new PickUpBombAction(this));
+		//seqBehaviour.addSubBehaviour(new WalkToClosestTrapBehaviour(this));
+		//seqBehaviour.addSubBehaviour(new DropBombAction(this));
 		//seqBehaviour.addSubBehaviour(new ResetBehaviour(seqBehaviour));
 	}
 }
