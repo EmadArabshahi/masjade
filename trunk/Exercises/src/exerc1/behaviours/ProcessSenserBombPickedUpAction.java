@@ -29,6 +29,7 @@ public class ProcessSenserBombPickedUpAction extends OneShotBehaviour{
 			location.y = Integer.parseInt(splitMsg[1]);
 			
 			_owner.broadcastedBombPositions.remove(location);
+			_owner.removeKnownBomb(location);
 			
 			System.out.println("pickeduprecieved!!!!!!!!!!!!!!!!");
 		}
