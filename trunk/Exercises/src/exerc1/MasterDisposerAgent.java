@@ -126,7 +126,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		sdReceiveTrapPosition.setType("receive-trap-position");
 		sdReceiveTrapPosition.setName("receive-trap-position");
 		
-		// describe receive-bomb-picked-up service
+		// describe receive-target-bomb-request service
 		ServiceDescription sdReceiveBombPickedUp = new ServiceDescription();
 		sdReceiveBombPickedUp.setType("receive-target-bomb-request");
 		sdReceiveBombPickedUp.setName("receive-target-bomb-request");

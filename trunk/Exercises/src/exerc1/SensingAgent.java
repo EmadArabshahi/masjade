@@ -3,6 +3,7 @@ package exerc1;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import exerc1.behaviours.ProcessBombPickedUpAction;
 import exerc1.behaviours.SendNewPositionsAction;
 import exerc1.behaviours.ExploreBehaviour;
 import jade.core.behaviours.FSMBehaviour;
@@ -31,8 +32,10 @@ public class SensingAgent extends GridWorldAgent
 		
 		fsm.registerFirstState(new ExploreBehaviour(this), "explore");
 		fsm.registerState(new SendNewPositionsAction(this), "informDisposers");
+		fsm.registerState(new ProcessBombPickedUpAction(this), "receiveBombPickedUp");
 		
-		fsm.registerTransition("explore", "informDisposers", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("explore", "receiveBombPickedUp", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("receiveBombPickedUp", "informDisposers", ProcessBombPickedUpAction.RECEIVE_DONE);
 		fsm.registerTransition("informDisposers", "explore", SendNewPositionsAction.BROADCAST_DONE);
 		
 		addBehaviour(fsm);
@@ -47,8 +50,8 @@ public class SensingAgent extends GridWorldAgent
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("bomb-managing");
-		sd.setName("bomb-managing");
+		sd.setType("receive-bomb-picked-up");
+		sd.setName("receive-bomb-picked-up");
 		dfd.addServices(sd);
 		try
 		{
