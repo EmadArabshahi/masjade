@@ -88,8 +88,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		fsm.registerTransition("processTrapPosition", "processActivities", ProcessTrapPositionAction.PROCESSED_TRAP_POSITION);
 		// Once the new position of the sending disposer is stored, the agent will return to its disposing activities.		
 		fsm.registerTransition("processDisposerCurrentPosition", "processActivities", ProcessDisposerCurrentPositionAction.PROCESSED_DISPOSER_CURRENT_POSITION);
-		// The agent receives a message telling that the sender has picked up his target. The agent will now
-		// distribute a new target to the sender.
+		// The agent receives a message telling that the sender requires a new target bomb. It responds with a new target.
 		fsm.registerTransition("processTargetBombRequest", "processActivities", ProcessMasterTargetBombRequestAction.PROCESSED_TARGET_BOMB_REQUEST);
 		
 		// If the agent has successfully picked up a bomb, it returns to its activities.
@@ -97,7 +96,7 @@ public class MasterDisposerAgent extends GridWorldAgent
 		// If the agent is unable to pick up a bomb here, it will choose a new target.
 		fsm.registerTransition("pickupBomb", "pickTargetBomb", PickUpBombAction.FOUND_NO_BOMB);
 		
-		// If the agent has successfully dropped a bomb into a trap.
+		// If the agent has successfully dropped a bomb into a trap, it starts over.
 		fsm.registerTransition("dropBomb", "processActivities", DropBombAction.DROPPED_BOMB);
 		// If the agent tries to drop the bomb, but there's no trap it picks a new target trap.
 		fsm.registerTransition("dropBomb", "pickTargetTrap", DropBombAction.FOUND_NO_TRAP);
