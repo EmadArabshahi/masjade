@@ -3,14 +3,8 @@ package exerc1;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import exerc1.behaviours.BroadcastNewPositionsAction;
-import exerc1.behaviours.DropBombAction;
+import exerc1.behaviours.SendNewPositionsAction;
 import exerc1.behaviours.ExploreBehaviour;
-import exerc1.behaviours.PickupBombAction_Old;
-import exerc1.behaviours.ReceiveRemovedBombsAction;
-import exerc1.behaviours.WalkToClosestBombBehaviour;
-import exerc1.behaviours.WalkToClosestTrapBehaviour;
-import jade.core.Agent;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -36,12 +30,10 @@ public class SensingAgent extends GridWorldAgent
 		FSMBehaviour fsm = new FSMBehaviour();
 		
 		fsm.registerFirstState(new ExploreBehaviour(this), "explore");
-		fsm.registerState(new BroadcastNewPositionsAction(this), "informDisposers");
-		fsm.registerState(new ReceiveRemovedBombsAction(this), "receiveClearedBombs");
+		fsm.registerState(new SendNewPositionsAction(this), "informDisposers");
 		
-		fsm.registerTransition("explore", "receiveClearedBombs", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
-		fsm.registerTransition("receiveClearedBombs", "informDisposers", ReceiveRemovedBombsAction.RECEIVE_DONE);
-		fsm.registerTransition("informDisposers", "explore", BroadcastNewPositionsAction.BROADCAST_DONE);
+		fsm.registerTransition("explore", "informDisposers", ExploreBehaviour.BOMB_AND_TRAP_FOUND);
+		fsm.registerTransition("informDisposers", "explore", SendNewPositionsAction.BROADCAST_DONE);
 		
 		addBehaviour(fsm);
 	}

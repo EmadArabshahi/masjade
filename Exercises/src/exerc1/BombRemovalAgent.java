@@ -1,10 +1,6 @@
 package exerc1;
 
 import jade.core.behaviours.*;
-import java.awt.Point;
-
-import javax.print.attribute.standard.Finishings;
-
 import exerc1.behaviours.*;
 
 public class BombRemovalAgent extends GridWorldAgent

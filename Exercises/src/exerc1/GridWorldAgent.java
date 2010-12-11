@@ -3,10 +3,8 @@ import java.awt.Point;
 
 import java.util.*;
 
-import exerc1.behaviours.*;
 import gridworld.Environment;
 import jade.core.Agent;
-import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 
 public abstract class GridWorldAgent extends Agent 
