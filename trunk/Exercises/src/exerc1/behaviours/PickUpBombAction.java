@@ -40,7 +40,7 @@ public class PickUpBombAction extends OneShotBehaviour {
 				ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 				
 				msg.setContent(String.format("%s,%s", _owner.targetBombLocation.x, _owner.targetBombLocation.y));
-				msg.setOntology("receive-bomb-picked-up");
+				msg.setOntology("bomb-picked-up");
 				
 				DFAgentDescription[] result = DFService.search(_owner, dfd);
 				for (int i = 0; i < result.length; i++)

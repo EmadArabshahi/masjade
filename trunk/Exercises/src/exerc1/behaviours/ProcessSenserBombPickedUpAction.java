@@ -8,19 +8,19 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class ProcessBombPickedUpAction extends OneShotBehaviour{
+public class ProcessSenserBombPickedUpAction extends OneShotBehaviour{
 
 	public static final int RECEIVE_DONE = 1;
 	
 	private SensingAgent _owner;
 
-	public ProcessBombPickedUpAction(SensingAgent owner)
+	public ProcessSenserBombPickedUpAction(SensingAgent owner)
 	{
 		_owner = owner;
 	}
 	@Override
 	public void action() {
-		ACLMessage msg = _owner.receive(MessageTemplate.MatchOntology("receive-bomb-picked-up"));
+		ACLMessage msg = _owner.receive(MessageTemplate.MatchOntology("bomb-picked-up"));
 		if (msg != null)
 		{
 			String[] splitMsg = msg.getContent().split(",");
