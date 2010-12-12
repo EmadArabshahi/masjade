@@ -3,7 +3,6 @@ package exerc1.behaviours;
 import java.awt.Point;
 import java.util.Iterator;
 
-import exerc1.GridWorldAgent;
 import exerc1.MasterDisposerAgent;
 import gridworld.Environment;
 import jade.core.behaviours.Behaviour;
@@ -13,6 +12,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import logistics.GridWorldAgent;
 
 public class PickUpBombAction extends OneShotBehaviour {
 
@@ -54,8 +54,6 @@ public class PickUpBombAction extends OneShotBehaviour {
 				fe.printStackTrace();
 			}
 			_owner.bombPickedUp(Environment.takeBomb(_owner.getLocalName()));
-			_owner.hasBomb = true;
-			_owner.targetBombLocation = null;
 			
 			_endState = PICKED_UP_BOMB;
 		}

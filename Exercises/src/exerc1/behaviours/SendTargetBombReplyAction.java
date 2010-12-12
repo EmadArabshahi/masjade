@@ -2,13 +2,13 @@ package exerc1.behaviours;
 
 import java.awt.Point;
 
-import exerc1.GridWorldAgent;
 import exerc1.MasterDisposerAgent;
 
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import logistics.GridWorldAgent;
 
 public class SendTargetBombReplyAction extends OneShotBehaviour {
 	private MasterDisposerAgent _owner;

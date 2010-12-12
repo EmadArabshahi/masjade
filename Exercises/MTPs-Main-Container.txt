@@ -1,1 +1,1 @@
-http://Frank-PC.lan:7778/acc
+http://192.168.2.110:7778/acc

@@ -12,7 +12,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import exerc1.behaviours.DropBombAction;
+import logistics.GridWorldAgent;
+import logistics.behaviours.DropBombAction;
+import logistics.behaviours.WalkAwayFromTrapBehaviour;
+
 import exerc1.behaviours.PickTargetBombAction;
 import exerc1.behaviours.PickTargetTrapAction;
 import exerc1.behaviours.PickUpBombAction;
@@ -23,7 +26,6 @@ import exerc1.behaviours.ProcessMasterBombPickedUpAction;
 import exerc1.behaviours.ProcessMasterDisposerMessagesAction;
 import exerc1.behaviours.ProcessMasterTargetBombRequestAction;
 import exerc1.behaviours.ProcessTrapPositionAction;
-import exerc1.behaviours.WalkAwayFromTrapBehaviour;
 
 /**
  * This agent is responsible for disposing bombs as well as informing slave disposers

@@ -1,6 +1,5 @@
 package exerc1;
 
-import exerc1.behaviours.DropBombAction;
 import exerc1.behaviours.PickTargetBombAction;
 import exerc1.behaviours.PickTargetTrapAction;
 import exerc1.behaviours.PickUpBombAction;
@@ -15,12 +14,14 @@ import exerc1.behaviours.ProcessTargetBombPositionAction;
 import exerc1.behaviours.ProcessSlaveTargetBombRequestBehaviour;
 import exerc1.behaviours.ProcessTrapPositionAction;
 import exerc1.behaviours.SendTargetBombPositionAction;
-import exerc1.behaviours.WalkAwayFromTrapBehaviour;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import logistics.GridWorldAgent;
+import logistics.behaviours.DropBombAction;
+import logistics.behaviours.WalkAwayFromTrapBehaviour;
 
 public class SlaveDisposerAgent extends GridWorldAgent {
 	@Override

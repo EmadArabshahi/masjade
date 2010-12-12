@@ -2,11 +2,11 @@ package exerc1.behaviours;
 
 import java.awt.Point;
 
-import exerc1.GridWorldAgent;
 import exerc1.MasterDisposerAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import logistics.GridWorldAgent;
 
 public class ProcessTrapPositionAction extends OneShotBehaviour {
 

@@ -2,11 +2,11 @@ package exerc1.behaviours;
 
 import java.awt.Point;
 
-import exerc1.GridWorldAgent;
 
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import logistics.GridWorldAgent;
 
 public class ProcessMasterBombPickedUpAction extends OneShotBehaviour {
 	public static final int PROCESSED_BOMB_PICKED_UP = 1;

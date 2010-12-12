@@ -3,8 +3,8 @@ package exerc1.behaviours;
 import java.awt.Point;
 import java.util.Set;
 
-import exerc1.GridWorldAgent;
 import jade.core.behaviours.OneShotBehaviour;
+import logistics.GridWorldAgent;
 
 public class PickTargetBombAction extends OneShotBehaviour {
 	public static final int PICKED_TARGET_BOMB = 1;

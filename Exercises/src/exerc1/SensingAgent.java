@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import exerc1.behaviours.ProcessSenserBombPickedUpAction;
 import exerc1.behaviours.SendNewPositionsAction;
-import exerc1.behaviours.ExploreBehaviour;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import logistics.GridWorldAgent;
+import logistics.behaviours.ExploreBehaviour;
 
 public class SensingAgent extends GridWorldAgent 
 {
