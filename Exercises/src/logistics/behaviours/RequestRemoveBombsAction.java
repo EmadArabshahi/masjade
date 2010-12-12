@@ -1,6 +1,7 @@
 package logistics.behaviours;
 
 import java.awt.Point;
+import java.util.HashSet;
 import java.util.Set;
 
 import gridworld.Environment;
@@ -38,10 +39,11 @@ public class RequestRemoveBombsAction extends OneShotBehaviour
 		{
 			
 			Set<Point> bombs = _owner.getBombsToBroadcast();
-			
+			Set<Point> bombsToRemove = new HashSet<Point>();
 			for (Point location : bombs)
 			{
 				DFAgentDescription[] carriers = DFService.search(_owner, dfdBomb);
+			
 				
 				if(carriers.length == 0)
 				{
@@ -57,10 +59,12 @@ public class RequestRemoveBombsAction extends OneShotBehaviour
 					bombsRequest.setOntology("bomb-position");
 					bombsRequest.setContent(String.format("%s,%s", location.x, location.y));
 					_owner.send(bombsRequest);
-					bombs.remove(location);
+					bombsToRemove.add(location);
 					System.out.println("bombs to broadcast size before." + _owner.getBombsToBroadcast().size());
 				}
 			}
+			
+			bombs.removeAll(bombsToRemove);
 		}
 	    catch(Exception e)
 	    {
