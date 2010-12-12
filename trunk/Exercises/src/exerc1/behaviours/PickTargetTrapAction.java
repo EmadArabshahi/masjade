@@ -3,10 +3,10 @@ package exerc1.behaviours;
 import java.awt.Point;
 import java.util.Set;
 
-import exerc1.GridWorldAgent;
 import exerc1.MasterDisposerAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import logistics.GridWorldAgent;
 
 public class PickTargetTrapAction extends OneShotBehaviour {
 

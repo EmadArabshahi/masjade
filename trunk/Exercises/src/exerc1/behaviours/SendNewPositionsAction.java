@@ -8,7 +8,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import exerc1.GridWorldAgent;
+import logistics.GridWorldAgent;
 import exerc1.SensingAgent;
 
 public class SendNewPositionsAction extends OneShotBehaviour
