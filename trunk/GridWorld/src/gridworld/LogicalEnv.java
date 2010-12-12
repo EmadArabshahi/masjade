@@ -515,6 +515,7 @@ public class LogicalEnv implements ObsVectListener
     		while(i.hasNext())
     		{
     			Agent agentB = i.next();
+    			if(agentB.getPosition() != null)
     			if( position.distance(agentB.getPosition()) <= _senserange && agentB.getName() != agent )
     				visible.add(agentB.getPosition());
     		}
