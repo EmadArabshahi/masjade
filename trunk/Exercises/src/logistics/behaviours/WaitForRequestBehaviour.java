@@ -27,7 +27,7 @@ public class WaitForRequestBehaviour extends SimpleBehaviour
 		_owner.StartListeningForBombRequest();
 		
 		
-		ACLMessage msg = myAgent.receive();
+		ACLMessage msg = _owner.receive();
 		if (msg != null) 
 		{
 			if(msg.getPerformative() == ACLMessage.REQUEST)

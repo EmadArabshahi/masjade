@@ -150,10 +150,10 @@ public class BombCarrierAgent extends GridWorldAgent
 	    dfd.addServices(sd); 
 	    
 	    try
-	    {
+	   {
 	    	DFService.modify(this, dfd);
 	    }
-	    catch(Exception e)
+	    catch(FIPAException e)
 	    {
 	    	e.printStackTrace();
 	    }
