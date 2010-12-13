@@ -5,6 +5,7 @@ import logistics.BombCarrierAgent;
 import logistics.GridWorldAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.MessageTemplate.MatchExpression;
 
 public class ProcessMessageBehaviour extends SimpleBehaviour
 {
@@ -17,13 +18,21 @@ public class ProcessMessageBehaviour extends SimpleBehaviour
 	private boolean _blocking;
 	private int _messagePerformative;
 	private int _state = NO_MESSAGE_RECEIVED;
-
+	private MatchExpression _matchExpression;
 	
 	public ProcessMessageBehaviour(GridWorldAgent carrier, boolean blocking, int ACLMessagePerformative)
 	{
 		this._owner = carrier;
 		this._blocking = blocking;
 		this._messagePerformative = ACLMessagePerformative;
+		this._matchExpression = new MatchExpression() {
+			
+			@Override
+			public boolean match(ACLMessage arg0) {
+				return arg0.getPerformative() == _messagePerformative;
+			}
+		};
+		
 	}
 	
 	public void action()
@@ -32,21 +41,18 @@ public class ProcessMessageBehaviour extends SimpleBehaviour
 		
 		_done = false;
 		
-		ACLMessage msg = _owner.receive();
+		MessageTemplate mt = new MessageTemplate(_matchExpression);
+		ACLMessage msg = _owner.receive(mt);
 		if (msg != null) 
 		{
 			_state = MESSAGE_RECEIVED;
 			_owner.messageReceived(msg);
 			
-			if(msg.getPerformative() == this._messagePerformative)
-			{
 				if(_blocking)
 				{
 					_done = true;
 					
 				}
-			}
-			
 		}
 		else
 		{
