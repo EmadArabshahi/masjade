@@ -4,6 +4,7 @@ import jade.core.behaviours.SimpleBehaviour;
 import logistics.BombCarrierAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.MessageTemplate.MatchExpression;
 
 public class WaitForRequestBehaviour extends SimpleBehaviour
 {
@@ -14,10 +15,18 @@ public class WaitForRequestBehaviour extends SimpleBehaviour
 	
 	private boolean _done = false;
 	
+	private MatchExpression _matchExpression;
+	
 	public WaitForRequestBehaviour(BombCarrierAgent carrier)
 	{
 		this._owner = carrier;
-		
+		this._matchExpression = new MatchExpression() {
+			
+			@Override
+			public boolean match(ACLMessage arg0) {
+				return arg0.getPerformative() == ACLMessage.REQUEST || arg0.getPerformative() == ACLMessage.INFORM;
+			}
+		};
 	}
 	
 	public void action()
@@ -26,8 +35,8 @@ public class WaitForRequestBehaviour extends SimpleBehaviour
 		System.out.println("In WAITING ACTION.");
 		_owner.StartListeningForBombRequest();
 		
-		
-		ACLMessage msg = _owner.receive();
+		MessageTemplate mt = new MessageTemplate(_matchExpression);
+		ACLMessage msg = _owner.receive(mt);
 		if (msg != null) 
 		{
 			if(msg.getPerformative() == ACLMessage.REQUEST)

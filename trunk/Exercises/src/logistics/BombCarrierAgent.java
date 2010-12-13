@@ -9,11 +9,6 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import logistics.behaviours.*;
-import logistics.behaviours.PickUpBombAction;
-import logistics.behaviours.WaitForRequestBehaviour;
-import logistics.behaviours.walking.ExploreBehaviour;
-import logistics.behaviours.walking.WalkAwayFromTrapBehaviour;
-import logistics.behaviours.walking.WalkToClosestBombBehaviour;
 import logistics.behaviours.walking.*;
 
 public class BombCarrierAgent extends GridWorldAgent
@@ -188,7 +183,7 @@ public class BombCarrierAgent extends GridWorldAgent
 	}
 	
 	public void requestReceived(ACLMessage message)
-	{
+	{	
 		String[] splitMsg = message.getContent().split(",");
 		Point location = new Point();
 		location.x = Integer.parseInt(splitMsg[0]);
