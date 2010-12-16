@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -91,12 +92,19 @@ public class SelectionList<T> extends JPanel
 		removeButton.addActionListener(new RemoveListener());
 		
 		 JPanel leftPanel = new JPanel(new BorderLayout());
-	    leftPanel.add(new JLabel(_selectionLabel), BorderLayout.NORTH);
+		 
+		 JLabel selectionLabel = new JLabel(_selectionLabel);
+		selectionLabel.setFont(new Font("sansserif", Font.BOLD, 18));
+		
+	    leftPanel.add(selectionLabel, BorderLayout.NORTH);
 	    leftPanel.add(new JScrollPane(_selectedList), BorderLayout.CENTER);
 	    leftPanel.add(removeButton, BorderLayout.SOUTH);
 
 	    JPanel rightPanel = new JPanel(new BorderLayout());
-	    rightPanel.add(new JLabel(_availableLabel), BorderLayout.NORTH);
+	    JLabel availableLabel = new JLabel(_availableLabel);
+	    availableLabel.setFont(new Font("sansserif", Font.BOLD, 18));
+	    
+	    rightPanel.add(availableLabel, BorderLayout.NORTH);
 	    rightPanel.add(new JScrollPane(_availableList), BorderLayout.CENTER);
 	    rightPanel.add(addButton, BorderLayout.SOUTH);
 		

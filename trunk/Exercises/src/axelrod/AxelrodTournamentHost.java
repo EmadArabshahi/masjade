@@ -19,11 +19,12 @@ public class AxelrodTournamentHost extends Agent
 
 	private Window _window;
 	
-	
+	private Rules _rules;
 	
 	protected void setup()
 	{
-		_window = new Window();
+		_rules = new Rules();
+		_window = new Window(this);
 		_window.setVisible(true);	
 		
 		addBehaviour(new RefreshAgentListBehaviour(this,1000));
@@ -42,5 +43,10 @@ public class AxelrodTournamentHost extends Agent
 	protected void takedown()
 	{
 		_window.dispose();
+	}
+
+	public Rules getRules()
+	{
+		return _rules;
 	}
 }
