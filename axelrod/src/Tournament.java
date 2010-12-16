@@ -4,26 +4,29 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.lang.acl.ACLMessage;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 
 public class Tournament extends Agent {
-	private ArrayList<AID> _games;
+	private ArrayList<Game> _games;
 	private ArrayList<AID> _contestants;
 	private int _currentGame;
 	
 	public Tournament()
 	{
-		_games = new ArrayList<AID>();
+		_games = new ArrayList<Game>();
 		_contestants = new ArrayList<AID>();
 	}
 	
 	public void setup()
 	{
 		addBehaviour(new SetupTournamentBehaviour(this, 1000));
+	}
+	
+	public ArrayList<Game> getGames()
+	{
+		return _games;
 	}
 	
 	public ArrayList<AID> getContestants()
@@ -55,19 +58,19 @@ public class Tournament extends Agent {
 		}
 	}
 	
-	private void createGames()
+	public void createGames()
 	{
-		// each contestant plays 5 other games against each other contestant.
-		for (AID contestant1 : _contestants)
+		// loop in such a way that each pair only comes up once,
+		// and no pairs are made with the same object.
+		for (int i = 0; i < _contestants.size(); i++)
 		{
-			for (AID contestant2 : _contestants)
+			for(int j = i + 1; j < _contestants.size(); j++)
 			{
-				if (contestant1 != contestant2)
+				// create for each pair the amount of games that is set (5).
+				for (int k = 0; k < Rules.getNumberOfGamesPerUniqueOpponents(); k++)
 				{
-					for (int i = 0; i < Rules.getNumberOfGamesPerUniqueOpponents(); i++)
-					{
-						
-					}
+					Game newGame = new Game(_contestants.get(i), _contestants.get(j));
+					_games.add(newGame);
 				}
 			}
 		}
@@ -75,7 +78,7 @@ public class Tournament extends Agent {
 	
 	public void play()
 	{
-		for (AID game : _games)
+		for (Game game : _games)
 		{
 			//game.play();
 			_currentGame++;

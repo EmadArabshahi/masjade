@@ -1,19 +1,25 @@
+import jade.core.AID;
+import jade.core.Agent;
+
 import java.util.ArrayList;
 
-public class Game {	
-	private Contestant _contestant1;
-	private Contestant _contestant2;
+public class Game extends Agent {	
+	private AID _contestant1;
+	private AID _contestant2;
 	
 	private int _currentRound;
 	
 	private ArrayList<Round> _rounds;
 	
-	public Game(Contestant contestant1, Contestant contestant2)
+	public Game(AID contestant1, AID contestant2)
 	{
 		_contestant1 = contestant1;
 		_contestant2 = contestant2;
 		_currentRound = 0;
-		
+	}
+	
+	public void setup()
+	{
 		createRounds();
 	}
 	
