@@ -20,11 +20,10 @@ public class Window extends JFrame
 	
 	private SelectionList<String> _availableAgentsList;
 	
-	public Window(List<String> agentList)
+	public Window()
 	{
 		super("Axelrod Tournament");
-		
-		_availableAgentsList = new SelectionList<String>(agentList, "selected agents:", "available agents:");
+		_availableAgentsList = new SelectionList<String>("selected agents:", "available agents:");
 		init();
 	}
 	
@@ -50,9 +49,9 @@ public class Window extends JFrame
 		getContentPane().add(bottomRow);
 	}
 	
-	public void updateAgentList()
+	public void updateAgentList(List<String> newAgents)
 	{
-		this._availableAgentsList.update();
+		this._availableAgentsList.setItems(newAgents);
 	}
 	
 }
