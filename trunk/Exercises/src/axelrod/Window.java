@@ -18,14 +18,13 @@ public class Window extends JFrame
 	 */
 	private static final long serialVersionUID = -2165175645115692616L;
 	
-	private AvailableAgentsList _availableAgentsList;
+	private SelectionList<String> _availableAgentsList;
 	
-	public Window(AvailableAgentsList availableAgentsList)
+	public Window(List<String> agentList)
 	{
 		super("Axelrod Tournament");
 		
-		_availableAgentsList = availableAgentsList;
-		
+		_availableAgentsList = new SelectionList<String>(agentList, "selected agents:", "available agents:");
 		init();
 	}
 	
@@ -51,6 +50,9 @@ public class Window extends JFrame
 		getContentPane().add(bottomRow);
 	}
 	
-	
+	public void updateAgentList()
+	{
+		this._availableAgentsList.update();
+	}
 	
 }
