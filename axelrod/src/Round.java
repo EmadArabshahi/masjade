@@ -1,6 +1,5 @@
 import jade.core.AID;
 
-
 public class Round {
 	private AID _contestant1;
 	private AID _contestant2;
@@ -8,19 +7,23 @@ public class Round {
 	private boolean _cooperationContestant1;
 	private boolean _cooperationContestant2;
 	private boolean _played;
+	private TournamentAgent _tournamentAgent;
+	private int _roundNumber;
+	private int _gameNumber;
 	
-	public Round(AID _contestant12, AID _contestant22)
+	public Round(TournamentAgent tournamentAgent, int roundNumber, int gameNumber, AID contestant1, AID contestant2)
 	{
-		_contestant1 = _contestant12;
-		_contestant2 = _contestant22;
+		_tournamentAgent = tournamentAgent;
+		_contestant1 = contestant1;
+		_contestant2 = contestant2;
+		_roundNumber = roundNumber;
+		_gameNumber = gameNumber;
 	}
 
-	public void play() {
-		/*
-		_cooperationContestant1 = _contestant1.sendCooperation();
-		_cooperationContestant2 = _contestant2.sendCooperation();
-		_played = true;
-		*/
+	public void play() 
+	{
+		_tournamentAgent.addBehaviour(new ProcessMoveRequestBehaviour(_contestant1, _roundNumber, _gameNumber));
+		_tournamentAgent.addBehaviour(new ProcessMoveRequestBehaviour(_contestant2, _roundNumber, _gameNumber));
 	}
 	
 	public int getUtilityContestant1() throws Exception
@@ -32,7 +35,7 @@ public class Round {
 		}
 		else
 		{
-			throw new Exception("Round has not yet been played");
+			throw new Exception("Round has not yet been played.");
 		}
 		return utility;
 	}
@@ -46,7 +49,7 @@ public class Round {
 		}
 		else
 		{
-			throw new Exception("Round has not yet been played");
+			throw new Exception("Round has not yet been played.");
 		}
 		return utility;
 	}

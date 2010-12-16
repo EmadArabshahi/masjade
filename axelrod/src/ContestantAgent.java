@@ -4,12 +4,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
-public class Contestant extends Agent{
-	public Contestant()
-	{
-		
-	}
-	
+public class ContestantAgent extends Agent{
 	public void setup()
 	{
 		registerServices();
