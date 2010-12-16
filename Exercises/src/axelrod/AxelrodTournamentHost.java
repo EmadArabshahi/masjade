@@ -1,6 +1,8 @@
 package axelrod;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import axelrod.behaviours.RefreshAgentListBehaviour;
@@ -17,12 +19,12 @@ public class AxelrodTournamentHost extends Agent
 
 	private Window _window;
 	
-	private AvailableAgentsList _availableAgentsList;
+	private List<String> _agentList;
 	
 	protected void setup()
 	{
-		_availableAgentsList = new AvailableAgentsList();
-		_window = new Window(_availableAgentsList);
+		_agentList = new ArrayList<String>();
+		_window = new Window(_agentList);
 		_window.setVisible(true);	
 		
 		addBehaviour(new RefreshAgentListBehaviour(this,1000));
@@ -30,11 +32,15 @@ public class AxelrodTournamentHost extends Agent
 	
 	public void setAvailableAgents(DFAgentDescription[] participants)
 	{
-		this._availableAgentsList.set
-		for(DFAgentDescription participant : participants)
+		List<String> newAgents = new ArrayList<String>();
+		for(int i=0; i<participants.length; i++)
 		{
-			this._availableAgentsList.addAgent(participant.getName().getLocalName());
+			newAgents.add(participants[i].getName().getName());
 		}
+		_agentList.clear();
+		_agentList.addAll(newAgents);
+		
+		_window.updateAgentList();
 	}
 	
 	protected void takedown()
