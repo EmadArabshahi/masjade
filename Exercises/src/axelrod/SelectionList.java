@@ -18,54 +18,92 @@ import javax.swing.JScrollPane;
 public class SelectionList<T> extends JPanel
 {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5256505106730436864L;
 	
 	private List<T> _totalList;
 		
 	private MutableList _selectedList;
 	private MutableList _availableList;
+
+	private String _selectionLabel;
+	private String _availableLabel;
 	
-	private JButton _addButton;
-	private JButton _removeButton;
+	/**
+	 * Constructs a new empty SelectionList with default labels.
+	 */
+	public SelectionList()
+	{
+		this(new ArrayList<T>());
+	}
 	
+	/**
+	 * Constructs a new SelectionList with given list as available elements and default labels.
+	 * @param list The list to have as starting available elements.
+	 */
+	public SelectionList(List<T> list)
+	{
+		this(list, "selected items:", "available items:");
+	}
+	
+	/**
+	 * Constructs a new empty selectionlist with giben labels.
+	 * @param selectionLabel The label to display above the selection list.
+	 * @param availableLabel The label to display above the available list.
+	 */
+	public SelectionList(String selectionLabel, String availableLabel)
+	{
+		this(new ArrayList<T>(),selectionLabel, availableLabel);
+	}
+	
+	/**
+	 * Constructs a new SelectionList with given list as available elements and given labels.
+	 * @param list The list to have as starting available elements.
+	 * @param selectionLabel The label to display above the selection list.
+	 * @param availableLabel The label to dosplay above the available list.
+	 */
 	public SelectionList(List<T> list, String selectionLabel, String availableLabel) 
 	{
 		super();
 		
 		_totalList = list;
-		System.out.println("In init SelectionList + size = " + list.size());
+		_selectionLabel = selectionLabel;
+		_availableLabel = availableLabel;
 		
-		
+		init();
+		update();
+	}
+	
+	/**
+	 * Initializes the selectionlist, does the layout.
+	 */
+	private void init()
+	{
 		//divide in two regions.
 		setLayout(new GridLayout(0, 2));
 		
 		_selectedList = new MutableList();
 		_availableList = new MutableList();
 		
-		_addButton = new JButton("<<");
-		_removeButton = new JButton(">>");
+		JButton addButton = new JButton("<<");
+		JButton removeButton = new JButton(">>");
 		
-		_addButton.addActionListener(new AddListener()); 
-		_removeButton.addActionListener(new RemoveListener());
+		addButton.addActionListener(new AddListener()); 
+		removeButton.addActionListener(new RemoveListener());
 		
 		 JPanel leftPanel = new JPanel(new BorderLayout());
-	    leftPanel.add(new JLabel(selectionLabel), BorderLayout.NORTH);
+	    leftPanel.add(new JLabel(_selectionLabel), BorderLayout.NORTH);
 	    leftPanel.add(new JScrollPane(_selectedList), BorderLayout.CENTER);
-	    leftPanel.add(_removeButton, BorderLayout.SOUTH);
+	    leftPanel.add(removeButton, BorderLayout.SOUTH);
 
 	    JPanel rightPanel = new JPanel(new BorderLayout());
-	    rightPanel.add(new JLabel(availableLabel), BorderLayout.NORTH);
+	    rightPanel.add(new JLabel(_availableLabel), BorderLayout.NORTH);
 	    rightPanel.add(new JScrollPane(_availableList), BorderLayout.CENTER);
-	    rightPanel.add(_addButton, BorderLayout.SOUTH);
+	    rightPanel.add(addButton, BorderLayout.SOUTH);
 		
 		
 		
 		this.add(leftPanel);
 		this.add(rightPanel);
-		
 	}
 	
 	/**
@@ -79,10 +117,12 @@ public class SelectionList<T> extends JPanel
 		update();
 	}
 	
-	
-	public void update()
+	/**
+	 * Updates the items in the two lists to match the _totalList.
+	 */
+	private void update()
 	{	
-		System.out.println("In update list is size: " + _totalList.size());
+		
 		//remove items from the selected list that are not in the total list.
 		for(int i=0; i<_selectedList.getContents().size(); i++)
 		{
@@ -211,10 +251,9 @@ public class SelectionList<T> extends JPanel
 
 
 
-class MutableList extends JList {
-    /**
-	 * 
-	 */
+class MutableList extends JList 
+{
+    
 	private static final long serialVersionUID = 1689653672302817819L;
 	
 	MutableList() 

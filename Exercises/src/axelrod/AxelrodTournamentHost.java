@@ -19,12 +19,11 @@ public class AxelrodTournamentHost extends Agent
 
 	private Window _window;
 	
-	private List<String> _agentList;
+	
 	
 	protected void setup()
 	{
-		_agentList = new ArrayList<String>();
-		_window = new Window(_agentList);
+		_window = new Window();
 		_window.setVisible(true);	
 		
 		addBehaviour(new RefreshAgentListBehaviour(this,1000));
@@ -37,10 +36,7 @@ public class AxelrodTournamentHost extends Agent
 		{
 			newAgents.add(participants[i].getName().getName());
 		}
-		_agentList.clear();
-		_agentList.addAll(newAgents);
-		
-		_window.updateAgentList();
+		_window.updateAgentList(newAgents);
 	}
 	
 	protected void takedown()
