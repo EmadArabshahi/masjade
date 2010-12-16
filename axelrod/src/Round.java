@@ -1,21 +1,21 @@
 
 public class Round {
-	private AxelrodAgent _contestant1;
-	private AxelrodAgent _contestant2;
+	private Contestant _contestant1;
+	private Contestant _contestant2;
 	
 	private boolean _cooperationContestant1;
 	private boolean _cooperationContestant2;
 	private boolean _played;
 	
-	public Round(AxelrodAgent contestant1, AxelrodAgent contestant2)
+	public Round(Contestant contestant1, Contestant contestant2)
 	{
 		_contestant1 = contestant1;
 		_contestant2 = contestant2;
 	}
 
 	public void play() {
-		_cooperationContestant1 = _contestant1.getCooperation();
-		_cooperationContestant2 = _contestant2.getCooperation();
+		_cooperationContestant1 = _contestant1.sendCooperation();
+		_cooperationContestant2 = _contestant2.sendCooperation();
 		_played = true;
 	}
 	
