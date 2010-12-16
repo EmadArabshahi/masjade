@@ -1,24 +1,66 @@
+import jade.core.AID;
+import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+
+import java.awt.Point;
 import java.util.ArrayList;
 
 
-public class Tournament {
-	private ArrayList<Game> _games;
-	private ArrayList<AxelrodAgent> _contestants;
+public class Tournament extends Agent {
+	private ArrayList<AID> _games;
+	private ArrayList<AID> _contestants;
 	private int _currentGame;
 	
-	public Tournament(ArrayList<AxelrodAgent> contestants)
+	public Tournament()
 	{
-		_contestants = contestants;
-		
-		createGames();
+		_games = new ArrayList<AID>();
+		_contestants = new ArrayList<AID>();
+	}
+	
+	public void setup()
+	{
+		addBehaviour(new SetupTournamentBehaviour(this, 1000));
+	}
+	
+	public ArrayList<AID> getContestants()
+	{
+		return _contestants;
+	}
+	
+	public void registerContestants()
+	{
+		_contestants = new ArrayList<AID>();
+		//Setup agent description.
+		DFAgentDescription dfdContestants = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription(); 
+	    sd.setType("contestant"); 
+	    sd.setName("contestant"); 
+	    dfdContestants.addServices(sd); 
+	    
+		try
+		{
+			DFAgentDescription[] resultContestants = DFService.search(this, dfdContestants);
+					
+			for (int i = 0; i < resultContestants.length; i++)
+			{
+				_contestants.add(resultContestants[i].getName());
+			}
+		}
+		catch (FIPAException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void createGames()
 	{
 		// each contestant plays 5 other games against each other contestant.
-		for (AxelrodAgent contestant1 : _contestants)
+		for (AID contestant1 : _contestants)
 		{
-			for (AxelrodAgent contestant2 : _contestants)
+			for (AID contestant2 : _contestants)
 			{
 				if (contestant1 != contestant2)
 				{
@@ -33,9 +75,9 @@ public class Tournament {
 	
 	public void play()
 	{
-		for (Game game : _games)
+		for (AID game : _games)
 		{
-			game.play();
+			//game.play();
 			_currentGame++;
 		}
 	}

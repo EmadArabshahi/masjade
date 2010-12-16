@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 
 public class Game {	
-	private AxelrodAgent _contestant1;
-	private AxelrodAgent _contestant2;
+	private Contestant _contestant1;
+	private Contestant _contestant2;
 	
 	private int _currentRound;
 	
 	private ArrayList<Round> _rounds;
 	
-	public Game(AxelrodAgent contestant1, AxelrodAgent contestant2)
+	public Game(Contestant contestant1, Contestant contestant2)
 	{
 		_contestant1 = contestant1;
 		_contestant2 = contestant2;
