@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import axelrod.behaviours.RefreshAgentListBehaviour;
+import axelrod.gui.Window;
 
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -19,11 +20,10 @@ public class AxelrodTournamentHost extends Agent
 
 	private Window _window;
 	
-	private Rules _rules;
+	//private Rules _rules;
 	
 	protected void setup()
 	{
-		_rules = new Rules();
 		_window = new Window(this);
 		_window.setVisible(true);	
 		
@@ -45,8 +45,4 @@ public class AxelrodTournamentHost extends Agent
 		_window.dispose();
 	}
 
-	public Rules getRules()
-	{
-		return _rules;
-	}
 }

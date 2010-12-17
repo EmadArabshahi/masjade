@@ -1,4 +1,4 @@
-package axelrod;
+package axelrod.gui;
 
 import java.util.ArrayList;
 import java.util.HashSet;

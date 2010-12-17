@@ -3,19 +3,33 @@ package axelrod;
 public class Rules 
 {
 	
+	private static final int NUMBER_OF_GAMES_PER_UNIQUE_OPPONENTS = 5;
+	private static final int NUMBER_OF_ROUNDS_PER_GAME = 200;
+	
 	public final static int COOPERATE = 0;
 	public final static int DEFECT = 1;
 	
 	
 	private int[][][] _utilities;
 	
-	public Rules()
-	{
-		//default
-	}
+	private Rules()
 	{
 		_utilities = defaultUtilities();
 	}
+	
+	/**
+	 * returns the number of games two same opponents play against each other
+	 * @return
+	 */
+	public static int getNumberOfGamesPerUniqueOpponents() {
+		return NUMBER_OF_GAMES_PER_UNIQUE_OPPONENTS;
+	}
+	
+	public static int getNumberOfRoundsPerGame()
+	{
+		return NUMBER_OF_ROUNDS_PER_GAME;
+	}
+	
 	
 	/**
 	 * Gets the defaultUtilities for axelrod.
@@ -46,7 +60,7 @@ public class Rules
 	 * @param player2Action The action of player 2, either COOPERATE of DEFECT.
 	 * @return The utility for player 1.
 	 */
-	public int getUtilityForPlayer1(int player1Action, int player2Action)
+	public static int getUtilityForPlayer1(int player1Action, int player2Action)
 	{
 		return _utilities[player1Action][player2Action][0];
 	}
@@ -57,7 +71,7 @@ public class Rules
 	 * @param player2Action The action of player 2, either COOPERATE of DEFECT.
 	 * @return The utility for player 2.
 	 */
-	public int getUtilityForPlayer2(int player1Action, int player2Action)
+	public static int getUtilityForPlayer2(int player1Action, int player2Action)
 	{
 		return _utilities[player1Action][player2Action][1];
 	}
