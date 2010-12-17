@@ -9,13 +9,9 @@ public class Rules
 	public final static int COOPERATE = 0;
 	public final static int DEFECT = 1;
 	
+	private static int[][][] _utilities = defaultUtilities();
 	
-	private int[][][] _utilities;
-	
-	private Rules()
-	{
-		_utilities = defaultUtilities();
-	}
+	private Rules() { }
 	
 	/**
 	 * returns the number of games two same opponents play against each other
@@ -35,7 +31,7 @@ public class Rules
 	 * Gets the defaultUtilities for axelrod.
 	 * @return
 	 */
-	private int[][][] defaultUtilities()
+	private static int[][][] defaultUtilities()
 	{
 		int[][][] utilities = new int[2][2][2];
 		//utility for player 1 (0) and 2(1) if both cooperate

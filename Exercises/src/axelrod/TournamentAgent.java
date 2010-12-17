@@ -18,6 +18,7 @@ public class TournamentAgent extends Agent {
 	private ArrayList<Game> _games;
 	private ArrayList<AID> _contestants;
 	private int _currentGame;
+	public SequentialBehaviour behaviours;
 	
 	public TournamentAgent()
 	{
@@ -27,9 +28,15 @@ public class TournamentAgent extends Agent {
 	
 	public void setup()
 	{
-		SequentialBehaviour behaviours = new SequentialBehaviour();
-		behaviours.addSubBehaviour(new SetupTournamentBehaviour(this, 1000));
-		behaviours.addSubBehaviour(new PlayTournamentBehaviour());
+		SequentialBehaviour setupBehaviours = new SequentialBehaviour();
+		setupBehaviours.addSubBehaviour(new SetupTournamentBehaviour(this, 1000));
+		setupBehaviours.addSubBehaviour(new PlayTournamentBehaviour());
+		addBehaviour(setupBehaviours);
+		behaviours = new SequentialBehaviour();
+	}
+	
+	public void startBehaviours()
+	{
 		addBehaviour(behaviours);
 	}
 	
@@ -95,5 +102,6 @@ public class TournamentAgent extends Agent {
 			game.play();
 			_currentGame++;
 		}
+		startBehaviours();
 	}
 }

@@ -7,8 +7,8 @@ public class Round {
 	private AID _contestant1;
 	private AID _contestant2;
 	
-	private boolean _cooperationContestant1;
-	private boolean _cooperationContestant2;
+	private int _actionContestant1;
+	private int _actionContestant2;
 	private boolean _played;
 	private TournamentAgent _tournamentAgent;
 	private int _roundNumber;
@@ -25,8 +25,9 @@ public class Round {
 
 	public void play() 
 	{
-		_tournamentAgent.addBehaviour(new ProcessMoveRequestBehaviour(_contestant1, _roundNumber, _gameNumber));
-		_tournamentAgent.addBehaviour(new ProcessMoveRequestBehaviour(_contestant2, _roundNumber, _gameNumber));
+		
+		_tournamentAgent.behaviours.addSubBehaviour(new ProcessMoveRequestBehaviour(_contestant1, _roundNumber, _gameNumber));
+		_tournamentAgent.behaviours.addSubBehaviour(new ProcessMoveRequestBehaviour(_contestant2, _roundNumber, _gameNumber));
 	}
 	
 	public int getUtilityContestant1() throws Exception
@@ -34,8 +35,7 @@ public class Round {
 		int utility = -1;
 		if (_played)
 		{
-			utility = Rules.getUtilityForPlayer1(player1Action, player2Action)
-			getUtility(_cooperationContestant1, _cooperationContestant2);
+			utility = Rules.getUtilityForPlayer1(_actionContestant1, _actionContestant2);
 		}
 		else
 		{
@@ -49,7 +49,7 @@ public class Round {
 		int utility = -1;
 		if (_played)
 		{
-			utility = Rules.getUtility(_cooperationContestant2, _cooperationContestant1);
+			utility = Rules.getUtilityForPlayer2(_actionContestant2, _actionContestant1);
 		}
 		else
 		{
