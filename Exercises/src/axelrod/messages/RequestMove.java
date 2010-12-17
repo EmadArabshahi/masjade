@@ -67,7 +67,7 @@ public class RequestMove
 	{
 		return _gameNr;
 	}
-	public int conservationNr()
+	public String conservationNr()
 	{
 		return _conservationNr;
 	}
