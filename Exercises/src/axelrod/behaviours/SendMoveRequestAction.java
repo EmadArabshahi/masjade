@@ -25,7 +25,6 @@ public class SendMoveRequestAction extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		Output.AgentMessage(myAgent, String.format("Sending move request (%s)...", _conversationId));
 		ACLMessage moveRequest = new ACLMessage(ACLMessage.REQUEST);
 			
 		moveRequest.setConversationId(_conversationId);
@@ -35,7 +34,7 @@ public class SendMoveRequestAction extends OneShotBehaviour {
 		
 		myAgent.send(moveRequest);
 
-		Output.AgentMessage(myAgent, String.format("Move request sent (%s)...", _conversationId));
+		Output.AgentMessage(myAgent, String.format("Move request sent (%s).", _conversationId));
 	}
 
 	public String getConversationId() {
