@@ -40,7 +40,6 @@ public class Game {
 	
 	public void play()
 	{
-		Output.AgentMessage(_tournamentAgent, String.format("Starting game (%s).", _gameNumber));
 		// play all the rounds.
 		for (Round round : _rounds)
 		{
