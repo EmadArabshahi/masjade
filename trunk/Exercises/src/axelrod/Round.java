@@ -1,5 +1,6 @@
 package axelrod;
-import axelrod.behaviours.ProcessMoveRequestBehaviour;
+import axelrod.behaviours.ReceiveMoveReplyAction;
+import axelrod.behaviours.SendMoveRequestAction;
 import axelrod.Rules;
 import jade.core.AID;
 
@@ -25,9 +26,10 @@ public class Round {
 
 	public void play() 
 	{
+		SendMoveRequestAction sendMoveRequest = new SendMoveRequestAction(_contestant1, _contestant2, _roundNumber, _gameNumber);
 		
-		_tournamentAgent.behaviours.addSubBehaviour(new ProcessMoveRequestBehaviour(_contestant1, _roundNumber, _gameNumber));
-		_tournamentAgent.behaviours.addSubBehaviour(new ProcessMoveRequestBehaviour(_contestant2, _roundNumber, _gameNumber));
+		_tournamentAgent.behaviours.addSubBehaviour(sendMoveRequest);
+		_tournamentAgent.behaviours.addSubBehaviour(new ReceiveMoveReplyAction(sendMoveRequest.getConversationId()));
 	}
 	
 	public int getUtilityContestant1() throws Exception
