@@ -1,4 +1,4 @@
-package axelrod;
+package axelrod.gui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -10,6 +10,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import axelrod.AxelrodTournamentHost;
+import axelrod.Rules;
 
 
 public class Window extends JFrame
@@ -57,7 +60,7 @@ public class Window extends JFrame
 	
 	private JPanel getRulesPanel()
 	{
-		Rules rules = _hostAgent.getRules();
+		
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.black));
