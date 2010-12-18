@@ -1,7 +1,10 @@
 package axelrod.gui;
 
+import jade.core.AID;
+
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.awt.*;
@@ -29,6 +32,8 @@ public class Window extends JFrame
 	private SelectionList<String> _availableAgentsList;
 	
 	private TournamentAgent _hostAgent;
+
+	private JButton _playButton;
 	
 	public Window(TournamentAgent hostAgent)
 	{
@@ -36,6 +41,14 @@ public class Window extends JFrame
 		_hostAgent = hostAgent;
 		_availableAgentsList = new SelectionList<String>("selected agents:", "available agents:");
 		init();
+	}
+	
+	private void startTournament()
+	{
+		_hostAgent.start();
+		_playButton.setText("Games in progress...");
+		_playButton.setEnabled(false);
+		_availableAgentsList.setEnabled(false);
 	}
 	
 	private void init()
@@ -46,7 +59,6 @@ public class Window extends JFrame
 		
 		JPanel agentList = _availableAgentsList;
 		agentList.setBorder(BorderFactory.createLineBorder(Color.black));
-		
 		JPanel topRow = new JPanel();
 		
 		JPanel bottomRow = new JPanel();
@@ -58,13 +70,13 @@ public class Window extends JFrame
 		
 		getContentPane().add(topRow);
 		
-		JButton playButton = new JButton("Play games");
-		playButton.addActionListener(new ActionListener() {
+		_playButton = new JButton("Play games");
+		_playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				_hostAgent.play();
+				startTournament();
 			}
 		});
-		topRow.add(playButton);
+		topRow.add(_playButton);
 		getContentPane().add(bottomRow);
 	}
 	
@@ -108,5 +120,21 @@ public class Window extends JFrame
 	{
 		this._availableAgentsList.setItems(newAgents);
 	}
-	
+
+	public ArrayList<AID> getSelectedContestants() {
+		List<String> AIDsStringList = _availableAgentsList.getSelectedList();
+		ArrayList<AID> contestantAIDs = new ArrayList<AID>();
+		
+		for (String AIDstring : AIDsStringList)
+		{
+			contestantAIDs.add(new AID(AIDstring, false));
+		}
+		return contestantAIDs;
+	}
+
+	public void reset() {
+		_playButton.setEnabled(true);
+		_playButton.setText("Play Games");
+		_availableAgentsList.setEnabled(true);		
+	}
 }

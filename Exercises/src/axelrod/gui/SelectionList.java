@@ -28,6 +28,10 @@ public class SelectionList<T> extends JPanel
 
 	private String _selectionLabel;
 	private String _availableLabel;
+
+	private JButton _addButton;
+
+	private JButton _removeButton;
 	
 	/**
 	 * Constructs a new empty SelectionList with default labels.
@@ -85,11 +89,11 @@ public class SelectionList<T> extends JPanel
 		_selectedList = new MutableList();
 		_availableList = new MutableList();
 		
-		JButton addButton = new JButton("<<");
-		JButton removeButton = new JButton(">>");
+		_addButton = new JButton("<<");
+		_removeButton = new JButton(">>");
 		
-		addButton.addActionListener(new AddListener()); 
-		removeButton.addActionListener(new RemoveListener());
+		_addButton.addActionListener(new AddListener()); 
+		_removeButton.addActionListener(new RemoveListener());
 		
 		 JPanel leftPanel = new JPanel(new BorderLayout());
 		 
@@ -98,7 +102,7 @@ public class SelectionList<T> extends JPanel
 		
 	    leftPanel.add(selectionLabel, BorderLayout.NORTH);
 	    leftPanel.add(new JScrollPane(_selectedList), BorderLayout.CENTER);
-	    leftPanel.add(removeButton, BorderLayout.SOUTH);
+	    leftPanel.add(_removeButton, BorderLayout.SOUTH);
 
 	    JPanel rightPanel = new JPanel(new BorderLayout());
 	    JLabel availableLabel = new JLabel(_availableLabel);
@@ -106,7 +110,7 @@ public class SelectionList<T> extends JPanel
 	    
 	    rightPanel.add(availableLabel, BorderLayout.NORTH);
 	    rightPanel.add(new JScrollPane(_availableList), BorderLayout.CENTER);
-	    rightPanel.add(addButton, BorderLayout.SOUTH);
+	    rightPanel.add(_addButton, BorderLayout.SOUTH);
 		
 		
 		
@@ -188,6 +192,15 @@ public class SelectionList<T> extends JPanel
 			list.add((T)o);
 		}
 		return list;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled)
+	{
+		_selectedList.setEnabled(enabled);
+		_availableList.setEnabled(enabled);
+		_addButton.setEnabled(enabled);
+		_removeButton.setEnabled(enabled);
 	}
 	
 	/**

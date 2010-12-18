@@ -11,9 +11,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.ArrayList;
 import java.util.List;
 
-import axelrod.behaviours.PlayTournamentBehaviour;
+import axelrod.behaviours.PlayTournamentAction;
 import axelrod.behaviours.RefreshAgentListBehaviour;
-import axelrod.behaviours.SetupTournamentBehaviour;
+import axelrod.behaviours.SetupTournamentAction;
 import axelrod.gui.Window;
 
 
@@ -71,26 +71,7 @@ public class TournamentAgent extends Agent {
 	
 	public void registerContestants()
 	{
-		_contestants = new ArrayList<AID>();
-		//Setup agent description.
-		DFAgentDescription dfdContestants = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription(); 
-	    sd.setType("contestant"); 
-	    sd.setName("contestant"); 
-	    dfdContestants.addServices(sd); 
-	    
-		try
-		{
-			DFAgentDescription[] resultContestants = DFService.search(this, dfdContestants);
-					
-			for (int i = 0; i < resultContestants.length; i++)
-			{
-				_contestants.add(resultContestants[i].getName());
-			}
-		}
-		catch (FIPAException e) {
-			e.printStackTrace();
-		}
+		_contestants = _window.getSelectedContestants();
 	}
 	
 	public void createGames()
@@ -114,12 +95,16 @@ public class TournamentAgent extends Agent {
 		}
 	}
 	
-	public void play()
+	public void start()
 	{
 		SequentialBehaviour setupBehaviours = new SequentialBehaviour();
-		setupBehaviours.addSubBehaviour(new SetupTournamentBehaviour(this, 1000));
-		setupBehaviours.addSubBehaviour(new PlayTournamentBehaviour());
+		setupBehaviours.addSubBehaviour(new SetupTournamentAction());
+		setupBehaviours.addSubBehaviour(new PlayTournamentAction());
 		addBehaviour(setupBehaviours);
+	}
+	
+	public void play()
+	{
 		behaviours = new SequentialBehaviour();
 		
 		for (Game game : _games)
@@ -127,6 +112,11 @@ public class TournamentAgent extends Agent {
 			game.play();
 			_currentGame++;
 		}
+		behaviours.addSubBehaviour(new EndTournamentAction());
 		startBehaviours();
+	}
+
+	public void stop() {
+		_window.reset();
 	}
 }
