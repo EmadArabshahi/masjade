@@ -5,7 +5,7 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 
 
-public class PlayTournamentBehaviour extends OneShotBehaviour {
+public class PlayTournamentAction extends OneShotBehaviour {
 	@Override
 	public void action() {
 		TournamentAgent agent = (TournamentAgent) myAgent;
