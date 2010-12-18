@@ -9,9 +9,12 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import axelrod.behaviours.PlayTournamentBehaviour;
+import axelrod.behaviours.RefreshAgentListBehaviour;
 import axelrod.behaviours.SetupTournamentBehaviour;
+import axelrod.gui.Window;
 
 
 public class TournamentAgent extends Agent {
@@ -20,19 +23,35 @@ public class TournamentAgent extends Agent {
 	private int _currentGame;
 	public SequentialBehaviour behaviours;
 	
+	private Window _window;
+	
 	public TournamentAgent()
 	{
 		_games = new ArrayList<Game>();
 		_contestants = new ArrayList<AID>();
 	}
 	
+	public void setAvailableAgents(DFAgentDescription[] participants)
+	{
+		List<String> newAgents = new ArrayList<String>();
+		for(int i=0; i<participants.length; i++)
+		{
+			newAgents.add(participants[i].getName().getName());
+		}
+		_window.updateAgentList(newAgents);
+	}
+	
+	protected void takedown()
+	{
+		_window.dispose();
+	}
+	
 	public void setup()
 	{
-		SequentialBehaviour setupBehaviours = new SequentialBehaviour();
-		setupBehaviours.addSubBehaviour(new SetupTournamentBehaviour(this, 1000));
-		setupBehaviours.addSubBehaviour(new PlayTournamentBehaviour());
-		addBehaviour(setupBehaviours);
-		behaviours = new SequentialBehaviour();
+		_window = new Window(this);
+		_window.setVisible(true);	
+		
+		addBehaviour(new RefreshAgentListBehaviour(this,1000));
 	}
 	
 	public void startBehaviours()
@@ -97,6 +116,12 @@ public class TournamentAgent extends Agent {
 	
 	public void play()
 	{
+		SequentialBehaviour setupBehaviours = new SequentialBehaviour();
+		setupBehaviours.addSubBehaviour(new SetupTournamentBehaviour(this, 1000));
+		setupBehaviours.addSubBehaviour(new PlayTournamentBehaviour());
+		addBehaviour(setupBehaviours);
+		behaviours = new SequentialBehaviour();
+		
 		for (Game game : _games)
 		{
 			game.play();

@@ -11,8 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import axelrod.AxelrodTournamentHost;
 import axelrod.Rules;
+import axelrod.TournamentAgent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class Window extends JFrame
@@ -25,9 +28,9 @@ public class Window extends JFrame
 	
 	private SelectionList<String> _availableAgentsList;
 	
-	private AxelrodTournamentHost _hostAgent;
+	private TournamentAgent _hostAgent;
 	
-	public Window(AxelrodTournamentHost hostAgent)
+	public Window(TournamentAgent hostAgent)
 	{
 		super("Axelrod Tournament");
 		_hostAgent = hostAgent;
@@ -39,7 +42,7 @@ public class Window extends JFrame
 	{
 		this.setSize(800, 600);	
 		//divide into toprow and bottomrow.
-		this.setLayout(new GridLayout(2,0));
+		getContentPane().setLayout(new GridLayout(2,0));
 		
 		JPanel agentList = _availableAgentsList;
 		agentList.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -54,6 +57,14 @@ public class Window extends JFrame
 		bottomRow.add(agentList);
 		
 		getContentPane().add(topRow);
+		
+		JButton playButton = new JButton("Play games");
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				_hostAgent.play();
+			}
+		});
+		topRow.add(playButton);
 		getContentPane().add(bottomRow);
 	}
 	
