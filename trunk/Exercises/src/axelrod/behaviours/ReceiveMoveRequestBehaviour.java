@@ -1,5 +1,7 @@
-package axelrod;
+package axelrod.behaviours;
 
+import axelrod.ContestantAgent;
+import axelrod.Output;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -10,11 +12,6 @@ public class ReceiveMoveRequestBehaviour extends SimpleBehaviour {
 	
 	private boolean _messageReceived;
 
-	public ReceiveMoveRequestBehaviour()
-	{
-		
-	}
-	
 	@Override
 	public void action() {
 		_messageReceived = false;

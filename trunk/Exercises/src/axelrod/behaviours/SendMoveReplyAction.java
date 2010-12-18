@@ -1,5 +1,7 @@
-package axelrod;
+package axelrod.behaviours;
 
+import axelrod.ContestantAgent;
+import axelrod.Output;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
