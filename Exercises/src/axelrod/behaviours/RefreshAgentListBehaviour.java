@@ -1,27 +1,18 @@
 package axelrod.behaviours;
 
-import java.awt.Point;
-
-import java.util.Arrays;
-import java.util.Set;
-
-import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.lang.acl.ACLMessage;
-import axelrod.AxelrodTournamentHost;
+import axelrod.TournamentAgent;
 
 public class RefreshAgentListBehaviour extends TickerBehaviour
-{
-	
-	private AxelrodTournamentHost _owner;
-	
-	public RefreshAgentListBehaviour(AxelrodTournamentHost owner, int refreshInMs)
+{	
+	private static final long serialVersionUID = -6567203261955271409L;
+
+	public RefreshAgentListBehaviour(TournamentAgent tournamentAgent, int refreshInMs)
 	{
-		super(owner, refreshInMs);
-		_owner = owner;
+		super(tournamentAgent, refreshInMs);
 	}
 
 	@Override
@@ -30,23 +21,19 @@ public class RefreshAgentListBehaviour extends TickerBehaviour
 		//Setup agent description.
 		DFAgentDescription tournamentParticipantsDescription = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription(); 
-	    sd.setType("axelrod-tournament-participant"); 
-	    sd.setName("axelrod-tournament-participant"); 
+	    sd.setType("contestant"); 
+	    sd.setName("contestant"); 
 	    tournamentParticipantsDescription.addServices(sd); 
 		
 	    try
 		{
-			DFAgentDescription[] participants = DFService.search(_owner, tournamentParticipantsDescription);
-			_owner.setAvailableAgents(participants);
-		
+	    	TournamentAgent agent = (TournamentAgent) myAgent;
+			DFAgentDescription[] participants = DFService.search(agent, tournamentParticipantsDescription);
+			agent.setAvailableAgents(participants);
 		}
 	    catch(Exception e)
 	    {
 	    	e.printStackTrace();
 	    }
-	    
-		
-		
-	}
-	
+	}	
 }
