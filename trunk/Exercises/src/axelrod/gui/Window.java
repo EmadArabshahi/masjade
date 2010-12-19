@@ -29,7 +29,7 @@ public class Window extends JFrame
 	 */
 	private static final long serialVersionUID = -2165175645115692616L;
 	
-	private SelectionList<String> _availableAgentsList;
+	private SelectionList<AID> _availableAgentsList;
 	
 	private TournamentAgent _hostAgent;
 
@@ -39,7 +39,7 @@ public class Window extends JFrame
 	{
 		super("Axelrod Tournament");
 		_hostAgent = hostAgent;
-		_availableAgentsList = new SelectionList<String>("selected agents:", "available agents:");
+		_availableAgentsList = new SelectionList<AID>("selected agents:", "available agents:");
 		init();
 	}
 	
@@ -118,20 +118,13 @@ public class Window extends JFrame
 		return label;
 	}
 	
-	public void updateAgentList(List<String> newAgents)
+	public void updateAgentList(List<AID> newAgents)
 	{
 		this._availableAgentsList.setItems(newAgents);
 	}
 
-	public ArrayList<AID> getSelectedContestants() {
-		List<String> AIDsStringList = _availableAgentsList.getSelectedList();
-		ArrayList<AID> contestantAIDs = new ArrayList<AID>();
-		
-		for (String AIDstring : AIDsStringList)
-		{
-			contestantAIDs.add(new AID(AIDstring, false));
-		}
-		return contestantAIDs;
+	public List<AID> getSelectedContestants() {
+		return _availableAgentsList.getSelectedList();
 	}
 
 	public void reset() {

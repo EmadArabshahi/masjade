@@ -3,6 +3,7 @@ package axelrod.behaviours;
 import axelrod.ContestantAgent;
 import axelrod.Output;
 import axelrod.Round;
+import axelrod.messages.RoundResult;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -17,16 +18,10 @@ public class SendRoundResultAction extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		ACLMessage resultInform = new ACLMessage(ACLMessage.INFORM);
 		
-		resultInform.setConversationId(_round.getConversationId());
- 		resultInform.addReceiver(_round.getContestant1());
-		resultInform.addReceiver(_round.getContestant2());
-		resultInform.setOntology("result");
-		resultInform.setContent(String.format("%s;%s|%s;%s", _round.getContestant1().getName(), _round.getActionContestant1(), _round.getContestant2().getName(), _round.getActionContestant2()));
-		
-		myAgent.send(resultInform);
+		RoundResult roundResult = new RoundResult(_round);
+		myAgent.send(roundResult.getMessage());
 
-		Output.AgentMessage(myAgent, String.format("Inform sent (%s): %s", _round.getConversationId(), resultInform.getContent()));
+		Output.AgentMessage(myAgent, String.format("Inform sent (%s): %s", roundResult.getConversationId(), roundResult.getMessage().getContent()));
 	}
 }

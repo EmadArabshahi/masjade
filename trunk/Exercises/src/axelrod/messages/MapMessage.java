@@ -47,7 +47,7 @@ public class MapMessage
 		
 		_message = aclMessage;
 		_map = new HashMap<String, String>();
-		parseContent();
+		parseContent(_message.getContent());
 		_readOnly = true;
 	}
 
@@ -74,10 +74,8 @@ public class MapMessage
 	}
 	
 	
-	private void parseContent()
+	protected void parseContent(String content)
 	{
-		// Gets the message contents.
-		String content = _message.getContent();
 		
 		String delimiters = KEY_VALUE_DELIMITER + ELEMENTS_DELIMITER;
 		//searches the content for new key value pairs:  syntax(key=value;)

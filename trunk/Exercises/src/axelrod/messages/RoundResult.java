@@ -10,21 +10,23 @@ import java.util.Scanner;
 
 import axelrod.Round;
 
-public class MoveRequest extends MapMessage
+public class RoundResult extends MapMessage
 {
 	
-	private static final String[] KEYS = {"roundNr", "gameNr"};
+	private static final String[] KEYS = {"roundNr", "gameNr","actionPlayer1", "actionPlayer2"};
 	private static final String LANGUAGE = "axelrod-tournament";
-	private static final String ONTOLOGY = "axelrod-tournament-move-request";
+	private static final String ONTOLOGY = "axelrod-tournament-round-result";
 	
-	public MoveRequest(Round round)
+	public RoundResult(Round round)
 	{
-		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1(), round.getContestant2());
+		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1(), round.getContestant2(), round.getActionContestant1(), round.getActionContestant2());
+
 	}
 	
-	public MoveRequest(int roundNr, int gameNr, String conservationId, AID player1, AID player2)
+	public RoundResult(int roundNr, int gameNr, String conservationId, AID player1, AID player2, int actionPlayer1, int actionPlayer2)
 	{
-		super(ACLMessage.REQUEST, KEYS);
+		super(ACLMessage.INFORM, KEYS);
+		
 		setLanguage(LANGUAGE);
 		setOntology(ONTOLOGY);
 		addReceiver(player1);
@@ -32,9 +34,11 @@ public class MoveRequest extends MapMessage
 		setConversationId(conservationId);
 		setRoundNr(roundNr);
 		setGameNr(gameNr);
+		setActionPlayer1(actionPlayer1);
+		setActionPlayer2(actionPlayer2);
 	}
 	
-	public MoveRequest(ACLMessage message)
+	public RoundResult(ACLMessage message)
 	{
 		super(message);
 	}
@@ -50,6 +54,15 @@ public class MoveRequest extends MapMessage
 		setValue(KEYS[1], "" + gameNr);
 	}
 	
+	private void setActionPlayer1(int actionPlayer1)
+	{
+		setValue(KEYS[2], "" + actionPlayer1);
+	}
+	
+	private void setActionPlayer2(int actionPlayer2)
+	{
+		setValue(KEYS[3], "" + actionPlayer2);
+	}
 	
 	
 	public int getRoundNr()
@@ -61,7 +74,6 @@ public class MoveRequest extends MapMessage
 		return getInteger(KEYS[1]);
 	}
 	
-	
 	public AID getPlayer1()
 	{
 		AID[] aids = this.getReceivers();
@@ -72,7 +84,16 @@ public class MoveRequest extends MapMessage
 		AID[] aids = this.getReceivers();
 		return aids[1];
 	}
-
+	
+	public int getActionPlayer1()
+	{
+		return getInteger(KEYS[2]);
+	}
+	
+	public int getActionPlayer2()
+	{
+		return getInteger(KEYS[3]);
+	}
 	
 	public static MessageTemplate getMessageTemplate()
 	{
