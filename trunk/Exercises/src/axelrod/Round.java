@@ -12,14 +12,16 @@ public class Round {
 	private int _actionContestant2;
 	private boolean _played;
 	private TournamentAgent _tournamentAgent;
-	private String _conversationId;
+	private int _roundNr;
+	private int _gameNr;
 	
 	public Round(TournamentAgent tournamentAgent, int roundNumber, int gameNumber, AID contestant1, AID contestant2)
 	{
 		_tournamentAgent = tournamentAgent;
 		_contestant1 = contestant1;
 		_contestant2 = contestant2;
-		_conversationId = String.format("game;%s|round;%s", gameNumber, roundNumber);
+		_roundNr = roundNumber;
+		_gameNr = gameNumber;
 	}
 	
 	public void setActionContestant1(int action)
@@ -33,7 +35,7 @@ public class Round {
 	}
 	
 	public String getConversationId() {
-		return _conversationId;
+		return String.format("game;%s|round;%s", _gameNr, _roundNr);
 	}
 
 	public AID getContestant1() {
@@ -42,6 +44,16 @@ public class Round {
 	
 	public AID getContestant2() {
 		return _contestant2;
+	}
+	
+	public int getRoundNr()
+	{
+		return _roundNr;
+	}
+	
+	public int getGameNr()
+	{
+		return _gameNr;
 	}
 	
 	public int getActionContestant1() {

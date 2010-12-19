@@ -2,6 +2,7 @@ package axelrod.behaviours;
 
 import axelrod.Output;
 import axelrod.Round;
+import axelrod.messages.MoveReply;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -20,19 +21,26 @@ public class ReceiveMoveReplyAction extends SimpleBehaviour {
 	@Override
 	public void action() 
 	{
-		ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId(_round.getConversationId()));
+		//matching converstationID is not enough, since it can be a reply from the system informing the message could not be delivered.
+		//ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId(_round.getConversationId()));
+		ACLMessage msg = myAgent.receive(MoveReply.getMessageTemplate(_round.getConversationId()));
 		
 		if (msg != null)
 		{
+			
+			MoveReply moveReply = new MoveReply(msg);
+			
 			_numberMessagesReceived++;
-			Output.AgentMessage(myAgent, String.format("Move reply received (%s)", _round.getConversationId()));
+			
+			Output.AgentMessage(myAgent, String.format("Move reply received (%s), %s", moveReply.getConversationId(), moveReply.getMessage().getContent()));
+			
 			if (msg.getSender().equals(_round.getContestant1()))
 			{
-				_round.setActionContestant1(Integer.parseInt(msg.getContent()));
+				_round.setActionContestant1(moveReply.getAction());
 			}
 			else if (msg.getSender().equals(_round.getContestant2()))
 			{
-				_round.setActionContestant2(Integer.parseInt(msg.getContent()));
+				_round.setActionContestant2(moveReply.getAction());
 			}
 		}
 	}

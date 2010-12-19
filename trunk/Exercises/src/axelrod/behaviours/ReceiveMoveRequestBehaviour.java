@@ -2,6 +2,7 @@ package axelrod.behaviours;
 
 import axelrod.ContestantAgent;
 import axelrod.Output;
+import axelrod.messages.MoveRequest;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -15,13 +16,17 @@ public class ReceiveMoveRequestBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		_messageReceived = false;
+		
+		System.out.println("Waiting for moveRequest!");
+		
 		ContestantAgent agent = (ContestantAgent) myAgent;
-		ACLMessage msg = agent.receive(MessageTemplate.MatchOntology("move"));
+		ACLMessage msg = agent.receive();
 		
 		if (msg != null)
 		{
 			Output.AgentMessage(agent, String.format("Received move request (%s)", msg.getConversationId()));
-			agent.setCurrentMoveRequest(msg);
+			MoveRequest moveRequest = new MoveRequest(msg);
+			agent.setCurrentMoveRequest(moveRequest);
 			_messageReceived = true;
 		}
 		else

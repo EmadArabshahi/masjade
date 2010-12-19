@@ -59,17 +59,9 @@ public class Window extends JFrame
 		
 		JPanel agentList = _availableAgentsList;
 		agentList.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		
 		JPanel topRow = new JPanel();
-		
-		JPanel bottomRow = new JPanel();
-		bottomRow.setLayout(new GridLayout(0,2));
-		
-		
-		bottomRow.add(getRulesPanel());
-		bottomRow.add(agentList);
-		
-		getContentPane().add(topRow);
-		
 		_playButton = new JButton("Play games");
 		_playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -77,6 +69,16 @@ public class Window extends JFrame
 			}
 		});
 		topRow.add(_playButton);
+		
+		
+		
+		JPanel bottomRow = new JPanel();
+		bottomRow.setLayout(new GridLayout(0,2));
+		
+		bottomRow.add(getRulesPanel());
+		bottomRow.add(agentList);
+		
+		getContentPane().add(topRow);
 		getContentPane().add(bottomRow);
 	}
 	

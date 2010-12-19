@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import axelrod.behaviours.ReceiveMoveRequestBehaviour;
 import axelrod.behaviours.ReceiveRoundResultBehaviour;
 import axelrod.behaviours.SendMoveReplyAction;
+import axelrod.messages.MoveRequest;
 import jade.core.Agent;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
@@ -13,7 +14,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 public class ContestantAgent extends Agent{
-	private ACLMessage _currentMoveRequest;
+	private MoveRequest _currentMoveRequest;
 	private ArrayList<Integer> _myRoundMoveHistory;
 	private ArrayList<Integer> _opponentsRoundMoveHistory;
 	
@@ -58,6 +59,18 @@ public class ContestantAgent extends Agent{
 	    }		
 	}
 
+	public void takedown()
+	{
+		try 
+		{ 
+			DFService.deregister(this); 
+		}  
+		catch (FIPAException fe) 
+		{ 
+			fe.printStackTrace(); 
+		}
+	}
+	
 	public int getMove() {
 		return Rules.COOPERATE;
 	}
@@ -83,11 +96,11 @@ public class ContestantAgent extends Agent{
 		_opponentsRoundMoveHistory.clear();
 	}
 
-	public ACLMessage getCurrentMoveRequest() {
+	public MoveRequest getCurrentMoveRequest() {
 		return _currentMoveRequest;
 	}
 
-	public void setCurrentMoveRequest(ACLMessage request) {
+	public void setCurrentMoveRequest(MoveRequest request) {
 		_currentMoveRequest = request;
 	}
 }

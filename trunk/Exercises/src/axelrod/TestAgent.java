@@ -23,8 +23,8 @@ public class TestAgent extends Agent
 	    
 	    //The bomb-positions service.
 	    ServiceDescription sd = new ServiceDescription(); 
-	    sd.setType("axelrod-tournament-participant"); 
-	    sd.setName("axelrod-tournament-participant"); 
+	    sd.setType("contestant"); 
+	    sd.setName("contestant"); 
 	    dfd.addServices(sd); 
 	    
 	    try 
