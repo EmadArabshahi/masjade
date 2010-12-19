@@ -17,7 +17,8 @@ import axelrod.behaviours.SetupTournamentAction;
 import axelrod.gui.Window;
 
 
-public class TournamentAgent extends Agent {
+public class TournamentAgent extends Agent 
+{
 	private ArrayList<Game> _games;
 	private ArrayList<AID> _contestants;
 	private int _currentGame;

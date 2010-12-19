@@ -23,14 +23,11 @@ public class MapMessage
 	private static String KEY_VALUE_DELIMITER = "=";
 	private static String ELEMENTS_DELIMITER = ";";
 	
-	/**
-	 * Indicates wether the content of the message is given at construction time.
-	 */
-	private boolean _contentGiven;
-	
 	private ACLMessage _message;
 	
 	private Map<String, String> _map;	
+	
+	private boolean _readOnly;
 	
 	protected MapMessage(int performative, String[] supportedKeys)
 	{
@@ -39,9 +36,9 @@ public class MapMessage
 		
 		_message = new ACLMessage(performative);
 		_map = new HashMap<String, String>(supportedKeys.length);
-		_contentGiven = false;
+		registerKeys(supportedKeys);
+		_readOnly = false;
 	}
-	
 	
 	protected MapMessage(ACLMessage aclMessage)
 	{
@@ -49,10 +46,33 @@ public class MapMessage
 			throw new IllegalArgumentException("value aclMessage cannot be null.");
 		
 		_message = aclMessage;
+		_map = new HashMap<String, String>();
 		parseContent();
-		_contentGiven = true;
+		_readOnly = true;
 	}
 
+	protected MapMessage(ACLMessage aclMessage, String[] supportedKeys)
+	{
+		if(aclMessage == null)
+			throw new IllegalArgumentException("value aclMessage cannnot be null.");
+		if(supportedKeys == null)
+			throw new IllegalArgumentException("value supportedKeys cannot be null.");
+		
+		_message = aclMessage;
+		_map = new HashMap<String, String>(supportedKeys.length);
+		registerKeys(supportedKeys);
+				
+		_readOnly = false;
+	}
+	
+	private void registerKeys(String[] keys)
+	{
+		for(int i=0; i<keys.length; i++)
+		{
+			_map.put(keys[i], "");
+		}
+	}
+	
 	
 	private void parseContent()
 	{
@@ -110,7 +130,7 @@ public class MapMessage
 	
 	public void setValue(String key, String value)
 	{
-		if(_contentGiven)
+		if(_readOnly)
 			throw new IllegalStateException("Message is readonly.");
 		
 		if(_map.containsKey(key))
@@ -174,5 +194,10 @@ public class MapMessage
 		}
 		AID[] type = new AID[0];
 		return list.toArray(type);
+	}
+	
+	public AID getSender()
+	{
+		return _message.getSender();
 	}
 }

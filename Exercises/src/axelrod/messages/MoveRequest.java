@@ -8,15 +8,21 @@ import jade.lang.acl.MessageTemplate;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class RequestMove extends MapMessage
+import axelrod.Round;
+
+public class MoveRequest extends MapMessage
 {
 	
 	private static final String[] KEYS = {"roundNr", "gameNr"};
-	private static final String LANGUAGE = "Axelrod-tournament";
-	private static final String ONTOLOGY = "Axelrod-tournament-move-request";
+	private static final String LANGUAGE = "axelrod-tournament";
+	private static final String ONTOLOGY = "axelrod-tournament-move-request";
 	
+	public MoveRequest(Round round)
+	{
+		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1(), round.getContestant2());
+	}
 	
-	public RequestMove(int roundNr, int gameNr, String conservationId, AID player1, AID player2)
+	public MoveRequest(int roundNr, int gameNr, String conservationId, AID player1, AID player2)
 	{
 		super(ACLMessage.REQUEST, KEYS);
 		
@@ -29,12 +35,12 @@ public class RequestMove extends MapMessage
 		setGameNr(gameNr);
 	}
 	
-	public RequestMove(ACLMessage message)
+	public MoveRequest(ACLMessage message)
 	{
 		super(message);
 	}
-	
 
+	
 	private void setRoundNr(int roundNr)
 	{
 		setValue(KEYS[0], "" + roundNr);
@@ -67,7 +73,14 @@ public class RequestMove extends MapMessage
 	}
 
 	
-	
+	public static MessageTemplate getMessageTemplate()
+	{
+		MessageTemplate mtLanguage = MessageTemplate.MatchLanguage(LANGUAGE);
+		MessageTemplate mtOntology = MessageTemplate.MatchOntology(ONTOLOGY);
+		
+		MessageTemplate mt = MessageTemplate.and(mtOntology, mtLanguage);
+		return mt;
+	}
 	
 	
 	

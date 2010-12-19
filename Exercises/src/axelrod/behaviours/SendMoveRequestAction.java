@@ -6,6 +6,8 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import axelrod.messages.*;
+
 
 public class SendMoveRequestAction extends OneShotBehaviour {
 	private Round _round;
@@ -16,15 +18,17 @@ public class SendMoveRequestAction extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		ACLMessage moveRequest = new ACLMessage(ACLMessage.REQUEST);
-			
-		moveRequest.setConversationId(_round.getConversationId());
-		moveRequest.addReceiver(_round.getContestant1());
-		moveRequest.addReceiver(_round.getContestant2());
-		moveRequest.setOntology("move");
 		
-		myAgent.send(moveRequest);
+		
+		MoveRequest moveRequest = new MoveRequest(_round);
+		
+		// moveRequest.setConversationId(_round.getConversationId());
+		// moveRequest.addReceiver(_round.getContestant1());
+		// moveRequest.addReceiver(_round.getContestant2());
+		// moveRequest.setOntology("move");
+		
+		myAgent.send(moveRequest.getMessage());
 
-		Output.AgentMessage(myAgent, String.format("Move request sent (%s)", _round.getConversationId()));
+		Output.AgentMessage(myAgent, String.format("Move request sent (%s), %s, %s, %s, %s, %s", moveRequest.getConversationId(), moveRequest.getPlayer1(), moveRequest.getPlayer2(), moveRequest.getMessage().getContent(), moveRequest.getLanguage(), moveRequest.getOntology()));
 	}
 }
