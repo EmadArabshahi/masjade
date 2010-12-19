@@ -19,8 +19,8 @@ import axelrod.gui.Window;
 
 public class TournamentAgent extends Agent 
 {
-	private ArrayList<Game> _games;
-	private ArrayList<AID> _contestants;
+	private List<Game> _games;
+	private List<AID> _contestants;
 	private int _currentGame;
 	public SequentialBehaviour behaviours;
 	
@@ -34,10 +34,10 @@ public class TournamentAgent extends Agent
 	
 	public void setAvailableAgents(DFAgentDescription[] participants)
 	{
-		List<String> newAgents = new ArrayList<String>();
+		List<AID> newAgents = new ArrayList<AID>();
 		for(int i=0; i<participants.length; i++)
 		{
-			newAgents.add(participants[i].getName().getName());
+			newAgents.add(participants[i].getName());
 		}
 		_window.updateAgentList(newAgents);
 	}
@@ -60,12 +60,12 @@ public class TournamentAgent extends Agent
 		addBehaviour(behaviours);
 	}
 	
-	public ArrayList<Game> getGames()
+	public List<Game> getGames()
 	{
 		return _games;
 	}
 	
-	public ArrayList<AID> getContestants()
+	public List<AID> getContestants()
 	{
 		return _contestants;
 	}

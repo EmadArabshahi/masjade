@@ -20,6 +20,7 @@ public class MoveReply extends MapMessage
 	public MoveReply(MoveRequest messageToReply, int action)
 	{
 		super(messageToReply.getMessage().createReply(), KEYS);
+		this.parseContent(messageToReply.getMessage().getContent());
 		
 		setLanguage(LANGUAGE);
 		setOntology(ONTOLOGY);
@@ -57,6 +58,7 @@ public class MoveReply extends MapMessage
 	{
 		return getInteger(KEYS[0]);
 	}
+	
 	public int getGameNr()
 	{
 		return getInteger(KEYS[1]);
