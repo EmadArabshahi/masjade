@@ -7,9 +7,13 @@ import jade.core.behaviours.OneShotBehaviour;
 
 public class PlayTournamentAction extends OneShotBehaviour {
 	@Override
-	public void action() {
+	public void action() 
+	{
 		TournamentAgent agent = (TournamentAgent) myAgent;
 		Output.AgentMessage(agent, "Games started.");
 		agent.play();
+		
+		
+		
 	}
 }
