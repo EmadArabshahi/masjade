@@ -8,76 +8,62 @@ import jade.lang.acl.MessageTemplate;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class RequestMove 
+public class RequestMove extends MapMessage
 {
 	
-	private int _roundNr;
-	private int _gameNr;
-	private String _conservationNr;
-	private AID _player1;
-	private AID _player2;
+	private static final String[] KEYS = {"roundNr", "gameNr"};
+	private static final String LANGUAGE = "Axelrod-tournament";
+	private static final String ONTOLOGY = "Axelrod-tournament-move-request";
 	
 	
-	public RequestMove(int roundNr, int gameNr, String conservationNr, AID player1, AID player2)
+	public RequestMove(int roundNr, int gameNr, String conservationId, AID player1, AID player2)
 	{
-		this._roundNr = roundNr;
-		this._gameNr = gameNr;
-		this._conservationNr = conservationNr;
-		this._player1 = player1;
-		this._player2 = player2;
+		super(ACLMessage.REQUEST, KEYS);
+		
+		setLanguage(LANGUAGE);
+		setOntology(ONTOLOGY);
+		addReceiver(player1);
+		addReceiver(player2);
+		setConversationId(conservationId);
+		setRoundNr(roundNr);
+		setGameNr(gameNr);
 	}
 	
 	public RequestMove(ACLMessage message)
 	{
-		parseContent(message.getContent());
-		
-		Iterator iterator = message.getAllReceiver();
-		
-		this._player1 = (AID)iterator.next();
-		this._player2 = (AID)iterator.next();
-		
-		this._conservationNr = message.getConversationId();
+		super(message);
 	}
 	
-	
-	private void parseContent(String content)
+
+	private void setRoundNr(int roundNr)
 	{
-		Scanner s = new Scanner(content);
-		
-		int roundNr = -1;
-		int gameNr = -1;
-		
-		
-		if(s.hasNextInt())
-			roundNr = s.nextInt();
-		if(s.hasNextInt())
-			gameNr = s.nextInt();
-		
-		this._roundNr = roundNr;
-		this._gameNr = gameNr;
+		setValue(KEYS[0], "" + roundNr);
 	}
 	
+	private void setGameNr(int gameNr)
+	{
+		setValue(KEYS[1], "" + gameNr);
+	}
 	
 	
 	public int getRoundNr()
 	{
-		return _roundNr;
+		return getInteger(KEYS[0]);
 	}
 	public int getGameNr()
 	{
-		return _gameNr;
+		return getInteger(KEYS[1]);
 	}
-	public String conservationNr()
+	
+	public AID getPlayer1()
 	{
-		return _conservationNr;
+		AID[] aids = this.getReceivers();
+		return aids[0];
 	}
-	public AID player1()
+	public AID getPlayer2()	
 	{
-		return _player1;
-	}
-	public AID player2()	
-	{
-		return _player2;
+		AID[] aids = this.getReceivers();
+		return aids[1];
 	}
 
 	
