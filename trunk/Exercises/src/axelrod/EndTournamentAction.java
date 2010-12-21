@@ -1,5 +1,6 @@
 package axelrod;
 
+import axelrod.agents.TournamentAgent;
 import jade.core.behaviours.OneShotBehaviour;
 
 public class EndTournamentAction extends OneShotBehaviour {

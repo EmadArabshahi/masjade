@@ -4,7 +4,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import axelrod.TournamentAgent;
+import axelrod.agents.TournamentAgent;
 
 public class RefreshAgentListBehaviour extends TickerBehaviour
 {	

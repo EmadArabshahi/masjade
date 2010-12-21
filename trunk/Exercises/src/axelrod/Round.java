@@ -1,4 +1,5 @@
 package axelrod;
+import axelrod.agents.TournamentAgent;
 import axelrod.behaviours.ReceiveMoveReplyAction;
 import axelrod.behaviours.SendMoveRequestAction;
 import axelrod.behaviours.SendRoundResultAction;

@@ -1,4 +1,6 @@
-package axelrod;
+package axelrod.agents;
+import axelrod.EndTournamentAction;
+import axelrod.Game;
 import axelrod.Rules;
 import jade.core.AID;
 import jade.core.Agent;
