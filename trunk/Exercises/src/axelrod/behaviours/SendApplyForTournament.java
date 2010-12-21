@@ -5,29 +5,33 @@ import axelrod.agents.AbstractContestantAgent;
 import axelrod.agents.TournamentAgent;
 import axelrod.messages.ApplyForTournament;
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.Agent;
+import jade.core.behaviours.SimpleBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
-public class SendApplyForTournament extends OneShotBehaviour {
+public class SendApplyForTournament extends SimpleBehaviour 
+{
+	public static final int MESSAGE_SEND = 1;
+	private boolean _done = false;
 
-	public SendApplyForTournament() 
-	{
-	}
-
-	@Override
-	public void action() 
+	public void action()
 	{
 		AbstractContestantAgent owner = (AbstractContestantAgent) myAgent;
 		String strategy = owner.getStrategy();
 		AID host = getHost();
 		
-		ApplyForTournament apply = new ApplyForTournament(strategy, host);
-		myAgent.send(apply.getMessage());
+		if(host != null)
+		{
+			ApplyForTournament apply = new ApplyForTournament(strategy, host);
+			myAgent.send(apply.getMessage());
 		
-		Output.AgentMessage(myAgent, String.format("Inform sent: %s", apply.getMessage().getContent()));
+			Output.AgentMessage(myAgent, String.format("Inform sent: %s", apply.getMessage().getContent()));
+			_done = true;
+		}
 	}
 	
 	private AID getHost()
@@ -44,10 +48,9 @@ public class SendApplyForTournament extends OneShotBehaviour {
 		
 	    try
 		{
-	    	TournamentAgent agent = (TournamentAgent) myAgent;
-			DFAgentDescription[] hosts = DFService.search(agent, tournamentParticipantsDescription);
-		
-			host = hosts[0].getName();
+			DFAgentDescription[] hosts = DFService.search(myAgent, tournamentParticipantsDescription);
+			if(hosts.length > 0)
+				host = hosts[0].getName();
 		}
 	    catch(Exception e)
 	    {
@@ -55,5 +58,18 @@ public class SendApplyForTournament extends OneShotBehaviour {
 	    }
 	    return host;
 	}
+
+	@Override
+	public boolean done() {
+		// TODO Auto-generated method stub
+		return _done;
+	}
+	
+	@Override
+	public int onEnd() 
+	{
+		return MESSAGE_SEND;
+	}
+
 }
 

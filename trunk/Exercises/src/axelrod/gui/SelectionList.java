@@ -118,6 +118,13 @@ public class SelectionList<T> extends JPanel
 		this.add(rightPanel);
 	}
 	
+	
+	public void addItem(T item)
+	{
+		_totalList.add(item);
+		update();
+	}
+	
 	/**
 	 * Sets the contents of this list to the new given list.
 	 * Items in either list that do not occur in this list are removed, items in this list that not occur in the available list are added.

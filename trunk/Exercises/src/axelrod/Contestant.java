@@ -22,4 +22,9 @@ public class Contestant
 	{
 		return this._strategy;
 	}
+	
+	public String toString()
+	{
+		return getAID().getLocalName() + "(" + getStrategy() + ")";
+	}
 }

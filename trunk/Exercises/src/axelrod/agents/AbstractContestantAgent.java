@@ -6,6 +6,7 @@ import java.util.Random;
 import axelrod.Rules;
 import axelrod.behaviours.ReceiveMoveRequestBehaviour;
 import axelrod.behaviours.ReceiveRoundResultBehaviour;
+import axelrod.behaviours.SendApplyForTournament;
 import axelrod.behaviours.SendMoveReplyAction;
 import axelrod.messages.MoveRequest;
 import jade.core.Agent;
@@ -40,11 +41,12 @@ public abstract class AbstractContestantAgent extends Agent
 		
 		FSMBehaviour fsm = new FSMBehaviour();
 		
-		
-		fsm.registerFirstState(new ReceiveMoveRequestBehaviour(), "receiveMoveRequest");
+		fsm.registerFirstState(new SendApplyForTournament(), "aplyForTournament");
+		fsm.registerState(new ReceiveMoveRequestBehaviour(), "receiveMoveRequest");
 		fsm.registerState(new SendMoveReplyAction(), "sendMoveReply");
 		fsm.registerState(new ReceiveRoundResultBehaviour(), "receiveRoundResult");
 		
+		fsm.registerTransition("aplyForTournament", "receiveMoveRequest", SendApplyForTournament.MESSAGE_SEND);
 		fsm.registerTransition("receiveMoveRequest", "sendMoveReply", ReceiveMoveRequestBehaviour.RECEIVED_MOVE_REQUEST);
 		fsm.registerTransition("sendMoveReply", "receiveRoundResult", SendMoveReplyAction.SENT_MOVE_REPLY);
 		fsm.registerTransition("receiveRoundResult", "receiveMoveRequest", ReceiveRoundResultBehaviour.RECEIVED_ROUND_RESULT);
@@ -56,38 +58,7 @@ public abstract class AbstractContestantAgent extends Agent
 	{
 		return _randomGenerator;
 	}
-	private void registerServices()
-	{
-		//The agent description
-	    DFAgentDescription dfd = new DFAgentDescription(); 
-	    dfd.setName(getAID()); 
-	    
-	    ServiceDescription sd = new ServiceDescription(); 
-	    sd.setType("contestant"); 
-	    sd.setName("contestant"); 
-	    dfd.addServices(sd); 
-	    
-	    try 
-	    { 
-	    	DFService.register(this, dfd); 
-	    }
-	    catch (FIPAException fe) 
-	    { 
-	    	fe.printStackTrace(); 
-	    }		
-	}
-
-	public void takedown()
-	{
-		try 
-		{ 
-			DFService.deregister(this); 
-		}  
-		catch (FIPAException fe) 
-		{ 
-			fe.printStackTrace(); 
-		}
-	}
+	
 	
 	public abstract int getMove();
 	

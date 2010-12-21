@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import axelrod.Contestant;
 import axelrod.Rules;
 import axelrod.agents.TournamentAgent;
 
@@ -30,7 +31,7 @@ public class Window extends JFrame
 	 */
 	private static final long serialVersionUID = -2165175645115692616L;
 	
-	private SelectionList<AID> _availableAgentsList;
+	private SelectionList<Contestant> _availableAgentsList;
 	
 	private TournamentAgent _hostAgent;
 
@@ -40,7 +41,7 @@ public class Window extends JFrame
 	{
 		super("Axelrod Tournament");
 		_hostAgent = hostAgent;
-		_availableAgentsList = new SelectionList<AID>("selected agents:", "available agents:");
+		_availableAgentsList = new SelectionList<Contestant>("selected agents:", "available agents:");
 		init();
 	}
 	
@@ -119,12 +120,13 @@ public class Window extends JFrame
 		return label;
 	}
 	
-	public void updateAgentList(List<AID> newAgents)
+	public void addContestant(Contestant contestant)
 	{
-		this._availableAgentsList.setItems(newAgents);
+		this._availableAgentsList.addItem(contestant);
 	}
 
-	public List<AID> getSelectedContestants() {
+	public List<Contestant> getSelectedContestants() 
+	{
 		return _availableAgentsList.getSelectedList();
 	}
 
