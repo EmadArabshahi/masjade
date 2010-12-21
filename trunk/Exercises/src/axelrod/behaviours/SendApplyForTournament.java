@@ -1,11 +1,9 @@
 package axelrod.behaviours;
 
 import axelrod.Output;
-import axelrod.Round;
 import axelrod.agents.AbstractContestantAgent;
 import axelrod.agents.TournamentAgent;
 import axelrod.messages.ApplyForTournament;
-import axelrod.messages.RoundResult;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
