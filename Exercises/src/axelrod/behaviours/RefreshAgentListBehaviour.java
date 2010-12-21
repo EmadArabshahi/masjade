@@ -4,7 +4,11 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+import axelrod.Contestant;
 import axelrod.agents.TournamentAgent;
+import axelrod.messages.ApplyForTournament;
+import axelrod.messages.RoundResult;
 
 public class RefreshAgentListBehaviour extends TickerBehaviour
 {	
@@ -18,22 +22,20 @@ public class RefreshAgentListBehaviour extends TickerBehaviour
 	@Override
 	protected void onTick() 
 	{
-		//Setup agent description.
-		DFAgentDescription tournamentParticipantsDescription = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription(); 
-	    sd.setType("contestant"); 
-	    sd.setName("contestant"); 
-	    tournamentParticipantsDescription.addServices(sd); 
+		TournamentAgent agent = (TournamentAgent) myAgent;
 		
-	    try
+		ACLMessage msg = agent.receive(ApplyForTournament.getMessageTemplate());
+		
+		if(msg != null)
 		{
-	    	TournamentAgent agent = (TournamentAgent) myAgent;
-			DFAgentDescription[] participants = DFService.search(agent, tournamentParticipantsDescription);
-			agent.setAvailableAgents(participants);
+			ApplyForTournament aply = new ApplyForTournament(msg);
+			Contestant contestant = new Contestant(aply.getPlayer(), aply.getStrategy());
+			agent.addContestant(contestant);
 		}
-	    catch(Exception e)
-	    {
-	    	e.printStackTrace();
-	    }
+		else
+		{
+			block();
+		}
+		
 	}	
 }

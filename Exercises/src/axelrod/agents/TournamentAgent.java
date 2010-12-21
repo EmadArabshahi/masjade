@@ -1,4 +1,5 @@
 package axelrod.agents;
+import axelrod.Contestant;
 import axelrod.Game;
 import axelrod.Rules;
 import jade.core.AID;
@@ -26,7 +27,7 @@ public class TournamentAgent extends Agent
 	 */
 	private static final long serialVersionUID = 8202958476515095561L;
 	private List<Game> _games;
-	private List<AID> _contestants;
+	private List<Contestant> _contestants;
 	private int _currentGame;
 	public SequentialBehaviour behaviours;
 	
@@ -35,9 +36,19 @@ public class TournamentAgent extends Agent
 	public TournamentAgent()
 	{
 		_games = new ArrayList<Game>();
-		_contestants = new ArrayList<AID>();
 	}
 	
+	public void setup()
+	{
+		registerServices();
+		
+		_window = new Window(this);
+		_window.setVisible(true);	
+		
+		addBehaviour(new RefreshAgentListBehaviour(this,1000));
+	}
+	
+	/*
 	public void setAvailableAgents(DFAgentDescription[] participants)
 	{
 		List<AID> newAgents = new ArrayList<AID>();
@@ -47,18 +58,55 @@ public class TournamentAgent extends Agent
 		}
 		_window.updateAgentList(newAgents);
 	}
+	*/
+	
+	public void registerContestants()
+	{
+		this._contestants = _window.getSelectedContestants();
+	}
 	
 	protected void takedown()
 	{
 		_window.dispose();
+		deregisterServices();
 	}
 	
-	public void setup()
+	private void registerServices()
 	{
-		_window = new Window(this);
-		_window.setVisible(true);	
-		
-		addBehaviour(new RefreshAgentListBehaviour(this,1000));
+		//The agent description
+	    DFAgentDescription dfd = new DFAgentDescription(); 
+	    dfd.setName(getAID()); 
+	    
+	    ServiceDescription sd = new ServiceDescription(); 
+	    sd.setType("axelrod-tournament-host"); 
+	    sd.setName("axelrod-tournament-host"); 
+	    dfd.addServices(sd); 
+	    
+	    try 
+	    { 
+	    	DFService.register(this, dfd); 
+	    }
+	    catch (FIPAException fe) 
+	    { 
+	    	fe.printStackTrace(); 
+	    }		
+	}
+	
+	private void deregisterServices()
+	{
+		try 
+		{ 
+			DFService.deregister(this); 
+		}  
+		catch (FIPAException fe) 
+		{ 
+			fe.printStackTrace(); 
+		}
+	}
+	
+	public void addContestant(Contestant contestant)
+	{
+		this._window.addContestant(contestant);
 	}
 	
 	public void startBehaviours()
@@ -71,14 +119,9 @@ public class TournamentAgent extends Agent
 		return _games;
 	}
 	
-	public List<AID> getContestants()
+	public List<Contestant> getContestants()
 	{
-		return _contestants;
-	}
-	
-	public void registerContestants()
-	{
-		_contestants = _window.getSelectedContestants();
+		return this._contestants;
 	}
 	
 	public void createGames()

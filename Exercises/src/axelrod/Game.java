@@ -8,8 +8,8 @@ import jade.core.Agent;
 import java.util.ArrayList;
 
 public class Game {	
-	private AID _contestant1;
-	private AID _contestant2;
+	private Contestant _contestant1;
+	private Contestant _contestant2;
 	
 	private int _currentRound;
 	
@@ -17,7 +17,7 @@ public class Game {
 	private TournamentAgent _tournamentAgent;
 	private int _gameNumber;
 	
-	public Game(TournamentAgent tournamentAgent, int game, AID contestant1, AID contestant2)
+	public Game(TournamentAgent tournamentAgent, int game, Contestant contestant1, Contestant contestant2)
 	{
 		_tournamentAgent = tournamentAgent;
 		_rounds = new ArrayList<Round>();
@@ -34,7 +34,7 @@ public class Game {
 		// create the rounds that should be played. each game consists of 200 rounds.
 		for (int roundNumber = 0; roundNumber < Rules.getNumberOfRoundsPerGame(); roundNumber++)
 		{
-			Round round = new Round(_tournamentAgent, roundNumber, _gameNumber, _contestant1, _contestant2);
+			Round round = new Round(_tournamentAgent, roundNumber, _gameNumber, _contestant1.getAID(), _contestant2.getAID());
 			_rounds.add(round);
 		}
 	}
