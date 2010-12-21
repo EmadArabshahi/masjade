@@ -1,6 +1,7 @@
 package axelrod.agents;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import axelrod.Rules;
 import axelrod.behaviours.ReceiveMoveRequestBehaviour;
@@ -20,11 +21,16 @@ public abstract class AbstractContestantAgent extends Agent
 	private MoveRequest _currentMoveRequest;
 	private List<Integer> _myRoundMoveHistory;
 	private List<Integer> _opponentsRoundMoveHistory;
+	private Random _randomGenerator;
+	
 	
 	public void setup()
 	{
 		_myRoundMoveHistory = new ArrayList<Integer>();
 		_opponentsRoundMoveHistory = new ArrayList<Integer>();
+	
+		long seed = hashCode() + System.currentTimeMillis();
+		_randomGenerator = new Random(seed);
 		
 		registerServices();
 		
@@ -41,6 +47,10 @@ public abstract class AbstractContestantAgent extends Agent
 		addBehaviour(fsm);
 	}
 	
+	public Random getRandomGenerator()
+	{
+		return _randomGenerator;
+	}
 	private void registerServices()
 	{
 		//The agent description
@@ -76,6 +86,43 @@ public abstract class AbstractContestantAgent extends Agent
 	
 	public abstract int getMove();
 	
+	public abstract String getStrategy();
+	
+	public int getRoundNr()
+	{
+		int roundnr = -1;
+		if(_currentMoveRequest != null)
+			roundnr = _currentMoveRequest.getRoundNr();
+		
+		return roundnr;
+	}
+	
+	
+	public int getOpponentMove(int roundNr)
+	{
+		int move = -1;
+		
+		if(_opponentsRoundMoveHistory != null)
+		{
+			if(_opponentsRoundMoveHistory.size() > roundNr)
+				move = _opponentsRoundMoveHistory.get(roundNr);
+		}
+		
+		return move;
+	}
+	
+	public int getMyMove(int roundNr)
+	{
+		int move = -1;
+		
+		if(_myRoundMoveHistory != null)
+		{
+			if(_myRoundMoveHistory.size() > roundNr)
+				move = _myRoundMoveHistory.get(roundNr);
+		}
+		
+		return move;
+	}
 	
 	public void clearCurrentMoveRequest()
 	{
