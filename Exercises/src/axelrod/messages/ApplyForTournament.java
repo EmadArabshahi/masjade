@@ -40,7 +40,7 @@ public class ApplyForTournament extends MapMessage
 	
 	public String getStrategy()
 	{
-		return getValue((KEYS[0]);
+		return getValue(KEYS[0]);
 	}
 	
 	public AID getPlayer()
