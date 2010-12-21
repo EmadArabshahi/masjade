@@ -1,5 +1,4 @@
 package axelrod.agents;
-import axelrod.EndTournamentAction;
 import axelrod.Game;
 import axelrod.Rules;
 import jade.core.AID;
@@ -13,6 +12,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.util.ArrayList;
 import java.util.List;
 
+import axelrod.behaviours.EndTournamentAction;
 import axelrod.behaviours.PlayTournamentAction;
 import axelrod.behaviours.RefreshAgentListBehaviour;
 import axelrod.behaviours.SetupTournamentAction;
