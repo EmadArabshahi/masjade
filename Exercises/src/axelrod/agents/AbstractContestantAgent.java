@@ -36,9 +36,10 @@ public abstract class AbstractContestantAgent extends Agent
 		long seed = hashCode() + System.currentTimeMillis();
 		_randomGenerator = new Random(seed);
 		
-		registerServices();
+		//registerServices();
 		
 		FSMBehaviour fsm = new FSMBehaviour();
+		
 		
 		fsm.registerFirstState(new ReceiveMoveRequestBehaviour(), "receiveMoveRequest");
 		fsm.registerState(new SendMoveReplyAction(), "sendMoveReply");
