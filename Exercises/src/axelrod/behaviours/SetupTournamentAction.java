@@ -1,8 +1,8 @@
 package axelrod.behaviours;
 
 import axelrod.Output;
-import axelrod.TournamentAgent;
 import axelrod.Rules;
+import axelrod.agents.TournamentAgent;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.WakerBehaviour;

@@ -1,7 +1,7 @@
 package axelrod.behaviours;
 
-import axelrod.ContestantAgent;
 import axelrod.Output;
+import axelrod.agents.ContestantAgent;
 import axelrod.messages.RoundResult;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;

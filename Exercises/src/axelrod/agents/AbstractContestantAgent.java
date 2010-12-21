@@ -1,7 +1,8 @@
-package axelrod;
+package axelrod.agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import axelrod.Rules;
 import axelrod.behaviours.ReceiveMoveRequestBehaviour;
 import axelrod.behaviours.ReceiveRoundResultBehaviour;
 import axelrod.behaviours.SendMoveReplyAction;
@@ -14,7 +15,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
-public class ContestantAgent extends Agent
+public abstract class AbstractContestantAgent extends Agent
 {
 	private MoveRequest _currentMoveRequest;
 	private List<Integer> _myRoundMoveHistory;
@@ -73,9 +74,7 @@ public class ContestantAgent extends Agent
 		}
 	}
 	
-	public int getMove() {
-		return Rules.COOPERATE;
-	}
+	public abstract int getMove();
 	
 	
 	public void clearCurrentMoveRequest()

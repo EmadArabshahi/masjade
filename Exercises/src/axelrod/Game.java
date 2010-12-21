@@ -1,6 +1,7 @@
 package axelrod;
 
 import axelrod.Rules;
+import axelrod.agents.TournamentAgent;
 import jade.core.AID;
 import jade.core.Agent;
 

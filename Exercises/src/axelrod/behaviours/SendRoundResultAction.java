@@ -1,8 +1,8 @@
 package axelrod.behaviours;
 
-import axelrod.ContestantAgent;
 import axelrod.Output;
 import axelrod.Round;
+import axelrod.agents.ContestantAgent;
 import axelrod.messages.RoundResult;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
