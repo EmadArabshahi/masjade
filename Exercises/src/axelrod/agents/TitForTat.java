@@ -4,6 +4,11 @@ import axelrod.Rules;
 
 public class TitForTat extends AbstractContestantAgent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5843959893069547909L;
+
 	@Override
 	public int getMove() 
 	{

@@ -21,6 +21,10 @@ import axelrod.gui.Window;
 
 public class TournamentAgent extends Agent 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8202958476515095561L;
 	private List<Game> _games;
 	private List<AID> _contestants;
 	private int _currentGame;

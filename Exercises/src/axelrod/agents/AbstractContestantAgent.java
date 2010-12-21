@@ -18,6 +18,10 @@ import jade.lang.acl.ACLMessage;
 
 public abstract class AbstractContestantAgent extends Agent
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2440347769399603000L;
 	private MoveRequest _currentMoveRequest;
 	private List<Integer> _myRoundMoveHistory;
 	private List<Integer> _opponentsRoundMoveHistory;
