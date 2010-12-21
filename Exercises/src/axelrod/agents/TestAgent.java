@@ -1,4 +1,4 @@
-package axelrod;
+package axelrod.agents;
 
 import jade.core.Agent;
 import jade.domain.DFService;
