@@ -1,7 +1,7 @@
 package axelrod.behaviours;
 
 import axelrod.Output;
-import axelrod.agents.ContestantAgent;
+import axelrod.agents.AbstractContestantAgent;
 import axelrod.messages.MoveReply;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -16,7 +16,7 @@ public class SendMoveReplyAction extends OneShotBehaviour {
 	
 	@Override
 	public void action() {
-		ContestantAgent agent = (ContestantAgent) myAgent;
+		AbstractContestantAgent agent = (AbstractContestantAgent) myAgent;
 		
 		
 		MoveReply reply = new MoveReply(agent.getCurrentMoveRequest(), agent.getMove());

@@ -1,7 +1,7 @@
 package axelrod.behaviours;
 
 import axelrod.Output;
-import axelrod.agents.ContestantAgent;
+import axelrod.agents.AbstractContestantAgent;
 import axelrod.messages.RoundResult;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -16,7 +16,7 @@ public static final int RECEIVED_ROUND_RESULT = 1;
 	@Override
 	public void action() {
 		_messageReceived = false;
-		ContestantAgent agent = (ContestantAgent) myAgent;
+		AbstractContestantAgent agent = (AbstractContestantAgent) myAgent;
 		
 		ACLMessage msg = agent.receive(RoundResult.getMessageTemplate());
 		

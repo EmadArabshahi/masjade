@@ -2,7 +2,7 @@ package axelrod.behaviours;
 
 import axelrod.Output;
 import axelrod.Round;
-import axelrod.agents.ContestantAgent;
+import axelrod.agents.AbstractContestantAgent;
 import axelrod.messages.RoundResult;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;

@@ -1,7 +1,7 @@
 package axelrod.behaviours;
 
 import axelrod.Output;
-import axelrod.agents.ContestantAgent;
+import axelrod.agents.AbstractContestantAgent;
 import axelrod.messages.MoveRequest;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -19,7 +19,7 @@ public class ReceiveMoveRequestBehaviour extends SimpleBehaviour {
 		
 		System.out.println("Waiting for moveRequest!");
 		
-		ContestantAgent agent = (ContestantAgent) myAgent;
+		AbstractContestantAgent agent = (AbstractContestantAgent) myAgent;
 		ACLMessage msg = agent.receive();
 		
 		if (msg != null)
