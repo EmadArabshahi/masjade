@@ -7,6 +7,11 @@ public class Tester extends AbstractContestantAgent
 	
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1244954641889807361L;
+
 	@Override
 	public int getMove() 
 	{
