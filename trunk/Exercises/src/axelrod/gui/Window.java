@@ -33,6 +33,8 @@ public class Window extends JFrame
 	
 	private SelectionList<Contestant> _availableAgentsList;
 	
+	private TournamentResults _tournamentResults;
+	
 	private TournamentAgent _hostAgent;
 
 	private JButton _playButton;
@@ -42,6 +44,7 @@ public class Window extends JFrame
 		super("Axelrod Tournament");
 		_hostAgent = hostAgent;
 		_availableAgentsList = new SelectionList<Contestant>("selected agents:", "available agents:");
+		_tournamentResults = new TournamentResults();
 		init();
 	}
 	
@@ -51,6 +54,7 @@ public class Window extends JFrame
 		_playButton.setText("Games in progress...");
 		_playButton.setEnabled(false);
 		_availableAgentsList.setEnabled(false);
+		_tournamentResults.setVisible(true);
 	}
 	
 	private void init()
@@ -64,14 +68,16 @@ public class Window extends JFrame
 		
 		
 		JPanel topRow = new JPanel();
+		topRow.setLayout(new BorderLayout());
 		_playButton = new JButton("Play games");
 		_playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				startTournament();
 			}
 		});
-		topRow.add(_playButton);
-		
+		topRow.add(_playButton, BorderLayout.NORTH);
+		topRow.add(_tournamentResults, BorderLayout.CENTER);
+		_tournamentResults.setVisible(false);
 		
 		
 		JPanel bottomRow = new JPanel();
@@ -133,6 +139,6 @@ public class Window extends JFrame
 	public void reset() {
 		_playButton.setEnabled(true);
 		_playButton.setText("Play Games");
-		_availableAgentsList.setEnabled(true);		
+		_availableAgentsList.setEnabled(true);
 	}
 }

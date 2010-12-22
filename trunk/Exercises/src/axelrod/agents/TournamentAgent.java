@@ -2,6 +2,7 @@ package axelrod.agents;
 import axelrod.Contestant;
 import axelrod.Game;
 import axelrod.Rules;
+import axelrod.Tournament;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SequentialBehaviour;
@@ -26,45 +27,24 @@ public class TournamentAgent extends Agent
 	 * 
 	 */
 	private static final long serialVersionUID = 8202958476515095561L;
-	private List<Game> _games;
-	private List<Contestant> _contestants;
-	private int _currentGame;
-	public SequentialBehaviour behaviours;
+	private Tournament _currentTournament;
+	public SequentialBehaviour _behaviours;
 	
 	private Window _window;
 	
-	public TournamentAgent()
-	{
-		_games = new ArrayList<Game>();
-	}
 	
 	public void setup()
 	{
 		registerServices();
+		
+		_currentTournament = null;
 		
 		_window = new Window(this);
 		_window.setVisible(true);	
 		
 		addBehaviour(new RefreshAgentListBehaviour(this,1000));
 	}
-	
-	/*
-	public void setAvailableAgents(DFAgentDescription[] participants)
-	{
-		List<AID> newAgents = new ArrayList<AID>();
-		for(int i=0; i<participants.length; i++)
-		{
-			newAgents.add(participants[i].getName());
-		}
-		_window.updateAgentList(newAgents);
-	}
-	*/
-	
-	public void registerContestants()
-	{
-		this._contestants = _window.getSelectedContestants();
-	}
-	
+		
 	protected void takedown()
 	{
 		_window.dispose();
@@ -111,38 +91,13 @@ public class TournamentAgent extends Agent
 	
 	public void startBehaviours()
 	{
-		addBehaviour(behaviours);
+		addBehaviour(_behaviours);
 	}
 	
-	public List<Game> getGames()
+	public void setupTournament()
 	{
-		return _games;
-	}
-	
-	public List<Contestant> getContestants()
-	{
-		return this._contestants;
-	}
-	
-	public void createGames()
-	{
-		// loop in such a way that each pair only comes up once,
-		// and no pairs are made with the same object.
-		int gameNumber = 0;
-		
-		for (int i = 0; i < _contestants.size(); i++)
-		{
-			for(int j = i + 1; j < _contestants.size(); j++)
-			{
-				// create for each pair the amount of games that is set (5).
-				for (int k = 0; k < Rules.getNumberOfGamesPerUniqueOpponents(); k++)
-				{
-					Game game = new Game(this, gameNumber, _contestants.get(i), _contestants.get(j));
-					_games.add(game);
-					gameNumber++;
-				}
-			}
-		}
+		Tournament tournament = new Tournament(this, _window.getSelectedContestants());
+		this._currentTournament = tournament;
 	}
 	
 	public void start()
@@ -155,14 +110,12 @@ public class TournamentAgent extends Agent
 	
 	public void play()
 	{
-		behaviours = new SequentialBehaviour();
+		_behaviours = new SequentialBehaviour();
 		
-		for (Game game : _games)
-		{
-			game.play();
-			_currentGame++;
-		}
-		behaviours.addSubBehaviour(new EndTournamentAction());
+		if(_currentTournament != null)
+			_currentTournament.play();
+		
+		_behaviours.addSubBehaviour(new EndTournamentAction());
 		startBehaviours();
 	}
 
