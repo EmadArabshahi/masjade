@@ -25,17 +25,18 @@ public class RefreshAgentListBehaviour extends TickerBehaviour
 		TournamentAgent agent = (TournamentAgent) myAgent;
 		
 		ACLMessage msg = agent.receive(ApplyForTournament.getMessageTemplate());
-		
-		if(msg != null)
+		while(msg != null)
 		{
 			ApplyForTournament aply = new ApplyForTournament(msg);
 			Contestant contestant = new Contestant(aply.getPlayer(), aply.getStrategy());
 			agent.addContestant(contestant);
+			
+			//get next message.
+			msg = agent.receive(ApplyForTournament.getMessageTemplate());
+			
 		}
-		else
-		{
-			block();
-		}
+		//wait with schedulling this behaviour till new message is received.
+		block();
 		
 	}	
 }

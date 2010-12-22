@@ -67,9 +67,9 @@ public class Round {
 	
 	public void play() 
 	{
-		_tournamentAgent.behaviours.addSubBehaviour(new SendMoveRequestAction(this));
-		_tournamentAgent.behaviours.addSubBehaviour(new ReceiveMoveReplyAction(this));
-		_tournamentAgent.behaviours.addSubBehaviour(new SendRoundResultAction(this));
+		_tournamentAgent._behaviours.addSubBehaviour(new SendMoveRequestAction(this));
+		_tournamentAgent._behaviours.addSubBehaviour(new ReceiveMoveReplyAction(this));
+		_tournamentAgent._behaviours.addSubBehaviour(new SendRoundResultAction(this));
 	}
 	
 	public int getUtilityContestant1() throws Exception
