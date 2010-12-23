@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.tools.logging.ontology.GetAllLoggers;
 
 import java.util.Iterator;
 import java.util.Scanner;
@@ -12,8 +13,7 @@ import axelrod.Round;
 
 public class MoveRequest extends MapMessage
 {
-	
-	private static final String[] KEYS = {"roundNr", "gameNr"};
+	private static final String[] KEYS = {"roundNr", "gameNr", "player1name", "player2name"};
 	private static final String LANGUAGE = "axelrod-tournament";
 	private static final String ONTOLOGY = "axelrod-tournament-move-request";
 	
@@ -32,6 +32,8 @@ public class MoveRequest extends MapMessage
 		setConversationId(conservationId);
 		setRoundNr(roundNr);
 		setGameNr(gameNr);
+		setPlayer1Name(player1.getName());
+		setPlayer2Name(player2.getName());
 	}
 	
 	public MoveRequest(ACLMessage message)
@@ -50,7 +52,15 @@ public class MoveRequest extends MapMessage
 		setValue(KEYS[1], "" + gameNr);
 	}
 	
+	private void setPlayer1Name(String name)
+	{
+		setValue(KEYS[2], name);
+	}
 	
+	private void setPlayer2Name(String name)
+	{
+		setValue(KEYS[3], name);
+	}
 	
 	public int getRoundNr()
 	{
@@ -65,12 +75,31 @@ public class MoveRequest extends MapMessage
 	public AID getPlayer1()
 	{
 		AID[] aids = this.getReceivers();
-		return aids[0];
+		AID actualAid = new AID();
+		
+		for (AID aid : aids)
+		{
+			if (aid.getName().equals(getValue(KEYS[2])))
+			{
+				actualAid = aid;
+			}
+		}
+		return actualAid;
 	}
-	public AID getPlayer2()	
+	
+	public AID getPlayer2()
 	{
 		AID[] aids = this.getReceivers();
-		return aids[1];
+		AID actualAid = new AID();
+		
+		for (AID aid : aids)
+		{
+			if (aid.getName().equals(getValue(KEYS[3])))
+			{
+				actualAid = aid;
+			}
+		}
+		return actualAid;
 	}
 
 	
