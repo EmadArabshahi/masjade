@@ -54,4 +54,14 @@ public class Tournament
 		}
 	}
 
+	public List<Game> getGames()
+	{
+		return _games;
+	}
+
+
+	public List<Contestant> getContestants() {
+		return _contestants;
+	}
+	
 }

@@ -19,7 +19,7 @@ public class MoveRequest extends MapMessage
 	
 	public MoveRequest(Round round)
 	{
-		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1(), round.getContestant2());
+		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1().getAID(), round.getContestant2().getAID());
 	}
 	
 	public MoveRequest(int roundNr, int gameNr, String conservationId, AID player1, AID player2)

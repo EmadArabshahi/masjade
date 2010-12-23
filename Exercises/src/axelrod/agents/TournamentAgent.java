@@ -32,6 +32,10 @@ public class TournamentAgent extends Agent
 	
 	private Window _window;
 	
+	public Tournament getCurrentTournament()
+	{
+		return _currentTournament;
+	}
 	
 	public void setup()
 	{
@@ -121,5 +125,9 @@ public class TournamentAgent extends Agent
 
 	public void stop() {
 		_window.reset();
+	}
+
+	public void updateRankings() {
+		_window.updateRankings(_currentTournament.getContestants());
 	}
 }

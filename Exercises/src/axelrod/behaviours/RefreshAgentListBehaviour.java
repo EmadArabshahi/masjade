@@ -6,6 +6,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import axelrod.Contestant;
+import axelrod.Output;
 import axelrod.agents.TournamentAgent;
 import axelrod.messages.ApplyForTournament;
 import axelrod.messages.RoundResult;
@@ -30,6 +31,8 @@ public class RefreshAgentListBehaviour extends TickerBehaviour
 			ApplyForTournament aply = new ApplyForTournament(msg);
 			Contestant contestant = new Contestant(aply.getPlayer(), aply.getStrategy());
 			agent.addContestant(contestant);
+			
+			Output.AgentMessage(agent, "Aply for tournament received. " + contestant);
 			
 			//get next message.
 			msg = agent.receive(ApplyForTournament.getMessageTemplate());
