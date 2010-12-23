@@ -8,8 +8,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class ReceiveRoundResultBehaviour extends SimpleBehaviour {
-
-public static final int RECEIVED_ROUND_RESULT = 1;
+	public static final int RECEIVED_ROUND_RESULT = 1;
 	
 	private boolean _messageReceived;
 	
@@ -22,7 +21,6 @@ public static final int RECEIVED_ROUND_RESULT = 1;
 		
 		if (msg != null)
 		{
-			
 			RoundResult roundResult = new RoundResult(msg);
 			
 			if(roundResult.getRoundNr() == 0)
@@ -36,7 +34,7 @@ public static final int RECEIVED_ROUND_RESULT = 1;
 			else
 			{
 				agent.addMoveToMyRoundHistory(roundResult.getActionPlayer2());
-				agent.addMoveToOpponentRoundHistory(roundResult.getActionPlayer2());
+				agent.addMoveToOpponentRoundHistory(roundResult.getActionPlayer1());
 			}
 			
 			_messageReceived = true;
