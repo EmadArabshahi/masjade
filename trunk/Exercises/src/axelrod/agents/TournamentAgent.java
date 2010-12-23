@@ -103,6 +103,7 @@ public class TournamentAgent extends Agent
 	{
 		Tournament tournament = new Tournament(this, _window.getSelectedContestants());
 		this._currentTournament = tournament;
+		System.out.println("Tournament set.!!!!!!!!!!");
 	}
 	
 	public void start()
@@ -142,5 +143,9 @@ public class TournamentAgent extends Agent
 
 	public void addPlayedRound(Round round) {
 		_window.addPlayedRound(round);		
+	}
+
+	public void startNewTournament() {
+		_window.startNewTournament(_currentTournament);
 	}
 }

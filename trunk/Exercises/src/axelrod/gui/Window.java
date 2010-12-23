@@ -56,9 +56,7 @@ public class Window extends JFrame
 		_playButton.setText("Games in progress...");
 		_playButton.setEnabled(false);
 		_availableAgentsList.setEnabled(false);
-		_tournamentResults.startNewTournament(_hostAgent.getCurrentTournament());
 		_tournamentResults.setVisible(true);
-		
 	}
 	
 	private void init()
@@ -96,8 +94,6 @@ public class Window extends JFrame
 	
 	private JPanel getRulesPanel()
 	{
-		
-		
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panel.setLayout(new BorderLayout());
@@ -160,5 +156,9 @@ public class Window extends JFrame
 
 	public void addPlayedRound(Round round) {
 		_tournamentResults.addPlayedRound(round);
+	}
+
+	public void startNewTournament(Tournament tournament) {
+		_tournamentResults.startNewTournament(tournament);
 	}
 }
