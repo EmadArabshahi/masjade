@@ -26,7 +26,7 @@ public class TitForTwoTats extends AbstractContestantAgent {
 		
 		if ( round == 0 || round == 1)
 			return Rules.COOPERATE;		
-		else if ( ( getOpponentMove( round) == Rules.DEFECT) && ( getOpponentMove( round - 1) == Rules.DEFECT))
+		else if ( ( getOpponentMove( round - 1) == Rules.DEFECT) && ( getOpponentMove( round - 2) == Rules.DEFECT))
 			return Rules.DEFECT;
 		else
 			return Rules.COOPERATE;
