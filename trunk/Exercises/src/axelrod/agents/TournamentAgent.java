@@ -42,10 +42,22 @@ public class TournamentAgent extends Agent
 	{
 		registerServices();
 		
+		
 		_currentTournament = null;
 		
 		_window = new Window(this);
 		_window.setVisible(true);	
+		
+		// Sleep the agent for one second to let the gui load.
+		/*
+		try
+		{
+			Thread.sleep(1000);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}*/
 		
 		addBehaviour(new RefreshAgentListBehaviour(this,1000));
 	}

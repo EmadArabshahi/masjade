@@ -75,7 +75,6 @@ public class SelectionList<T> extends JPanel
 		_availableLabel = availableLabel;
 		
 		init();
-		update();
 	}
 	
 	/**
@@ -179,7 +178,12 @@ public class SelectionList<T> extends JPanel
 			}
 			
 		}
-		repaint();
+		System.out.println("Updating list: " + _availableList.getContents().getSize());
+		try{
+			_availableList.repaint();
+			updateUI();
+			repaint();
+		}catch(Exception e){}
 	}
 	
 	
