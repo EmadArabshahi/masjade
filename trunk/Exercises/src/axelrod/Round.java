@@ -7,8 +7,8 @@ import axelrod.Rules;
 import jade.core.AID;
 
 public class Round {
-	private AID _contestant1;
-	private AID _contestant2;
+	private Contestant _contestant1;
+	private Contestant _contestant2;
 	private int _actionContestant1;
 	private int _actionContestant2;
 	private boolean _played;
@@ -16,7 +16,7 @@ public class Round {
 	private int _roundNr;
 	private int _gameNr;
 	
-	public Round(TournamentAgent tournamentAgent, int roundNumber, int gameNumber, AID contestant1, AID contestant2)
+	public Round(TournamentAgent tournamentAgent, int roundNumber, int gameNumber, Contestant contestant1, Contestant contestant2)
 	{
 		_tournamentAgent = tournamentAgent;
 		_contestant1 = contestant1;
@@ -39,11 +39,11 @@ public class Round {
 		return String.format("game;%s|round;%s", _gameNr, _roundNr);
 	}
 
-	public AID getContestant1() {
+	public Contestant getContestant1() {
 		return _contestant1;
 	}
 	
-	public AID getContestant2() {
+	public Contestant getContestant2() {
 		return _contestant2;
 	}
 	

@@ -179,7 +179,7 @@ public class SelectionList<T> extends JPanel
 			}
 			
 		}
-
+		repaint();
 	}
 	
 	

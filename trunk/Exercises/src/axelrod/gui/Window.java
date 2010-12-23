@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import axelrod.Contestant;
 import axelrod.Rules;
+import axelrod.Tournament;
 import axelrod.agents.TournamentAgent;
 
 import javax.swing.JButton;
@@ -25,7 +26,6 @@ import java.awt.event.ActionEvent;
 
 public class Window extends JFrame
 {
-
 	/**
 	 * 
 	 */
@@ -54,7 +54,9 @@ public class Window extends JFrame
 		_playButton.setText("Games in progress...");
 		_playButton.setEnabled(false);
 		_availableAgentsList.setEnabled(false);
+		_tournamentResults.startNewTournament(_hostAgent.getCurrentTournament());
 		_tournamentResults.setVisible(true);
+		
 	}
 	
 	private void init()
@@ -65,7 +67,6 @@ public class Window extends JFrame
 		
 		JPanel agentList = _availableAgentsList;
 		agentList.setBorder(BorderFactory.createLineBorder(Color.black));
-		
 		
 		JPanel topRow = new JPanel();
 		topRow.setLayout(new BorderLayout());
@@ -140,5 +141,10 @@ public class Window extends JFrame
 		_playButton.setEnabled(true);
 		_playButton.setText("Play Games");
 		_availableAgentsList.setEnabled(true);
+	}
+
+	public void updateRankings(List<Contestant> contestants)
+	{
+		_tournamentResults.updateRankings(contestants);
 	}
 }

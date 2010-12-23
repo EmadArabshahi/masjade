@@ -39,8 +39,6 @@ public static final int RECEIVED_ROUND_RESULT = 1;
 				agent.addMoveToOpponentRoundHistory(roundResult.getActionPlayer2());
 			}
 			
-			System.out.println("RoundResult received.");
-			
 			_messageReceived = true;
 		}
 		else

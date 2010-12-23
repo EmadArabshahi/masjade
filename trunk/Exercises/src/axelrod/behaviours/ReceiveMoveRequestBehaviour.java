@@ -17,8 +17,6 @@ public class ReceiveMoveRequestBehaviour extends SimpleBehaviour {
 	public void action() {
 		_messageReceived = false;
 		
-		System.out.println("Waiting for moveRequest!");
-		
 		AbstractContestantAgent agent = (AbstractContestantAgent) myAgent;
 		ACLMessage msg = agent.receive();
 		
