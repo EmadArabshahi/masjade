@@ -40,13 +40,17 @@ public class Game {
 		}
 	}
 	
+	public void gotoNextRound()
+	{
+		_currentRound++;
+	}
+	
 	public void play()
 	{
 		// play all the rounds.
 		for (Round round : _rounds)
 		{
 			round.play();
-			_currentRound++;
 		}
 	}
 	
@@ -72,18 +76,24 @@ public class Game {
 
 	public int getUtilityContestant1() {
 		int totalUtility = 0;
+		int roundCount = 0;
 		for (Round round : _rounds)
 		{
+			if (roundCount > getCurrentRoundNumber()) break;
 			totalUtility += round.getUtilityContestant1();
+			roundCount++;
 		}
 		return totalUtility;
 	}
 	
 	public int getUtilityContestant2() {
 		int totalUtility = 0;
+		int roundCount = 0;
 		for (Round round : _rounds)
 		{
+			if (roundCount > getCurrentRoundNumber()) break;
 			totalUtility += round.getUtilityContestant2();
+			roundCount++;
 		}
 		return totalUtility;
 	}
