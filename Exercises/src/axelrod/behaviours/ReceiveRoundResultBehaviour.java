@@ -26,7 +26,7 @@ public class ReceiveRoundResultBehaviour extends SimpleBehaviour {
 			if(roundResult.getRoundNr() == 0)
 				agent.clearRoundHistory();
 			
-			if(agent.getAID() == roundResult.getPlayer1())
+			if(agent.getAID().equals(roundResult.getPlayer1()))
 			{
 				agent.addMoveToMyRoundHistory(roundResult.getActionPlayer1());
 				agent.addMoveToOpponentRoundHistory(roundResult.getActionPlayer2());

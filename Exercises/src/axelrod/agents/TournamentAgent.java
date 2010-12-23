@@ -103,7 +103,6 @@ public class TournamentAgent extends Agent
 	{
 		Tournament tournament = new Tournament(this, _window.getSelectedContestants());
 		this._currentTournament = tournament;
-		System.out.println("Tournament set.!!!!!!!!!!");
 	}
 	
 	public void start()

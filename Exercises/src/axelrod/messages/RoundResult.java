@@ -20,7 +20,6 @@ public class RoundResult extends MapMessage
 	public RoundResult(Round round)
 	{
 		this(round.getRoundNr(), round.getGameNr(), round.getConversationId(), round.getContestant1().getAID(), round.getContestant2().getAID(), round.getActionContestant1(), round.getActionContestant2());
-
 	}
 	
 	public RoundResult(int roundNr, int gameNr, String conservationId, AID player1, AID player2, int actionPlayer1, int actionPlayer2)
