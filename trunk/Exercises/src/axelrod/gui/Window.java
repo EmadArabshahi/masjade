@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import axelrod.Contestant;
 import axelrod.Game;
+import axelrod.Round;
 import axelrod.Rules;
 import axelrod.Tournament;
 import axelrod.agents.TournamentAgent;
@@ -151,5 +152,13 @@ public class Window extends JFrame
 
 	public void addPlayedGame(Game game) {
 		_tournamentResults.addPlayedGame(game);
+	}
+	
+	public void updateCurrentGame(Game game) {
+		_tournamentResults.updateCurrentGame(game);
+	}
+
+	public void addPlayedRound(Round round) {
+		_tournamentResults.addPlayedRound(round);
 	}
 }

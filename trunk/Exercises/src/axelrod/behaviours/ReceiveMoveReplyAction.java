@@ -63,13 +63,20 @@ public class ReceiveMoveReplyAction extends SimpleBehaviour {
 		c1.addUtility(Rules.getUtilityForPlayer1(_round.getActionContestant1(), _round.getActionContestant2()));
 		c2.addUtility(Rules.getUtilityForPlayer2(_round.getActionContestant1(), _round.getActionContestant2()));
 		
+		// update the current game display
+		TournamentAgent agent = (TournamentAgent) myAgent;
+		
+		agent.updateCurrentGame(_round.getGame());
+		agent.addPlayedRound(_round);
+		
 		if (_round.getRoundNr() == Rules.getNumberOfRoundsPerGame() - 1)
 		{
 			// if the game is finished, update the rankings
-			TournamentAgent agent = (TournamentAgent) myAgent;
 			agent.updateRankings();
 			agent.addPlayedGame(_round.getGame());
 		}
+		
+		_round.getGame().gotoNextRound();
 		return 0;
 	}
 }

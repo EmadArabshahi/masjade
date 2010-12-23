@@ -1,6 +1,7 @@
 package axelrod.agents;
 import axelrod.Contestant;
 import axelrod.Game;
+import axelrod.Round;
 import axelrod.Rules;
 import axelrod.Tournament;
 import jade.core.AID;
@@ -133,5 +134,13 @@ public class TournamentAgent extends Agent
 
 	public void addPlayedGame(Game game) {
 		_window.addPlayedGame(game);		
+	}
+	
+	public void updateCurrentGame(Game game) {
+		_window.updateCurrentGame(game);
+	}
+
+	public void addPlayedRound(Round round) {
+		_window.addPlayedRound(round);		
 	}
 }
