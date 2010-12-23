@@ -19,11 +19,10 @@ import axelrod.Tournament;
 
 public class TournamentResults extends JPanel
 {
-	
 	private JTable _rankings;
-	
-	private JPanel _innerPanel;
-	private JScrollPane _scrollPane;
+	private JScrollPane _scrollPaneRankings;
+	private JTable _playedGames;
+	private JScrollPane _scrollPanePlayedGames;
 	
 	public TournamentResults()
 	{
@@ -32,15 +31,19 @@ public class TournamentResults extends JPanel
 	
 	private void init()
 	{
-		_scrollPane = new JScrollPane();
-		_innerPanel = new JPanel();
+		_scrollPaneRankings = new JScrollPane();
 		
 		_rankings = new JTable();
-		_scrollPane = new JScrollPane(_rankings);
+		_scrollPaneRankings = new JScrollPane(_rankings);
 		
-		_scrollPane.setPreferredSize(new Dimension(750, 250));
+		_playedGames = new JTable();
+		_scrollPanePlayedGames = new JScrollPane(_playedGames);
 		
-		this.add(_scrollPane, BorderLayout.CENTER);
+		_scrollPaneRankings.setPreferredSize(new Dimension(300, 250));
+		_scrollPanePlayedGames.setPreferredSize(new Dimension(300, 250));
+		
+		this.add(_scrollPaneRankings, BorderLayout.WEST);
+		this.add(_scrollPanePlayedGames, BorderLayout.CENTER);
 	}
 	
 	public void startNewTournament(Tournament tournament)
@@ -51,12 +54,21 @@ public class TournamentResults extends JPanel
 		}
 		Object[][] data = {	};
 		
-		Object[] columnNames = new Object[2];
-		columnNames[0] = "Contestant";
-		columnNames[1] = "Utility";
+		Object[] columnNamesRankings = new Object[2];
+		columnNamesRankings[0] = "Contestant";
+		columnNamesRankings[1] = "Utility";
 		
-		DefaultTableModel model = (DefaultTableModel)_rankings.getModel();
-		model.setDataVector(data, columnNames);
+		DefaultTableModel modelRankings = (DefaultTableModel)_rankings.getModel();
+		modelRankings.setDataVector(data, columnNamesRankings);
+		
+		Object[] columnNamesPlayedGames = new Object[4];
+		columnNamesPlayedGames[0] = "C1";
+		columnNamesPlayedGames[1] = "U1";
+		columnNamesPlayedGames[2] = "C2";
+		columnNamesPlayedGames[3] = "U2";
+		
+		DefaultTableModel modelPlayedGames = (DefaultTableModel)_playedGames.getModel();
+		modelPlayedGames.setDataVector(data, columnNamesPlayedGames);
 	}
 	
 	public void updateRankings(List<Contestant> contestants)
@@ -73,5 +85,19 @@ public class TournamentResults extends JPanel
 			
 			model.addRow(rowData);
 		}
+	}
+	
+	public void addPlayedGame(Game game)
+	{
+		DefaultTableModel model = (DefaultTableModel)_playedGames.getModel();
+		
+		Object[] rowData = new Object[4];
+		
+		rowData[0] = game.getContestant1();
+		rowData[1] = game.getUtilityContestant1();
+		rowData[2] = game.getContestant2();
+		rowData[3] = game.getUtilityContestant2();
+		
+		model.addRow(rowData);
 	}
 }

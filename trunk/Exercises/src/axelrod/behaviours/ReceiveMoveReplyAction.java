@@ -37,14 +37,11 @@ public class ReceiveMoveReplyAction extends SimpleBehaviour {
 			Output.AgentMessage(myAgent, String.format("Move reply received (%s), %s", moveReply.getConversationId(), moveReply.getMessage().getContent()));
 			
 			if (msg.getSender().equals(_round.getContestant1().getAID()))
-			{
-				System.out.println("c1 action " + moveReply.getAction());
-				
+			{	
 				_round.setActionContestant1(moveReply.getAction());
 			}
 			else if (msg.getSender().equals(_round.getContestant2().getAID()))
 			{
-				System.out.println("c2 action " + moveReply.getAction());
 				_round.setActionContestant2(moveReply.getAction());
 			}
 		}
@@ -71,6 +68,7 @@ public class ReceiveMoveReplyAction extends SimpleBehaviour {
 			// if the game is finished, update the rankings
 			TournamentAgent agent = (TournamentAgent) myAgent;
 			agent.updateRankings();
+			agent.addPlayedGame(_round.getGame());
 		}
 		return 0;
 	}
