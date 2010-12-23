@@ -35,7 +35,7 @@ public class Game {
 		// create the rounds that should be played. each game consists of 200 rounds.
 		for (int roundNumber = 0; roundNumber < Rules.getNumberOfRoundsPerGame(); roundNumber++)
 		{
-			Round round = new Round(_tournamentAgent, roundNumber, _gameNumber, _contestant1, _contestant2);
+			Round round = new Round(roundNumber, this);
 			_rounds.add(round);
 		}
 	}
@@ -68,5 +68,31 @@ public class Game {
 	public Contestant getContestant2()
 	{
 		return _contestant2;
+	}
+
+	public int getUtilityContestant1() {
+		int totalUtility = 0;
+		for (Round round : _rounds)
+		{
+			totalUtility += round.getUtilityContestant1();
+		}
+		return totalUtility;
+	}
+	
+	public int getUtilityContestant2() {
+		int totalUtility = 0;
+		for (Round round : _rounds)
+		{
+			totalUtility += round.getUtilityContestant2();
+		}
+		return totalUtility;
+	}
+
+	public int getGameNumber() {
+		return _gameNumber;
+	}
+
+	public TournamentAgent getTournamentAgent() {
+		return _tournamentAgent;
 	}
 }

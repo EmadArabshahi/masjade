@@ -7,22 +7,16 @@ import axelrod.Rules;
 import jade.core.AID;
 
 public class Round {
-	private Contestant _contestant1;
-	private Contestant _contestant2;
 	private int _actionContestant1;
 	private int _actionContestant2;
 	private boolean _played;
-	private TournamentAgent _tournamentAgent;
 	private int _roundNr;
-	private int _gameNr;
+	private Game _game;
 	
-	public Round(TournamentAgent tournamentAgent, int roundNumber, int gameNumber, Contestant contestant1, Contestant contestant2)
+	public Round(int roundNumber, Game game)
 	{
-		_tournamentAgent = tournamentAgent;
-		_contestant1 = contestant1;
-		_contestant2 = contestant2;
 		_roundNr = roundNumber;
-		_gameNr = gameNumber;
+		_game = game;
 	}
 	
 	public void setActionContestant1(int action)
@@ -36,15 +30,15 @@ public class Round {
 	}
 	
 	public String getConversationId() {
-		return String.format("game;%s|round;%s", _gameNr, _roundNr);
+		return String.format("game;%s|round;%s", _game.getGameNumber(), _roundNr);
 	}
 
 	public Contestant getContestant1() {
-		return _contestant1;
+		return _game.getContestant1();
 	}
 	
 	public Contestant getContestant2() {
-		return _contestant2;
+		return _game.getContestant2();
 	}
 	
 	public int getRoundNr()
@@ -54,7 +48,7 @@ public class Round {
 	
 	public int getGameNr()
 	{
-		return _gameNr;
+		return _game.getGameNumber();
 	}
 	
 	public int getActionContestant1() {
@@ -67,36 +61,23 @@ public class Round {
 	
 	public void play() 
 	{
-		_tournamentAgent._behaviours.addSubBehaviour(new SendMoveRequestAction(this));
-		_tournamentAgent._behaviours.addSubBehaviour(new ReceiveMoveReplyAction(this));
-		_tournamentAgent._behaviours.addSubBehaviour(new SendRoundResultAction(this));
+		TournamentAgent agent = _game.getTournamentAgent();
+		agent.behaviours.addSubBehaviour(new SendMoveRequestAction(this));
+		agent.behaviours.addSubBehaviour(new ReceiveMoveReplyAction(this));
+		agent.behaviours.addSubBehaviour(new SendRoundResultAction(this));
 	}
 	
-	public int getUtilityContestant1() throws Exception
+	public int getUtilityContestant1()
 	{
-		int utility = -1;
-		if (_played)
-		{
-			utility = Rules.getUtilityForPlayer1(_actionContestant1, _actionContestant2);
-		}
-		else
-		{
-			throw new Exception("Round has not yet been played.");
-		}
-		return utility;
+		return Rules.getUtilityForPlayer1(_actionContestant1, _actionContestant2);
 	}
 	
-	public int getUtilityContestant2() throws Exception
+	public int getUtilityContestant2()
 	{
-		int utility = -1;
-		if (_played)
-		{
-			utility = Rules.getUtilityForPlayer2(_actionContestant2, _actionContestant1);
-		}
-		else
-		{
-			throw new Exception("Round has not yet been played.");
-		}
-		return utility;
+		return Rules.getUtilityForPlayer2(_actionContestant1, _actionContestant2);
+	}
+
+	public Game getGame() {
+		return _game;
 	}
 }

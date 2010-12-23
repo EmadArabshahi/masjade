@@ -28,7 +28,7 @@ public class TournamentAgent extends Agent
 	 */
 	private static final long serialVersionUID = 8202958476515095561L;
 	private Tournament _currentTournament;
-	public SequentialBehaviour _behaviours;
+	public SequentialBehaviour behaviours;
 	
 	private Window _window;
 	
@@ -95,7 +95,7 @@ public class TournamentAgent extends Agent
 	
 	public void startBehaviours()
 	{
-		addBehaviour(_behaviours);
+		addBehaviour(behaviours);
 	}
 	
 	public void setupTournament()
@@ -114,12 +114,12 @@ public class TournamentAgent extends Agent
 	
 	public void play()
 	{
-		_behaviours = new SequentialBehaviour();
+		behaviours = new SequentialBehaviour();
 		
 		if(_currentTournament != null)
 			_currentTournament.play();
 		
-		_behaviours.addSubBehaviour(new EndTournamentAction());
+		behaviours.addSubBehaviour(new EndTournamentAction());
 		startBehaviours();
 	}
 
@@ -129,5 +129,9 @@ public class TournamentAgent extends Agent
 
 	public void updateRankings() {
 		_window.updateRankings(_currentTournament.getContestants());
+	}
+
+	public void addPlayedGame(Game game) {
+		_window.addPlayedGame(game);		
 	}
 }

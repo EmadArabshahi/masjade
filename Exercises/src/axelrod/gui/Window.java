@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import axelrod.Contestant;
+import axelrod.Game;
 import axelrod.Rules;
 import axelrod.Tournament;
 import axelrod.agents.TournamentAgent;
@@ -146,5 +147,9 @@ public class Window extends JFrame
 	public void updateRankings(List<Contestant> contestants)
 	{
 		_tournamentResults.updateRankings(contestants);
+	}
+
+	public void addPlayedGame(Game game) {
+		_tournamentResults.addPlayedGame(game);
 	}
 }
