@@ -69,6 +69,7 @@ public class AuctioneerAgent extends Agent {
 			AID bidder = i.next();
 			msg.addReceiver(bidder);
 		}
+		send(msg);
 	}
 
 	private ArrayList<AID> getBidderAIDs() {
