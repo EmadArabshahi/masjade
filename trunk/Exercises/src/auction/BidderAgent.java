@@ -1,5 +1,6 @@
 package auction;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
@@ -8,9 +9,12 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 public class BidderAgent extends Agent {
+	private int _currentPrice;
+	private AID _auctioneerAID;
 	@Override
 	protected void setup()
 	{
+		_currentPrice = 0;
 		registerService();
 		addBehaviours();
 	}
@@ -44,5 +48,24 @@ public class BidderAgent extends Agent {
 	    { 
 	    	fe.printStackTrace(); 
 	    }		
+	}
+
+	public void setCurrentPrice(int price) 
+	{
+		_currentPrice = price;
+	}
+	
+	public int getCurrentPrice()
+	{
+		return _currentPrice;
+	}
+
+	public void setAuctioneerAID(AID aid) {
+		_auctioneerAID = aid;
+	}
+	
+	public AID getAuctioneerAID()
+	{
+		return _auctioneerAID;
 	}
 }
