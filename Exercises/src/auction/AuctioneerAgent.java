@@ -14,6 +14,7 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctioneerAgent extends Agent {
 	private static final long serialVersionUID = 4944135154767164963L;
+	private int _highestBid = 0;
 
 	@Override
 	protected void setup()
@@ -72,7 +73,7 @@ public class AuctioneerAgent extends Agent {
 		send(msg);
 	}
 
-	private ArrayList<AID> getBidderAIDs() {
+	public ArrayList<AID> getBidderAIDs() {
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription(); 
 	    sd.setType("bidder"); 
@@ -94,5 +95,13 @@ public class AuctioneerAgent extends Agent {
 	    }
 	    
 	    return AIDs;
+	}
+
+	public int getHighestBid() {
+		return _highestBid;
+	}
+
+	public void setHighestBid(int newBid) {
+		_highestBid = newBid;
 	}
 }

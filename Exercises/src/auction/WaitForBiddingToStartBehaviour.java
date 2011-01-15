@@ -14,7 +14,7 @@ public class WaitForBiddingToStartBehaviour extends SimpleBehaviour {
 		
 		if (msg != null)
 		{
-			agent.setCurrentPrice(Integer.parseInt(msg.getContent()));
+			agent.setHighestBid(Integer.parseInt(msg.getContent()));
 			agent.setAuctioneerAID(msg.getSender());
 			_done = true;
 		}
