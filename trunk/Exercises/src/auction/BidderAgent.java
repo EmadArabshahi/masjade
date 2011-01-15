@@ -21,12 +21,7 @@ public class BidderAgent extends Agent {
 	
 	private void addBehaviours()
 	{
-		FSMBehaviour fsm = new FSMBehaviour();
-		fsm.registerFirstState(new WaitForBiddingToStartBehaviour(), "waitForBidding");
-		fsm.registerState(new BidBehaviour(), "bid");
-		fsm.registerDefaultTransition("waitForBidding", "bid");
-		fsm.registerDefaultTransition("bid", "waitForBidding");
-		addBehaviour(fsm);
+		addBehaviour(new BidBehaviour());
 	}
 	
 	private void registerService()
@@ -50,12 +45,12 @@ public class BidderAgent extends Agent {
 	    }		
 	}
 
-	public void setCurrentPrice(int price) 
+	public void setHighestBid(int price) 
 	{
 		_currentPrice = price;
 	}
 	
-	public int getCurrentPrice()
+	public int getHighestBid()
 	{
 		return _currentPrice;
 	}
@@ -67,5 +62,9 @@ public class BidderAgent extends Agent {
 	public AID getAuctioneerAID()
 	{
 		return _auctioneerAID;
+	}
+
+	public int getBiddingLimit() {
+		return 200;
 	}
 }
