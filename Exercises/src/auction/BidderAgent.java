@@ -11,12 +11,21 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 public class BidderAgent extends Agent {
 	private int _currentPrice;
 	private AID _auctioneerAID;
+	private int _totalBudget;
+	private int _bidLimit;
+	private int _remainingBudget;
 	@Override
 	protected void setup()
 	{
 		_currentPrice = 0;
 		registerService();
 		addBehaviours();
+		
+		Object[] args = getArguments();
+		_totalBudget = Integer.parseInt(args[0].toString());
+		_bidLimit = Integer.parseInt(args[1].toString());
+		
+		_remainingBudget = _totalBudget;
 	}
 	
 	private void addBehaviours()
@@ -63,8 +72,23 @@ public class BidderAgent extends Agent {
 	{
 		return _auctioneerAID;
 	}
+	
+	public int getTotalBudget()
+	{
+		return _totalBudget;
+	}
+	
+	public int getBidLimit()
+	{
+		return _bidLimit;
+	}
+	
+	public void setRemainingBudget(int budget)
+	{
+		_remainingBudget = budget;
+	}
 
-	public int getBiddingLimit() {
-		return 200;
+	public int getRemainingBudget() {
+		return _remainingBudget;
 	}
 }

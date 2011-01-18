@@ -14,13 +14,21 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctioneerAgent extends Agent {
 	private static final long serialVersionUID = 4944135154767164963L;
-	private int _highestBid = 0;
+	private ArrayList<Item> _items;
 
 	@Override
 	protected void setup()
 	{
 		registerService();
+		addItems();
 		addBehaviours();
+	}
+	
+	public void addItems()
+	{
+		_items = new ArrayList<Item>();
+		_items.add(new Item("Fellowship of the ring", "book", 50));
+		_items.add(new Item("Two Towers", "book", 70));
 	}
 	
 	public void addBehaviours()
@@ -28,7 +36,15 @@ public class AuctioneerAgent extends Agent {
 		SequentialBehaviour behaviours = new SequentialBehaviour();
 		
 		behaviours.addSubBehaviour(new WaitForBiddersBehaviour(this, 1000));
-		behaviours.addSubBehaviour(new DoAuctionBehaviour());
+		
+		Iterator<Item> i = _items.iterator();
+		
+		while (i.hasNext())
+		{
+			Item item = i.next();
+			behaviours.addSubBehaviour(new DoAuctionBehaviour(item));
+		}
+		
 		addBehaviour(behaviours);
 	}
 	
@@ -53,16 +69,12 @@ public class AuctioneerAgent extends Agent {
 	    }		
 	}
 
-	public int getStartingPrice() {
-		return 100;
-	}
-
-	public void sendStartingPrice() {
+	public void sendStartingPrice(int startingPrice) {
 		ArrayList<AID> bidderAgents = getBidderAIDs();
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setOntology("starting-price");
-		msg.setContent(getStartingPrice() + "");
+		msg.setContent(startingPrice + "");
 		
 		Iterator<AID> i = bidderAgents.iterator();
 		while (i.hasNext())
@@ -95,13 +107,5 @@ public class AuctioneerAgent extends Agent {
 	    }
 	    
 	    return AIDs;
-	}
-
-	public int getHighestBid() {
-		return _highestBid;
-	}
-
-	public void setHighestBid(int newBid) {
-		_highestBid = newBid;
 	}
 }
