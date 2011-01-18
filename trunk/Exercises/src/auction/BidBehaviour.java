@@ -10,7 +10,7 @@ public class BidBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		BidderAgent agent = (BidderAgent) myAgent;
-		ACLMessage msg = myAgent.receive(MessageTemplate.or(MessageTemplate.MatchOntology("starting-price"), MessageTemplate.MatchOntology("new-highest-bid")));
+		ACLMessage msg = myAgent.receive();
 		
 		if (msg != null)
 		{
@@ -28,16 +28,21 @@ public class BidBehaviour extends SimpleBehaviour {
 				String highestBidder = splitContentStrings[1];
 				agent.setHighestBid(newHighestBid);
 				
-				if (myAgent.getName().equals(highestBidder))
+				if (agent.getName().equals(highestBidder))
 				{
 					ownsHighestBid = true;
 				}
+			}
+			else if (msg.getOntology() == "auction-won")
+			{
+				agent.setRemainingBudget(agent.getRemainingBudget() - agent.getHighestBid());
+				Output.AgentMessage(agent, String.format("Auction won confirmed, bid: %s, budget remaining: %s", agent.getHighestBid(), agent.getRemainingBudget()));
 			}
 			
 			BidderAgent bidder = (BidderAgent) myAgent;
 			int bid = bidder.getHighestBid() + 1;
 			
-			if (!ownsHighestBid && bidder.getBiddingLimit() >= bid)
+			if (!ownsHighestBid && bidder.getBidLimit() >= bid && bidder.getRemainingBudget() >= bid && msg.getOntology() != "auction-won")
 			{
 				ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
 				msgBid.setOntology("bid");
@@ -57,5 +62,4 @@ public class BidBehaviour extends SimpleBehaviour {
 	public boolean done() {
 		return _done;
 	}
-
 }
