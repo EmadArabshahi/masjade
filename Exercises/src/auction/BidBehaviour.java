@@ -1,5 +1,7 @@
 package auction;
 
+import org.omg.stub.java.rmi._Remote_Stub;
+
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -15,10 +17,33 @@ public class BidBehaviour extends SimpleBehaviour {
 		if (msg != null)
 		{
 			boolean ownsHighestBid = false;
-			if (msg.getOntology() == "starting-price")
+			if (msg.getOntology() == "starting-price-english")
 			{
 				agent.setAuctioneerAID(msg.getSender());
 				agent.setHighestBid(Integer.parseInt(msg.getContent()));
+			}
+			else if (msg.getOntology() == "starting-price-dutch")
+			{
+				agent.setAuctioneerAID(msg.getSender());
+				
+				String[] content = msg.getContent().split("\\|");
+				int currentPricePerUnit = Integer.parseInt(content[0]);
+				int numberOfUnits = Integer.parseInt(content[1]);
+				
+				//if (currentPricePerUnit * numberOfUnits <= agent.getRemainingBudget())
+				//{
+					ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
+					msgBid.setOntology("bid");
+					msgBid.setContent(currentPricePerUnit * numberOfUnits + "");
+					msgBid.addReceiver(agent.getAuctioneerAID());
+					agent.send(msgBid);
+				//}
+			}
+			else if (msg.getOntology() == "price-dutch")
+			{
+				int currentPricePerUnit = Integer.parseInt(msg.getContent());
+				
+				//if (current)
 			}
 			else if (msg.getOntology() == "new-highest-bid")
 			{				

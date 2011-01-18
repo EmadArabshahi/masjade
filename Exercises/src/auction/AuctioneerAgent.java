@@ -14,21 +14,30 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctioneerAgent extends Agent {
 	private static final long serialVersionUID = 4944135154767164963L;
-	private ArrayList<Item> _items;
+	private ArrayList<Item> _englishItems;
+	private ArrayList<MultipleItem> _dutchItems;
 
 	@Override
 	protected void setup()
 	{
 		registerService();
-		addItems();
+		addEnglishItems();
+		addDutchItems();
 		addBehaviours();
 	}
 	
-	public void addItems()
+	public void addEnglishItems()
 	{
-		_items = new ArrayList<Item>();
-		_items.add(new Item("Fellowship of the ring", "book", 50));
-		_items.add(new Item("Two Towers", "book", 70));
+		_englishItems = new ArrayList<Item>();
+		_englishItems.add(new Item("Fellowship of the ring", "book", 50));
+		_englishItems.add(new Item("Two Towers", "book", 70));
+	}
+	
+	public void addDutchItems()
+	{
+		_dutchItems = new ArrayList<MultipleItem>();
+		_dutchItems.add(new MultipleItem("tulip", "flower", 5, 500));
+		_dutchItems.add(new MultipleItem("rose", "flower", 10, 200));
 	}
 	
 	public void addBehaviours()
@@ -37,12 +46,22 @@ public class AuctioneerAgent extends Agent {
 		
 		behaviours.addSubBehaviour(new WaitForBiddersBehaviour(this, 1000));
 		
-		Iterator<Item> i = _items.iterator();
+		Iterator<Item> i = _englishItems.iterator();
 		
+		/*
 		while (i.hasNext())
 		{
 			Item item = i.next();
-			behaviours.addSubBehaviour(new DoAuctionBehaviour(item));
+			behaviours.addSubBehaviour(new DoEnglishAuctionBehaviour(item));
+		}
+		*/
+		
+		Iterator<MultipleItem> di = _dutchItems.iterator();
+		
+		while (di.hasNext())
+		{
+			MultipleItem mi = di.next();
+			behaviours.addSubBehaviour(new DoDutchAuctionBehaviour(mi));
 		}
 		
 		addBehaviour(behaviours);
@@ -69,13 +88,8 @@ public class AuctioneerAgent extends Agent {
 	    }		
 	}
 
-	public void sendStartingPrice(int startingPrice) {
+	public void sendStartingPrice(ACLMessage msg) {		
 		ArrayList<AID> bidderAgents = getBidderAIDs();
-		
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		msg.setOntology("starting-price");
-		msg.setContent(startingPrice + "");
-		
 		Iterator<AID> i = bidderAgents.iterator();
 		while (i.hasNext())
 		{
