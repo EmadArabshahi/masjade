@@ -13,6 +13,7 @@ public class BidBehaviour extends SimpleBehaviour {
 	public void action() {
 		BidderAgent agent = (BidderAgent) myAgent;
 		ACLMessage msg = myAgent.receive();
+		boolean bidSent = false;
 		
 		if (msg != null)
 		{
@@ -25,25 +26,24 @@ public class BidBehaviour extends SimpleBehaviour {
 			else if (msg.getOntology() == "starting-price-dutch")
 			{
 				agent.setAuctioneerAID(msg.getSender());
-				
+				doDutchBid(msg);
+				bidSent = true;
+			}
+			else if (msg.getOntology() == "price-dutch")
+			{
+				doDutchBid(msg);
+				bidSent = true;
+			}
+			else if (msg.getOntology() == "confirm-bid-dutch")
+			{
 				String[] content = msg.getContent().split("\\|");
 				int currentPricePerUnit = Integer.parseInt(content[0]);
 				int numberOfUnits = Integer.parseInt(content[1]);
 				
-				//if (currentPricePerUnit * numberOfUnits <= agent.getRemainingBudget())
-				//{
-					ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
-					msgBid.setOntology("bid");
-					msgBid.setContent(currentPricePerUnit * numberOfUnits + "");
-					msgBid.addReceiver(agent.getAuctioneerAID());
-					agent.send(msgBid);
-				//}
-			}
-			else if (msg.getOntology() == "price-dutch")
-			{
-				int currentPricePerUnit = Integer.parseInt(msg.getContent());
+				agent.setRemainingBudget(agent.getRemainingBudget() - currentPricePerUnit * numberOfUnits);
 				
-				//if (current)
+				Output.AgentMessage(agent, String.format("Bid confirmation received: %s items bought", numberOfUnits));
+				bidSent = true;
 			}
 			else if (msg.getOntology() == "new-highest-bid")
 			{				
@@ -64,22 +64,52 @@ public class BidBehaviour extends SimpleBehaviour {
 				Output.AgentMessage(agent, String.format("Auction won confirmed, bid: %s, budget remaining: %s", agent.getHighestBid(), agent.getRemainingBudget()));
 			}
 			
-			BidderAgent bidder = (BidderAgent) myAgent;
-			int bid = bidder.getHighestBid() + 1;
-			
-			if (!ownsHighestBid && bidder.getBidLimit() >= bid && bidder.getRemainingBudget() >= bid && msg.getOntology() != "auction-won")
+			if (!bidSent)
 			{
-				ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
-				msgBid.setOntology("bid");
-				msgBid.setContent(bid + "");
-				msgBid.addReceiver(bidder.getAuctioneerAID());
-				bidder.send(msgBid);
-				Output.AgentMessage(myAgent, "Bid sent: " + bid);
+				BidderAgent bidder = (BidderAgent) myAgent;
+				int bid = bidder.getHighestBid() + 1;
+				
+				if (!ownsHighestBid && bidder.getBidLimit() >= bid && bidder.getRemainingBudget() >= bid && msg.getOntology() != "auction-won")
+				{
+					ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
+					msgBid.setOntology("bid");
+					msgBid.setContent(bid + "");
+					msgBid.addReceiver(bidder.getAuctioneerAID());
+					bidder.send(msgBid);
+					Output.AgentMessage(myAgent, "Bid sent: " + bid);
+				}
 			}
 		}
 		else
 		{
 			block();
+		}
+	}
+	
+	private void doDutchBid(ACLMessage msg)
+	{
+		BidderAgent agent = (BidderAgent) myAgent;
+		
+		String[] content = msg.getContent().split("\\|");
+		int currentPricePerUnit = Integer.parseInt(content[0]);
+		int numberOfUnits = Integer.parseInt(content[1]);
+		
+		int amountToBuy = agent.getRemainingBudget() / currentPricePerUnit;
+		
+		if (amountToBuy > numberOfUnits)
+		{
+			amountToBuy = numberOfUnits;
+		}
+		
+		if (currentPricePerUnit * amountToBuy <= agent.getRemainingBudget() && amountToBuy > 0)
+		{
+			ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
+			msgBid.setOntology("bid");
+			msgBid.setContent(amountToBuy + "");
+			msgBid.addReceiver(agent.getAuctioneerAID());
+			agent.send(msgBid);
+			
+			Output.AgentMessage(myAgent, "Bid sent: " + amountToBuy);
 		}
 	}
 
