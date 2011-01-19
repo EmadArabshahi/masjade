@@ -26,7 +26,7 @@ public class Item {
 		_type = type;
 	}
 	
-	public void setStartingPrice(int startingPrice)
+	public void setPrice(int startingPrice)
 	{
 		_startingPrice = startingPrice;
 	}
@@ -41,7 +41,7 @@ public class Item {
 		return _type;
 	}
 	
-	public int getStartingPrice()
+	public int getPrice()
 	{
 		return _startingPrice;
 	}

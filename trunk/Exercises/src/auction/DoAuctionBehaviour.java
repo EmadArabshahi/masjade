@@ -1,5 +1,11 @@
 package auction;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Timer;
+
 import jade.core.behaviours.SimpleBehaviour;
 
 public abstract class DoAuctionBehaviour extends SimpleBehaviour {
@@ -14,6 +20,15 @@ public abstract class DoAuctionBehaviour extends SimpleBehaviour {
 	
 	protected AuctioneerAgent _agent;
 	
+	protected Timer _biddingTimer;
+	
+	public DoAuctionBehaviour()
+	{
+		initializeTimer();
+	}
+	
+	protected abstract void initializeTimer();
+	
 	@Override
 	public void action() {
 		_agent = (AuctioneerAgent) myAgent;
@@ -27,12 +42,16 @@ public abstract class DoAuctionBehaviour extends SimpleBehaviour {
 			}
 			case BIDDING_PHASE:
 			{
+				_biddingTimer.start();
 				doBiddingPhase();
 				break;
 			}
 			case CLOSING_PHASE:
 			{
+				_biddingTimer.stop();
 				doClosingPhase();
+				// clear messages
+				while (_agent.receive() != null) {}
 				break;
 			}
 		}

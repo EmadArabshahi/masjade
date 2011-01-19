@@ -36,8 +36,8 @@ public class AuctioneerAgent extends Agent {
 	public void addDutchItems()
 	{
 		_dutchItems = new ArrayList<MultipleItem>();
-		_dutchItems.add(new MultipleItem("tulip", "flower", 5, 500));
-		_dutchItems.add(new MultipleItem("rose", "flower", 10, 200));
+		_dutchItems.add(new MultipleItem("tulip", "flower", 5, 50));
+		_dutchItems.add(new MultipleItem("rose", "flower", 10, 50));
 	}
 	
 	public void addBehaviours()
@@ -55,6 +55,8 @@ public class AuctioneerAgent extends Agent {
 			behaviours.addSubBehaviour(new DoEnglishAuctionBehaviour(item));
 		}
 		*/
+		
+		
 		
 		Iterator<MultipleItem> di = _dutchItems.iterator();
 		
@@ -88,7 +90,7 @@ public class AuctioneerAgent extends Agent {
 	    }		
 	}
 
-	public void sendStartingPrice(ACLMessage msg) {		
+	public void sendMessageToBidders(ACLMessage msg) {		
 		ArrayList<AID> bidderAgents = getBidderAIDs();
 		Iterator<AID> i = bidderAgents.iterator();
 		while (i.hasNext())

@@ -14,15 +14,13 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {	
-	private Timer _biddingTimer;
-
 	public DoEnglishAuctionBehaviour(Item item)
 	{
-		initializeTimer();
 		_item = item;
 	}
 	
-	private void initializeTimer()
+	@Override
+	protected void initializeTimer()
 	{
 		Action endBidding = new AbstractAction() {
 			@Override
@@ -38,13 +36,13 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 	protected void doStartingPhase()
 	{
 		Output.AgentMessage(_agent, "Starting auction");
-		Output.AgentMessage(_agent, String.format("Starting auction for item: %s/%s Setting starting price at: %s", _item.getType(), _item.getName(), _item.getStartingPrice()));
+		Output.AgentMessage(_agent, String.format("Starting auction for item: %s/%s Setting starting price at: %s", _item.getType(), _item.getName(), _item.getPrice()));
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setOntology("starting-price-english");
-		msg.setContent(_item.getStartingPrice() + "");
+		msg.setContent(_item.getPrice() + "");
 		
-		_agent.sendStartingPrice(msg);
+		_agent.sendMessageToBidders(msg);
 		Output.AgentMessage(_agent, "Starting price is sent");
 		Output.AgentMessage(_agent, "Waiting for bids");
 		
@@ -54,7 +52,6 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 	@Override
 	protected void doBiddingPhase()
 	{
-		_biddingTimer.start();
 		ACLMessage msg = _agent.receive(MessageTemplate.MatchOntology("bid"));
 		
 		if (msg != null)
@@ -97,7 +94,6 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 	@Override
 	protected void doClosingPhase()
 	{
-		_biddingTimer.stop();
 		Output.AgentMessage(_agent, String.format("Bidding Closed! Auction won by %s with a bid of %s", _item.getHighestBidder().getLocalName(), _item.getHighestBid()));
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.addReceiver(_item.getHighestBidder());
