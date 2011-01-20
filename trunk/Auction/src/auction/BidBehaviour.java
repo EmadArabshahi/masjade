@@ -37,9 +37,12 @@ public class BidBehaviour extends SimpleBehaviour {
 			else if (msg.getOntology() == "confirm-bid-dutch")
 			{
 				String[] content = msg.getContent().split("\\|");
-				int currentPricePerUnit = Integer.parseInt(content[0]);
-				int numberOfUnits = Integer.parseInt(content[1]);
+				String itemName = content[0];
+				String itemType = content[1];
+				int currentPricePerUnit = Integer.parseInt(content[2]);
+				int numberOfUnits = Integer.parseInt(content[3]);
 				
+				agent.addItem(itemName, itemType, currentPricePerUnit, numberOfUnits);
 				agent.setRemainingBudget(agent.getRemainingBudget() - currentPricePerUnit * numberOfUnits);
 				
 				Output.AgentMessage(agent, String.format("Bid confirmation received: %s items bought", numberOfUnits));
@@ -62,6 +65,9 @@ public class BidBehaviour extends SimpleBehaviour {
 			{
 				agent.setRemainingBudget(agent.getRemainingBudget() - agent.getHighestBid());
 				Output.AgentMessage(agent, String.format("Auction won confirmed, bid: %s, budget remaining: %s", agent.getHighestBid(), agent.getRemainingBudget()));
+				
+				String[] content = msg.getContent().split("\\|");
+				agent.addItem(content[0], content[1], Integer.parseInt(content[2]), 1);
 			}
 			
 			if (!bidSent)

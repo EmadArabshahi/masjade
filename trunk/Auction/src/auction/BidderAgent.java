@@ -31,7 +31,7 @@ public class BidderAgent extends Agent {
 		_remainingBudget = _totalBudget;
 		
 		_window = new BidderWindow();
-		_window.setSize(300, 300);
+		_window.setSize(400, 300);
 		_window.setBidderName(getLocalName());
 		updateRemainingBudget();
 		_window.setTotalBudget(_totalBudget);
@@ -41,6 +41,11 @@ public class BidderAgent extends Agent {
 	public void updateRemainingBudget()
 	{
 		_window.setRemainingBudget(_remainingBudget);
+	}
+	
+	public void addItem(String itemName, String type, int unitPrice, int amount)
+	{
+		_window.addItem(itemName, type, unitPrice, amount);
 	}
 	
 	private void addBehaviours()

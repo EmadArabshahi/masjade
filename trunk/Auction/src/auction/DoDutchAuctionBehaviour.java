@@ -78,7 +78,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 			ACLMessage confirmMsg = new ACLMessage(ACLMessage.INFORM);
 			confirmMsg.addReceiver(msg.getSender());
 			confirmMsg.setOntology("confirm-bid-dutch");
-			confirmMsg.setContent(String.format("%s|%s", _item.getPrice(), confirmedAmount));
+			confirmMsg.setContent(String.format("%s|%s|%s|%s", _item.getName(), _item.getType(), _item.getPrice(), confirmedAmount));
 			_agent.send(confirmMsg);
 			
 			if (mi.getAmount() <= 0)
