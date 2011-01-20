@@ -16,14 +16,40 @@ public class AuctioneerAgent extends Agent {
 	private static final long serialVersionUID = 4944135154767164963L;
 	private ArrayList<Item> _englishItems;
 	private ArrayList<MultipleItem> _dutchItems;
+	private AuctioneerWindow _window;
 
 	@Override
 	protected void setup()
 	{
+		_window = new AuctioneerWindow();
+		_window.setSize(600, 700);
+		
 		registerService();
 		addEnglishItems();
 		addDutchItems();
 		addBehaviours();
+		
+		_window.setVisible(true);
+	}
+	
+	public void addItem(Item item)
+	{
+		addItem(item.getName(), item.getType(), item.getPrice(), 1);
+	}
+	
+	public void addItem(MultipleItem item)
+	{
+		addItem(item.getName(), item.getType(), item.getPrice(), item.getAmount());
+	}
+	
+	public void addItem(String itemName, String type, int unitPrice, int amount)
+	{
+		_window.addItem(itemName, type, unitPrice, amount);
+	}
+	
+	public void addLogEntry(String entry)
+	{
+		_window.addLogEntry(entry);
 	}
 	
 	public void addEnglishItems()
@@ -52,6 +78,7 @@ public class AuctioneerAgent extends Agent {
 		{
 			Item item = i.next();
 			behaviours.addSubBehaviour(new DoEnglishAuctionBehaviour(item));
+			addItem(item);
 		}
 		
 		Iterator<MultipleItem> di = _dutchItems.iterator();
@@ -60,6 +87,7 @@ public class AuctioneerAgent extends Agent {
 		{
 			MultipleItem mi = di.next();
 			behaviours.addSubBehaviour(new DoDutchAuctionBehaviour(mi));
+			addItem(mi);
 		}
 		
 		addBehaviour(behaviours);
