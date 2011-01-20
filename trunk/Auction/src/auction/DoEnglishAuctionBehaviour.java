@@ -37,6 +37,7 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 	{
 		Output.AgentMessage(_agent, "Starting auction");
 		Output.AgentMessage(_agent, String.format("Starting auction for item: %s/%s Setting starting price at: %s", _item.getType(), _item.getName(), _item.getPrice()));
+		_agent.addLogEntry(String.format("Started english auction for item %s (%s) with a starting price of %s", _item.getName(), _item.getType(), _item.getPrice())); 
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setOntology("starting-price-english");
@@ -61,12 +62,14 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 			int newBid = Integer.parseInt(msg.getContent());
 			
 			Output.AgentMessage(_agent, String.format("Bid received from %s: %s", bidder.getLocalName(), newBid));
+			_agent.addLogEntry(String.format("Bid received from %s: %s", bidder.getLocalName(), newBid));
 			
 			if (newBid > _item.getHighestBid())
 			{
 				_item.setHighestBid(newBid);
 				_item.setHighestBidder(bidder);
 				Output.AgentMessage(_agent, String.format("New highest price set: %s, done by %s", newBid, bidder.getLocalName()));
+				_agent.addLogEntry(String.format("New highest bid (%s) accepted from %s", newBid, bidder.getLocalName())); 
 				
 				ACLMessage msgNewBid = new ACLMessage(ACLMessage.INFORM);
 				msgNewBid.setOntology("new-highest-bid");
@@ -95,6 +98,7 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 	protected void doClosingPhase()
 	{
 		Output.AgentMessage(_agent, String.format("Bidding Closed! Auction won by %s with a bid of %s", _item.getHighestBidder().getLocalName(), _item.getHighestBid()));
+		_agent.addLogEntry(String.format("Auction was won by %s for the price of %s", _item.getHighestBidder().getLocalName(), _item.getHighestBid()));
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.addReceiver(_item.getHighestBidder());
 		msg.setOntology("auction-won");

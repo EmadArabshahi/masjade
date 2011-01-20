@@ -40,6 +40,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 	public void doStartingPhase() {
 		Output.AgentMessage(_agent, "Starting Multi Unit Dutch Auction");
 		Output.AgentMessage(_agent, String.format("Starting auction for item: %s/%s/%s Setting starting price at %s per unit", _item.getType(), _item.getName(), getMultipleItem().getAmount(), _item.getPrice()));
+		_agent.addLogEntry(String.format("Started dutch auction for %s of item %s (%s) with a starting price of %s", getMultipleItem().getAmount(), _item.getName(), _item.getType(), _item.getPrice()));
 
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setOntology("starting-price-dutch");
@@ -63,6 +64,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 			
 			int bid = Integer.parseInt(msg.getContent());
 			Output.AgentMessage(_agent, String.format("Bid received from %s for %s items", msg.getSender().getLocalName(), bid));
+			_agent.addLogEntry(String.format("Bid received from %s for %s items at the price of %s", msg.getSender().getLocalName(), bid, _item.getPrice()));
 			MultipleItem mi = getMultipleItem();
 			
 			int newAmount = mi.getAmount() - bid;
@@ -79,6 +81,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 			confirmMsg.addReceiver(msg.getSender());
 			confirmMsg.setOntology("confirm-bid-dutch");
 			confirmMsg.setContent(String.format("%s|%s|%s|%s", _item.getName(), _item.getType(), _item.getPrice(), confirmedAmount));
+			_agent.addLogEntry(String.format("Sold %s of %s (%s) to %s for %s per unit", confirmedAmount, _item.getName(), _item.getType(), msg.getSender().getLocalName(), _item.getPrice() ));
 			_agent.send(confirmMsg);
 			
 			if (mi.getAmount() <= 0)
@@ -97,6 +100,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 			{
 				_item.setPrice(newPrice);
 				Output.AgentMessage(_agent, String.format("New price set: %s", newPrice));
+				_agent.addLogEntry(String.format("Lowering the price for %s (%s) to %s per unit", _item.getName(), _item.getType(), newPrice));
 				ACLMessage priceMsg = new ACLMessage(ACLMessage.INFORM);
 				priceMsg.setOntology("price-dutch");
 				priceMsg.setContent(_item.getPrice() + "|" + getMultipleItem().getAmount());
@@ -114,6 +118,7 @@ public class DoDutchAuctionBehaviour extends DoAuctionBehaviour {
 	@Override
 	public void doClosingPhase() {
 		Output.AgentMessage(_agent, String.format("Auction closed! %s items remaining", getMultipleItem().getAmount()));
+		_agent.addLogEntry(String.format("Auction closed. %s units of %s (%s) remain unsold", getMultipleItem().getAmount(), _item.getName(), _item.getType()));
 		_done = true;
 	}
 	
