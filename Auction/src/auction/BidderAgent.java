@@ -48,7 +48,7 @@ public class BidderAgent extends Agent {
 		_window.addItem(itemName, type, unitPrice, amount);
 	}
 	
-	private void addBehaviours()
+	protected void addBehaviours()
 	{
 		addBehaviour(new BidBehaviour());
 	}

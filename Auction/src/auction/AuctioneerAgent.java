@@ -57,13 +57,17 @@ public class AuctioneerAgent extends Agent {
 		_englishItems = new ArrayList<Item>();
 		_englishItems.add(new Item("Fellowship of the ring", "book", 50));
 		_englishItems.add(new Item("Two Towers", "book", 70));
+		_englishItems.add(new Item("Return of the king", "book", 80));
+		_englishItems.add(new Item("JADE for dummies", "book", 60));
 	}
 	
 	public void addDutchItems()
 	{
 		_dutchItems = new ArrayList<MultipleItem>();
+		_dutchItems.add(new MultipleItem("daisy", "flower", 3, 70));
 		_dutchItems.add(new MultipleItem("tulip", "flower", 5, 50));
-		_dutchItems.add(new MultipleItem("rose", "flower", 10, 50));
+		_dutchItems.add(new MultipleItem("red rose", "flower", 10, 50));
+		_dutchItems.add(new MultipleItem("black rose", "flower", 30, 10));
 	}
 	
 	public void addBehaviours()

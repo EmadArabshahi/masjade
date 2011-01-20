@@ -102,14 +102,21 @@ public class BidBehaviour extends SimpleBehaviour {
 		int currentPricePerUnit = Integer.parseInt(content[0]);
 		int numberOfUnits = Integer.parseInt(content[1]);
 		
-		int amountToBuy = agent.getRemainingBudget() / currentPricePerUnit;
+		int budgetAvailable = agent.getRemainingBudget();
+		
+		if (budgetAvailable > agent.getBidLimit())
+		{
+			budgetAvailable = agent.getBidLimit();
+		}
+		
+		int amountToBuy = budgetAvailable / currentPricePerUnit;
 		
 		if (amountToBuy > numberOfUnits)
 		{
 			amountToBuy = numberOfUnits;
 		}
 		
-		boolean makeABid = makeADutchBid(currentPricePerUnit, amountToBuy, agent); 
+		boolean makeABid = makeADutchBid(currentPricePerUnit, numberOfUnits, amountToBuy, agent); 
 		
 		if (makeABid)
 		{
@@ -123,7 +130,7 @@ public class BidBehaviour extends SimpleBehaviour {
 		}
 	}
 	
-	protected boolean makeADutchBid(int currentPricePerUnit, int amountToBuy, BidderAgent agent)
+	protected boolean makeADutchBid(int currentPricePerUnit, int numberOfUnits, int amountToBuy, BidderAgent agent)
 	{
 		return currentPricePerUnit * amountToBuy <= agent.getRemainingBudget() && amountToBuy > 0;
 	}

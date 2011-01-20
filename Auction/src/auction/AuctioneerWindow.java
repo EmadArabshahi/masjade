@@ -38,7 +38,7 @@ public class AuctioneerWindow extends JFrame {
 		Object[] columnNames = new Object[4];
 		columnNames[0] = "Item";
 		columnNames[1] = "Type";
-		columnNames[2] = "Price";
+		columnNames[2] = "Starting Price";
 		columnNames[3] = "Amount";
 		
 		_tblInitialGoods = new JTable();
