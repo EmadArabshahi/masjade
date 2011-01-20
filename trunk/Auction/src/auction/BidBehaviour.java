@@ -109,7 +109,9 @@ public class BidBehaviour extends SimpleBehaviour {
 			amountToBuy = numberOfUnits;
 		}
 		
-		if (currentPricePerUnit * amountToBuy <= agent.getRemainingBudget() && amountToBuy > 0)
+		boolean makeABid = makeADutchBid(currentPricePerUnit, amountToBuy, agent); 
+		
+		if (makeABid)
 		{
 			ACLMessage msgBid = new ACLMessage(ACLMessage.INFORM);
 			msgBid.setOntology("bid");
@@ -119,6 +121,11 @@ public class BidBehaviour extends SimpleBehaviour {
 			
 			Output.AgentMessage(myAgent, "Bid sent: " + amountToBuy);
 		}
+	}
+	
+	protected boolean makeADutchBid(int currentPricePerUnit, int amountToBuy, BidderAgent agent)
+	{
+		return currentPricePerUnit * amountToBuy <= agent.getRemainingBudget() && amountToBuy > 0;
 	}
 
 	@Override

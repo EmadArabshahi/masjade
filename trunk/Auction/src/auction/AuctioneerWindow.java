@@ -12,7 +12,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class AuctioneerWindow extends JFrame {
-	private JTable _tblRemainingGoods;
 	private JTable _tblLog;
 	private JTable _tblInitialGoods;
 
@@ -44,8 +43,6 @@ public class AuctioneerWindow extends JFrame {
 		
 		_tblInitialGoods = new JTable();
 		_tblInitialGoods.setFillsViewportHeight(true);
-		JPanel panel_2 = new JPanel();
-		panel.add(panel_2, BorderLayout.CENTER);
 		
 		JLabel lblInitialStock = new JLabel("Initial items");
 		panel_1.add(lblInitialStock, BorderLayout.NORTH);
@@ -55,22 +52,7 @@ public class AuctioneerWindow extends JFrame {
 		scrollPane.setPreferredSize(new Dimension(600, 200));
 		
 		DefaultTableModel modelInitialGoods = (DefaultTableModel)_tblInitialGoods.getModel();
-		modelInitialGoods.setDataVector(data, columnNames);		
-		
-		_tblRemainingGoods = new JTable();
-		_tblRemainingGoods.setFillsViewportHeight(true);
-		
-		DefaultTableModel model = (DefaultTableModel)_tblRemainingGoods.getModel();
-		model.setDataVector(data, columnNames);
-		
-		panel_2.setLayout(new BorderLayout(0, 0));
-		
-		JLabel lblRemainingStock = new JLabel("Remaining items");
-		panel_2.add(lblRemainingStock, BorderLayout.NORTH);
-		JScrollPane scrollPaneRemaingGoods = new JScrollPane(_tblRemainingGoods);
-		panel_2.add(scrollPaneRemaingGoods);
-		
-		scrollPaneRemaingGoods.setPreferredSize(new Dimension(600, 200));
+		modelInitialGoods.setDataVector(data, columnNames);
 		_tblInitialGoods.setFillsViewportHeight(true);	
 		
 		Object[] columnNamesLog = new Object[1];
@@ -80,14 +62,7 @@ public class AuctioneerWindow extends JFrame {
 		modelLog.setDataVector(data, columnNamesLog);
 		
 	}
-	
-	/*
-	public void removeItem(String itemName, int amount)
-	{
-		DefaultTableModel model = (DefaultTableModel)_tblRemainingGoods.getModel();
-		
-		model.
-	}*/
+
 	
 	public void addItem(String itemName, String type, int unitPrice, int amount)
 	{
@@ -96,9 +71,6 @@ public class AuctioneerWindow extends JFrame {
 		row[1] = type;
 		row[2] = unitPrice;
 		row[3] = amount;
-		
-		DefaultTableModel model = (DefaultTableModel)_tblRemainingGoods.getModel();
-		model.addRow(row);
 		
 		DefaultTableModel modelRemaining = (DefaultTableModel)_tblInitialGoods.getModel();
 		modelRemaining.addRow(row);
