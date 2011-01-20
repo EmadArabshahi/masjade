@@ -14,6 +14,9 @@ public class BidderAgent extends Agent {
 	private int _totalBudget;
 	private int _bidLimit;
 	private int _remainingBudget;
+	
+	private BidderWindow _window;
+	
 	@Override
 	protected void setup()
 	{
@@ -26,6 +29,18 @@ public class BidderAgent extends Agent {
 		_bidLimit = Integer.parseInt(args[1].toString());
 		
 		_remainingBudget = _totalBudget;
+		
+		_window = new BidderWindow();
+		_window.setSize(300, 300);
+		_window.setBidderName(getLocalName());
+		updateRemainingBudget();
+		_window.setTotalBudget(_totalBudget);
+		_window.setVisible(true);
+	}
+	
+	public void updateRemainingBudget()
+	{
+		_window.setRemainingBudget(_remainingBudget);
 	}
 	
 	private void addBehaviours()

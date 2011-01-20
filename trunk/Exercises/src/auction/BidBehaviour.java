@@ -79,6 +79,8 @@ public class BidBehaviour extends SimpleBehaviour {
 					Output.AgentMessage(myAgent, "Bid sent: " + bid);
 				}
 			}
+			
+			agent.updateRemainingBudget();
 		}
 		else
 		{
