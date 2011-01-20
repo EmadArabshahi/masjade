@@ -48,15 +48,11 @@ public class AuctioneerAgent extends Agent {
 		
 		Iterator<Item> i = _englishItems.iterator();
 		
-		/*
 		while (i.hasNext())
 		{
 			Item item = i.next();
 			behaviours.addSubBehaviour(new DoEnglishAuctionBehaviour(item));
 		}
-		*/
-		
-		
 		
 		Iterator<MultipleItem> di = _dutchItems.iterator();
 		

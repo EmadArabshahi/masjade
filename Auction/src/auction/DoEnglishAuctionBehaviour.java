@@ -98,7 +98,7 @@ public class DoEnglishAuctionBehaviour extends DoAuctionBehaviour {
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.addReceiver(_item.getHighestBidder());
 		msg.setOntology("auction-won");
-		msg.setContent(_item.getHighestBid() + "");
+		msg.setContent(String.format("%s|%s|%s", _item.getName(), _item.getType(), _item.getHighestBid()));
 		
 		_agent.send(msg);
 		
