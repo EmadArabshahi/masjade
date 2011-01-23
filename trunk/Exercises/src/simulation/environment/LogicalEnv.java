@@ -10,11 +10,16 @@ import simulation.environment.lib.Signal;
 
 import java.awt.Point;
 import java.util.*;
+
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import simulation.environment.Agent;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,8 +36,7 @@ public class LogicalEnv implements ObsVectListener
     // To hold our reference to the window
     final protected Window                  m_window;
     
-    // max distance of cells visible to each agent
-    protected int                           _senserange = 10;
+  
     
     // size of environment
     protected Dimension                     m_size = new Dimension( 16, 16 );
@@ -51,8 +55,21 @@ public class LogicalEnv implements ObsVectListener
     // id for identifiable objects
     protected String                        _objType = "default";   
     
-    protected int _maxAppleCapacity = 5;
     
+    //Sense Range R: max distance of cells visible to each agent
+    protected int                           _senserange = 10;
+	//Energy Cost K:
+	protected int 							 _energyCost = 5; 
+     //EnergyGain L:
+	protected int 							 _energyGain = 25;
+	//Apple Distribution p:
+	protected double					     _appleDistribution = 0.35;
+	//Maximum Apple capacity A:
+	protected int 							 _maxAppleCapacity = 5;
+	//Agent distribution.
+    protected int[]		 					 _agentDistribution = {2,2,2,2};
+	
+	
     /* ------------------------------------------*/
 
 
@@ -62,11 +79,9 @@ public class LogicalEnv implements ObsVectListener
     // emitted if environment is resized
     public transient Signal signalSizeChanged = new Signal( "env size changed" );
 
-    // emitted if bomb traps location changed
-    public transient Signal signalTrapChanged = new Signal(
-            "env trap position changed" );
+    public transient Signal signalProppertyChanged = new Signal("env propperty changed changed.");
     
-    public transient Signal signalMaxAppleCapacityChanged = new Signal("env max apple capacity changed.");
+    
     
     /* ------------------------------------------*/ 
 
@@ -88,8 +103,209 @@ public class LogicalEnv implements ObsVectListener
       return instance;
     }
 
- 
+    
+    
+   
+    // Get the environment width
+    public int getWidth() { return m_size.width; }
 
+    // Get the environment height
+    public int getHeight() { return m_size.height; }
+    
+ // helper function, calls setSize(Dimension)
+    public void setSize( int width, int height ) 
+    {
+        setSize( new Dimension( width, height ) );
+    }
+    
+    // resize world
+    public void setSize( Dimension size ) 
+    {
+        m_size = size;
+        signalSizeChanged.emit();
+
+        Iterator i = _apples.iterator();
+        while( i.hasNext() ) {
+            if( outOfBounds( ((TypeObject) i.next()).getPosition() ) )
+                i.remove();
+        }
+        i = _stones.iterator();
+        while( i.hasNext() ) {
+            if( outOfBounds( (Point) i.next() ) )
+                i.remove();
+        }
+    }
+    
+   
+    
+    // Get senserange
+    public int getSenseRange() 
+    {
+        return _senserange;
+    }
+    
+    // Set the senserange
+    public void setSenseRange( int senserange ) 
+    {
+        _senserange = senserange;
+        signalSenseRangeChanged.emit();
+    }
+    
+    public int getMaximumAppleCapacity()
+    {
+    	return _maxAppleCapacity;
+    }
+    
+    public void setMaximumAppleCapacity(int capacity)
+    {
+    	_maxAppleCapacity = capacity;
+    	signalProppertyChanged.emit();
+    }
+    
+    
+    public int getEnergyCost()
+    {
+    	return _energyCost;
+    }
+    
+    public void setEnergyCost(int energyCost)
+    {
+    	_energyCost = energyCost;
+    	signalProppertyChanged.emit();
+    }
+    
+    
+    public int getEnergyGain()
+    {
+    	return _energyGain;
+    }
+    
+    public void setEnergyGain(int energyGain)
+    {
+    	_energyGain = energyGain;
+    	signalProppertyChanged.emit();
+    }
+    
+    public double getAppleDistribution()
+    {
+    	return _appleDistribution;
+    }
+    
+    public void setAppleDistribution(double appleDistribution)
+    {
+    	_appleDistribution = appleDistribution;
+    	signalProppertyChanged.emit();
+    }
+    
+    public int[] getAgentDistribution()
+    {
+    	int[] copyOfDistribution = new int[_agentDistribution.length];
+    	for(int i=0; i<copyOfDistribution.length; i++)
+    	{
+    		copyOfDistribution[i] = _agentDistribution[i];
+    	}
+    	return copyOfDistribution;
+    }
+    
+    public void setAgentDistribution(int[] newDistribution)
+    {
+    	_agentDistribution = new int[newDistribution.length];
+    	for(int i=0; i<newDistribution.length; i++)
+    	{
+    		_agentDistribution[i] = newDistribution[i];
+    	}
+    	
+    	signalProppertyChanged.emit();
+    }
+    
+ 
+    // Which color does the agent want to be!
+    private int getColorID(String sColor)
+    {
+        if (sColor.equals("army") )
+        {
+            return 0;
+        }
+        else if (sColor.equals("blue") )
+        {
+            return 1;
+        }
+        else if (sColor.equals("gray") )
+        {
+            return 2;
+        }
+        else if (sColor.equals("green") )
+        {
+            return 3;
+        }
+        else if (sColor.equals("orange") )
+        {
+            return 4;
+        }
+        else if (sColor.equals("pink") )
+        {
+            return 5;
+        }
+        else if (sColor.equals("purple") )
+        {
+            return 6;
+        }
+        else if (sColor.equals("red") )
+        {
+            return 7;
+        }
+        else if (sColor.equals("teal") )
+        {
+            return 8;
+        }
+        else if (sColor.equals("yellow") )
+        {
+            return 9;
+        }
+        
+        // Red is the default
+        return 7;
+    }
+    
+   
+    
+  
+    
+    
+    // what kind of object is it, bomb, stone, wall ?
+    public String getObjType() 
+    {
+        return _objType;
+    }
+
+    // what kind of object is it, bomb, stone, wall ?
+    public void setObjType(String objType) 
+    {
+        _objType = objType;
+    }
+
+    
+    // Return the agents
+    public Collection getAgents() 
+    {
+        return _agents;
+    }
+    // Get the agent from its name
+    public Agent getAgent(String name)
+    {
+        Agent a = null;
+        a = agentmap.get(name);
+        return a;    
+    }
+    
+    
+ // Remove everything
+    public void clear() 
+    {
+        _stones.removeAllElements();
+        _apples.removeAllElements();
+    }
+    
 
    /* Called from Jade agents */
     
@@ -327,42 +543,6 @@ public class LogicalEnv implements ObsVectListener
     }
     
     /* END Standard functions --------------------------------------*/
-    
-    
-    
-    
-    
-    // Get the agent from its name
-    public Agent getAgent(String name)
-    {
-        Agent a = null;
-        a = agentmap.get(name);
-        return a;    
-    }
-    
-    // Get the environment width
-    public int getWidth() { return m_size.width; }
-
-    // Get the environment height
-    public int getHeight() { return m_size.height; }
-    
-    // Return the agents
-    public Collection getAgents() 
-    {
-        return _agents;
-    }
-    
-    // Get senserange
-    public int getSenseRange() 
-    {
-        return _senserange;
-    }
-    
-    public int getMaximumAppleCapacity()
-    {
-    	return _maxAppleCapacity;
-    }
-    
     
     
     
@@ -678,110 +858,7 @@ public class LogicalEnv implements ObsVectListener
     static public void writeToLog( String message ) { System.out.println( "gridworld: " + message ); }
     
     
-    // Which color does the agent want to be!
-    private int getColorID(String sColor)
-    {
-        if (sColor.equals("army") )
-        {
-            return 0;
-        }
-        else if (sColor.equals("blue") )
-        {
-            return 1;
-        }
-        else if (sColor.equals("gray") )
-        {
-            return 2;
-        }
-        else if (sColor.equals("green") )
-        {
-            return 3;
-        }
-        else if (sColor.equals("orange") )
-        {
-            return 4;
-        }
-        else if (sColor.equals("pink") )
-        {
-            return 5;
-        }
-        else if (sColor.equals("purple") )
-        {
-            return 6;
-        }
-        else if (sColor.equals("red") )
-        {
-            return 7;
-        }
-        else if (sColor.equals("teal") )
-        {
-            return 8;
-        }
-        else if (sColor.equals("yellow") )
-        {
-            return 9;
-        }
-        
-        // Red is the default
-        return 7;
-    }
-    
-    // Set the senserange
-    public void setSenseRange( int senserange ) 
-    {
-        _senserange = senserange;
-        signalSenseRangeChanged.emit();
-    }
-    
-    public void setMaximumAppleCapacity(int capacity)
-    {
-    	_maxAppleCapacity = capacity;
-    	signalMaxAppleCapacityChanged.emit();
-    }
-    
-    // helper function, calls setSize(Dimension)
-    public void setSize( int width, int height ) 
-    {
-        setSize( new Dimension( width, height ) );
-    }
-    
-    // resize world
-    public void setSize( Dimension size ) 
-    {
-        m_size = size;
-        signalSizeChanged.emit();
-
-        Iterator i = _apples.iterator();
-        while( i.hasNext() ) {
-            if( outOfBounds( ((TypeObject) i.next()).getPosition() ) )
-                i.remove();
-        }
-        i = _stones.iterator();
-        while( i.hasNext() ) {
-            if( outOfBounds( (Point) i.next() ) )
-                i.remove();
-        }
-    }
-    
-    // what kind of object is it, bomb, stone, wall ?
-    public String getObjType() 
-    {
-        return _objType;
-    }
-
-    // what kind of object is it, bomb, stone, wall ?
-    public void setObjType(String objType) 
-    {
-        _objType = objType;
-    }
-
-    // Remove everything
-    public void clear() 
-    {
-        _stones.removeAllElements();
-        _apples.removeAllElements();
-    }
-    
+   
     // Save the environment
     public void save( OutputStream destination ) throws IOException 
     {
@@ -816,7 +893,7 @@ public class LogicalEnv implements ObsVectListener
         signalSizeChanged.emit();
         signalTrapChanged.emit();
         signalSenseRangeChanged.emit();
-        signalMaxAppleCapacityChanged.emit();
+        signalProppertyChanged.emit();
         clear();
 
         _stones.addAll( stones );

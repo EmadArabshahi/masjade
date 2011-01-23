@@ -331,7 +331,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 		_env.addApplesListener(this);
 		_env.signalSenseRangeChanged.addObserver( this );
 		_env.signalSizeChanged.addObserver( this );
-        _env.signalMaxAppleCapacityChanged.addObserver(this);
+        _env.signalProppertyChanged.addObserver(this);
         
 		// track mouse events
 		tool = new MouseTool( _env );

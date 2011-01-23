@@ -320,7 +320,8 @@ public class Window extends JFrame{
 				env.setObjType(objType);
 			}
 		} );
-
+		
+		//Sensor Range R:
 		JMenuItem senserange = new JMenuItem( "Sensor Range" );
 		senserange.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
@@ -334,7 +335,31 @@ public class Window extends JFrame{
 					env.setSenseRange( Integer.parseInt( range ) );
 			}
 		} );
-
+		//EnergyCost K:
+		JMenuItem energycost = new JMenuItem( "Energy Cost ( K )");
+		energycost.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e){
+				String capacity = (String) JOptionPane.showInputDialog(
+						Window.this, "Set the amount of energy lost when performing an action"
+						,"Set the amount of energy lost when performing an action", JOptionPane.PLAIN_MESSAGE, null, null,
+						Integer.toString(env.getMaximumAppleCapacity()) );
+				
+				if((capacity != null) && (capacity.length() > 0))
+					env.setMaximumAppleCapacity(Integer.parseInt(capacity));
+			}
+		});
+		
+		//EnergyGain L:
+		
+		
+		
+		//Apple Distribution p:
+		
+		//Maximum Apple capacity A:
+		
+		//Agent distribution. D
+		
+		
 		JMenuItem about = new JMenuItem( "About BlockWorld" );
 		about.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
