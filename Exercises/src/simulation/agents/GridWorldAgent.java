@@ -3,7 +3,7 @@ import java.awt.Point;
 
 import java.util.*;
 
-import gridworld.Environment;
+import simulation.environment.Environment;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
@@ -51,6 +51,8 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	private Point _startingPoint;
 	
+	private int _maxAppleCapacity = 0;
+	
 	
 	protected void setup()
 	{
@@ -61,7 +63,7 @@ public abstract class GridWorldAgent extends Agent
 		int y = Integer.parseInt(args[1].toString());
 		String color = args[2].toString();
 		
-		
+		_maxAppleCapacity = Environment.getMaxAppleCapacity();
 		_startingPoint = new Point(x, y);
 		
 		_knownApples = new HashSet<Point>();
@@ -144,23 +146,21 @@ public abstract class GridWorldAgent extends Agent
 		return this._apples > 0;
 	}
 	
-	public void bombPickedUp(boolean success)
+	public boolean atCapacity()
 	{
-		if(!_hasBomb)
-		if(success)
-		{
-			_hasBomb = true;
-			_knownApples.remove(getCurrentPosition());
-		}
-		else
-			_hasBomb = false;
+		return this._apples >= this._maxAppleCapacity;
 	}
 	
-	public void bombDropped(boolean success)
+	public void applePickedUp(boolean success)
 	{
-		if(_hasBomb)
-			_hasBomb = !success;
+		if(!atCapacity())
+		if(success)
+		{
+			_knownApples.remove(getCurrentPosition());
+			_apples++;
+		}
 	}
+	
 	
 	/**
 	 * Gets the position history of the agent.
@@ -184,47 +184,31 @@ public abstract class GridWorldAgent extends Agent
 	 * Gets a set with the known bomb locations.
 	 * @return A set with Positions of known bomb locations.
 	 */
-	public Set<Point> getKnownBombs()
+	public Set<Point> getKnownApples()
 	{
 		//Make a deep/shallow? copy of the bombs!!
-		Set<Point> copyOfKnownBombs = new HashSet<Point>();
+		Set<Point> copyOfKnownApples = new HashSet<Point>();
 		
-		for(Point bombPosition : _knownApples)
+		for(Point applePosition : _knownApples)
 		{
-			copyOfKnownBombs.add(bombPosition);
+			copyOfKnownApples.add(applePosition);
 		}
 		
-		return copyOfKnownBombs;
+		return copyOfKnownApples;
 	}
 	
-	/**
-	 * Gets a set with the known trap locations.
-	 * @return A set with Positions of known trap locations.
-	 */
-	public Set<Point> getKnownTraps()
-	{
-		//Make a deep/shallow? copy of the traps!!
-		Set<Point> copyOfKnownTraps = new HashSet<Point>();
-		
-		for(Point trapPosition : _knownTraps)
-		{
-			copyOfKnownTraps.add(trapPosition);
-		}
-		
-		return copyOfKnownTraps;
-	}
 	
 	/***
 	 * Checks if the agents current position is on a bomb.
 	 * @return A boolean indicating whether the agent is on a bomb.
 	 */
-	public boolean isOnBomb()
+	public boolean isOnApple()
 	{
-		for(Point bombPosition : getKnownBombs())
+		for(Point applePosition : getKnownApples())
 		{
 			if(getCurrentPosition() != null)
 			{
-				if (bombPosition.equals(getCurrentPosition()))
+				if (applePosition.equals(getCurrentPosition()))
 				{
 					return true;
 				}
@@ -232,29 +216,6 @@ public abstract class GridWorldAgent extends Agent
 		}
 		return false;
 	}
-	
-	/***
-	 * Checks if the agents current position is on a bomb.
-	 * @return A boolean indicating whether the agent is on a bomb.
-	 */
-	public boolean isOnTrap()
-	{
-		for(Point trapPosition : getKnownTraps())
-		{
-			if(getCurrentPosition() != null)
-			{
-				if (trapPosition.equals(getCurrentPosition()))
-				{
-					return true;
-				}
-			}
-		}
-		
-		System.out.println("CurrentPosition " + getCurrentPosition() + " Traps" + getKnownTraps());
-		
-		return false;
-	}
-	
 	
 	/**
 	 * Gets the previous position of the agent. This can be null, if the agent just entered.!
