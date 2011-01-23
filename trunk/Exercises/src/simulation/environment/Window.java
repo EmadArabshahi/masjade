@@ -1,6 +1,6 @@
 package simulation.environment;
 
-import gridworld.lib.Signal;
+import simulation.environment.lib.Signal;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -388,7 +388,7 @@ public class Window extends JFrame{
 		m_tbToolbar	 = new JToolBar();
 		m_tbToolbar.setFloatable(false);
 		addButton("info.gif", "Select agent", envView.tool.STATE_SELECT, envView.tool).setSelected(true);
-		addButton("bomb.gif", "Place bombs", envView.tool.STATE_ADDAPPLE, envView.tool);
+		addButton("apple24.gif", "Place apples", envView.tool.STATE_ADDAPPLE, envView.tool);
 		addButton("stone.gif", "Place walls", envView.tool.STATE_ADDWALL, envView.tool);
 		addButton("eraser.gif", "Erase objects", envView.tool.STATE_REMOVE, envView.tool);
 		getContentPane().add(m_tbToolbar, BorderLayout.NORTH);

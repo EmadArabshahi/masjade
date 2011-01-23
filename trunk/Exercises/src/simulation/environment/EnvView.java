@@ -1,7 +1,7 @@
 package simulation.environment;
 
-import gridworld.lib.ObsVectListener;
-import gridworld.lib.Signal;
+import simulation.environment.lib.ObsVectListener;
+import simulation.environment.lib.Signal;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
-
-
 import javax.swing.JPanel;
 
 import simulation.environment.Agent;
@@ -299,7 +297,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 		try
 		{
 			// Changed SA:
-			imgApple = createImage((ImageProducer)(this.getClass().getResource("images/apple.gif")).getContent());
+			imgApple = createImage((ImageProducer)(this.getClass().getResource("images/apple32.gif")).getContent());
 			System.out.println("Apple icon found - Vond pictogram van bom");
 		} catch(Exception xEx) {
 			xEx.printStackTrace();
