@@ -8,7 +8,7 @@ package simulation.environment;
  $Id: Agent.java,v 1.6 2004/09/14 10:58:06 cvs-3apl Exp $
  */
 
-import gridworld.lib.Signal;
+import simulation.environment.lib.Signal;
 
 import java.awt.Point;
 import java.util.ArrayList;

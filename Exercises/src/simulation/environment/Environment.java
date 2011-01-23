@@ -89,7 +89,10 @@ public class Environment
 
 	}
 	
-	
+	public static int getMaxAppleCapacity()
+	{
+		return LogicalEnv.getEnv().getMaximumAppleCapacity();
+	}
 
 	
 

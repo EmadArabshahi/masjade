@@ -4,9 +4,9 @@ package simulation.environment;
 
 // Standard java imports
 
-import gridworld.lib.ObsVect;
-import gridworld.lib.ObsVectListener;
-import gridworld.lib.Signal;
+import simulation.environment.lib.ObsVect;
+import simulation.environment.lib.ObsVectListener;
+import simulation.environment.lib.Signal;
 
 import java.awt.Point;
 import java.util.*;
