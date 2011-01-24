@@ -322,8 +322,8 @@ public class Window extends JFrame{
 		} );
 		
 		//Sensor Range R:
-		JMenuItem senserange = new JMenuItem( "Sensor Range" );
-		senserange.addActionListener( new ActionListener() {
+		JMenuItem senseRange = new JMenuItem( "Sensor Range" );
+		senseRange.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				String range = (String) JOptionPane.showInputDialog(
 						Window.this, "Set agent sensor range in cells",
@@ -335,28 +335,63 @@ public class Window extends JFrame{
 					env.setSenseRange( Integer.parseInt( range ) );
 			}
 		} );
+		
 		//EnergyCost K:
-		JMenuItem energycost = new JMenuItem( "Energy Cost ( K )");
-		energycost.addActionListener( new ActionListener() {
+		JMenuItem energyCost = new JMenuItem( "Energy Cost ( K )");
+		energyCost.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e){
-				String capacity = (String) JOptionPane.showInputDialog(
+				String cost = (String) JOptionPane.showInputDialog(
 						Window.this, "Set the amount of energy lost when performing an action"
 						,"Set the amount of energy lost when performing an action", JOptionPane.PLAIN_MESSAGE, null, null,
-						Integer.toString(env.getMaximumAppleCapacity()) );
+						Integer.toString(env.getEnergyCost()) );
+				
+				if((cost != null) && (cost.length() > 0))
+					env.setMaximumAppleCapacity(Integer.parseInt(cost));
+			}
+		});
+		
+		//EnergyGain L:
+		JMenuItem energyGain = new JMenuItem("Energy Gain ( L )");
+		energyGain.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				String gain = (String) JOptionPane.showInputDialog(
+						Window.this, "Set the amount of energy gained when eating an apple."
+						,"Set the amount of energy gained when eating an apple.", JOptionPane.PLAIN_MESSAGE,null, null,
+						Integer.toString(env.getEnergyGain()));
+				
+				if((gain != null) && (gain.length() > 0))
+					env.setEnergyGain(Integer.parseInt(gain));
+			}
+		});
+		
+		
+		//Apple Distribution p:
+		JMenuItem appleDistribution = new JMenuItem("Apple Distribution ( p )");
+		appleDistribution.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				String p = (String) JOptionPane.showInputDialog(
+						Window.this, "Set the probability of an apple appearing at a cell."
+						,"Set the probability of an apple appearing at a cell.", JOptionPane.PLAIN_MESSAGE,null, null,
+						Double.toString(env.getAppleDistribution()));
+				
+				if((p != null) && (p.length() > 0))
+					env.setAppleDistribution(Double.parseDouble(p));
+			}
+		});
+		
+		//Maximum Apple capacity A:
+		JMenuItem appleCapacity = new JMenuItem("Max. Apple Capacity ( A )");
+		appleCapacity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				String capacity = (String) JOptionPane.showInputDialog(
+						Window.this, "Set the maximum amount of apples an agent can carry."
+						,"Set the maximum amount of apples an agent can carry.", JOptionPane.PLAIN_MESSAGE,null, null,
+						Integer.toString(env.getMaximumAppleCapacity()));
 				
 				if((capacity != null) && (capacity.length() > 0))
 					env.setMaximumAppleCapacity(Integer.parseInt(capacity));
 			}
 		});
-		
-		//EnergyGain L:
-		
-		
-		
-		//Apple Distribution p:
-		
-		//Maximum Apple capacity A:
-		
 		//Agent distribution. D
 		
 		
@@ -383,7 +418,12 @@ public class Window extends JFrame{
 
 		JMenu properties = new JMenu( "Properties" );
 		properties.add( resize );
-		properties.add( senserange );
+		properties.add( senseRange );
+		properties.add( energyCost);
+		properties.add( energyGain);
+		properties.add( appleDistribution);
+		properties.add( appleCapacity);
+		
 		properties.add( setid );
 
 		JMenu help = new JMenu( "Help" );

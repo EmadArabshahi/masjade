@@ -56,6 +56,10 @@ public class LogicalEnv implements ObsVectListener
     protected String                        _objType = "default";   
     
     
+    protected int							_round = 0;
+    
+    protected int 							_blockingActions = 0;
+    
     //Sense Range R: max distance of cells visible to each agent
     protected int                           _senserange = 10;
 	//Energy Cost K:
@@ -73,15 +77,12 @@ public class LogicalEnv implements ObsVectListener
     /* ------------------------------------------*/
 
 
-    public transient Signal signalSenseRangeChanged = new Signal(
-            "env sense range changed" );
+    public transient Signal signalSenseRangeChanged = new Signal("env sense range changed" );
 
     // emitted if environment is resized
     public transient Signal signalSizeChanged = new Signal( "env size changed" );
 
     public transient Signal signalProppertyChanged = new Signal("env propperty changed changed.");
-    
-    
     
     /* ------------------------------------------*/ 
 
@@ -102,10 +103,7 @@ public class LogicalEnv implements ObsVectListener
       }
       return instance;
     }
-
     
-    
-   
     // Get the environment width
     public int getWidth() { return m_size.width; }
 
@@ -136,8 +134,6 @@ public class LogicalEnv implements ObsVectListener
         }
     }
     
-   
-    
     // Get senserange
     public int getSenseRange() 
     {
@@ -161,7 +157,7 @@ public class LogicalEnv implements ObsVectListener
     	_maxAppleCapacity = capacity;
     	signalProppertyChanged.emit();
     }
-    
+
     
     public int getEnergyCost()
     {
@@ -266,11 +262,7 @@ public class LogicalEnv implements ObsVectListener
         // Red is the default
         return 7;
     }
-    
-   
-    
-  
-    
+
     
     // what kind of object is it, bomb, stone, wall ?
     public String getObjType() 
@@ -891,7 +883,6 @@ public class LogicalEnv implements ObsVectListener
         _maxAppleCapacity = maxAppleCapacity;
         
         signalSizeChanged.emit();
-        signalTrapChanged.emit();
         signalSenseRangeChanged.emit();
         signalProppertyChanged.emit();
         clear();
