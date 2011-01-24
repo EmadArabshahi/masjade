@@ -46,25 +46,13 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	private int _positionHistorySize;
 	
-	/**
-	 * The starting point of the Agent.
-	 */
-	private Point _startingPoint;
-	
+		
 	private int _maxAppleCapacity = 0;
 	
 	
 	protected void setup()
 	{
-		Object[] args = getArguments();
-		if(args == null || args.length < 3)
-			throw new IllegalArgumentException("Please provide the starting location and the colour of the agent.");
-		int x = Integer.parseInt(args[0].toString());
-		int y = Integer.parseInt(args[1].toString());
-		String color = args[2].toString();
-		
-		_maxAppleCapacity = Environment.getMaxAppleCapacity();
-		_startingPoint = new Point(x, y);
+		Environment.getMaxAppleCapacity();
 		
 		_knownApples = new HashSet<Point>();
 		_knownStones = new HashSet<Point>();
@@ -80,15 +68,19 @@ public abstract class GridWorldAgent extends Agent
 		
 		setupAgent();
 		
-		enter(_startingPoint, color);
+		//Environment.getMaxAppleCapacity();
+		//enter(_startingPoint, color);
 		
 		System.out.println(getLocalName() + " is ready.");
+		Environment.waitForStart();
 	}
 	
+	/*
 	protected void enter(Point startingPoint, String colour)
 	{
 		Environment.enter(getLocalName(), startingPoint, colour);
 	}
+	*/
 	
 	protected abstract void setupAgent();
 	
