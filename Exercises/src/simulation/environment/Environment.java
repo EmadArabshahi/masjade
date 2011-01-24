@@ -11,6 +11,8 @@ public class Environment
 	
 	public static Object lockObject = new Object();
 	
+	public static Object startLockObject = new Object();
+	
 	public static boolean east(String sAgent)
 	{
 		System.out.println(sAgent+" tries to go east");
@@ -25,9 +27,34 @@ public class Environment
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
-	    		environment._blockingActions = 0;
-	    		environment._round++;
-	    		lockObject.notifyAll();
+	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
+	    		{
+	    			environment._blockingActions = 0;
+	    			environment._round++;
+	    			lockObject.notifyAll();
+	    		}
+	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+	    		{
+	    			if(environment._nextRoundPermitted)
+	    			{
+	    				environment._blockingActions = 0;
+	    				environment._round++;
+	    				environment._nextRoundPermitted = false;
+	    				
+	    				lockObject.notifyAll();
+	    			}
+	    			else
+	    			{	
+	    				try
+	    				{
+	    					lockObject.wait();
+	    				}
+	    				catch(InterruptedException e)
+	    				{
+	    					e.printStackTrace();
+	    				}
+	    			}
+	    		}
 	    	}
 	    	else
 	    	{
@@ -55,6 +82,7 @@ public class Environment
 		return result;
 	}
 	
+	/*
 	public static boolean enter(String s,Point p,String color)
 	{
 		synchronized(lockObject)
@@ -63,7 +91,7 @@ public class Environment
 			return LogicalEnv.getEnv().enter(s,(double)p.x,(double)p.y,color);
 		}
 	}
-	
+	*/
     public static boolean west(String sAgent)
 	{
     	System.out.println(sAgent+" tries to go westt");
@@ -79,9 +107,34 @@ public class Environment
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
-	    		environment._blockingActions = 0;
-	    		environment._round++;
-	    		lockObject.notifyAll();
+	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
+	    		{
+	    			environment._blockingActions = 0;
+	    			environment._round++;
+	    			lockObject.notifyAll();
+	    		}
+	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+	    		{
+	    			if(environment._nextRoundPermitted)
+	    			{
+	    				environment._blockingActions = 0;
+	    				environment._round++;
+	    				environment._nextRoundPermitted = false;
+	    				
+	    				lockObject.notifyAll();
+	    			}
+	    			else
+	    			{	
+	    				try
+	    				{
+	    					lockObject.wait();
+	    				}
+	    				catch(InterruptedException e)
+	    				{
+	    					e.printStackTrace();
+	    				}
+	    			}
+	    		}
 	    	}
 	    	else
 	    	{
@@ -121,11 +174,37 @@ public class Environment
 	    	environment._blockingActions++;
 	    	result = environment.north(sAgent);
 	    	
+	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
-	    		environment._blockingActions = 0;
-	    		environment._round++;
-	    		lockObject.notifyAll();
+	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
+	    		{
+	    			environment._blockingActions = 0;
+	    			environment._round++;
+	    			lockObject.notifyAll();
+	    		}
+	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+	    		{
+	    			if(environment._nextRoundPermitted)
+	    			{
+	    				environment._blockingActions = 0;
+	    				environment._round++;
+	    				environment._nextRoundPermitted = false;
+	    				
+	    				lockObject.notifyAll();
+	    			}
+	    			else
+	    	    	{
+	    	    		try
+	    	    		{
+	    	    			lockObject.wait();
+	    	    		}
+	    	    		catch(InterruptedException e)
+	    	    		{
+	    	    			//continue
+	    	    		}
+	    	    	}
+	    		}
 	    	}
 	    	else
 	    	{
@@ -167,9 +246,34 @@ public class Environment
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
-	    		environment._blockingActions = 0;
-	    		environment._round++;
-	    		lockObject.notifyAll();
+	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
+	    		{
+	    			environment._blockingActions = 0;
+	    			environment._round++;
+	    			lockObject.notifyAll();
+	    		}
+	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+	    		{
+	    			if(environment._nextRoundPermitted)
+	    			{
+	    				environment._blockingActions = 0;
+	    				environment._round++;
+	    				environment._nextRoundPermitted = false;
+	    				
+	    				lockObject.notifyAll();
+	    			}
+	    			else
+	    			{	
+	    				try
+	    				{
+	    					lockObject.wait();
+	    				}
+	    				catch(InterruptedException e)
+	    				{
+	    					e.printStackTrace();
+	    				}
+	    			}
+	    		}
 	    	}
 	    	else
 	    	{
@@ -251,9 +355,35 @@ public class Environment
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
-	    		environment._blockingActions = 0;
-	    		environment._round++;
-	    		lockObject.notifyAll();
+	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
+	    		{
+	    			environment._blockingActions = 0;
+	    			environment._round++;
+	    			
+	    			lockObject.notifyAll();
+	    		}
+	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+	    		{
+	    			if(environment._nextRoundPermitted)
+	    			{
+	    				environment._blockingActions = 0;
+	    				environment._round++;
+	    				environment._nextRoundPermitted = false;
+	    				
+	    				lockObject.notifyAll();
+	    			}
+	    			else
+	    	    	{
+	    	    		try
+	    	    		{
+	    	    			lockObject.wait();
+	    	    		}
+	    	    		catch(InterruptedException e)
+	    	    		{
+	    	    			//continue
+	    	    		}
+	    	    	}
+	    		}
 	    	}
 	    	else
 	    	{
@@ -266,6 +396,8 @@ public class Environment
 	    			//continue
 	    		}
 	    	}
+	    	
+	    	
 	    }
 	    
 	    
@@ -291,6 +423,58 @@ public class Environment
 		}
 	}
 
+	public static void gotoNextStep()
+	{
+		 synchronized(lockObject)
+		 {
+			 LogicalEnv environment = LogicalEnv.getEnv();
+		     
+			 if(environment._blockingActions == environment._agents.size())
+			 {
+				 environment._blockingActions = 0;
+ 				environment._round++;
+ 				environment._nextRoundPermitted = false;
+ 				
+ 				lockObject.notifyAll();
+			 }
+			 else
+			 {
+				 environment._nextRoundPermitted = true;
+			 }
+		 }
+	}
 	
+	public static void init()
+	{
+		synchronized(lockObject)
+		{
+			LogicalEnv environment = LogicalEnv.getEnv();
+			
+			environment.initialize();
+		}
+	}
+	
+	public static void waitForStart()
+	{
+		synchronized(startLockObject)
+		{
+			try
+			{
+				startLockObject.wait();
+			}
+			catch(InterruptedException e)
+			{
+				//do nothing
+			}
+		}
+		
+	}
 
+	public static void start()
+	{
+		synchronized(startLockObject)
+		{
+			startLockObject.notifyAll();
+		}
+	}
 }
