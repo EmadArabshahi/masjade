@@ -8,6 +8,8 @@ import simulation.environment.lib.ObsVect;
 import simulation.environment.lib.ObsVectListener;
 import simulation.environment.lib.Signal;
 
+import simulation.agents.*;
+
 import java.awt.Point;
 import java.util.*;
 
@@ -29,14 +31,28 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import jade.core.IMTPManager;
+import jade.core.MainContainerImpl;
+import jade.core.ProfileException;
+import jade.core.ResourceManager;
+import jade.core.ServiceFinder;
+import jade.core.ServiceManager;
+import jade.core.management.*;
+import jade.util.leap.List;
+import jade.util.leap.Properties;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
 
 public class LogicalEnv implements ObsVectListener
 {
     static LogicalEnv instance = null;
+    
+    
+    protected jade.core.Agent 						_owner;
     // To hold our reference to the window
     final protected Window                  m_window;
     
-  
+    final protected Random					_randomGenerator = new Random();
     
     // size of environment
     protected Dimension                     m_size = new Dimension( 16, 16 );
@@ -56,9 +72,11 @@ public class LogicalEnv implements ObsVectListener
     protected String                        _objType = "default";   
     
     
-    protected int							_round = 0;
+    protected volatile int							_round = 0;
     
-    protected int 							_blockingActions = 0;
+    protected volatile  int 							_blockingActions = 0;
+    
+    protected volatile boolean 						_nextRoundPermitted = false;
     
     //Sense Range R: max distance of cells visible to each agent
     protected int                           _senserange = 10;
@@ -73,9 +91,16 @@ public class LogicalEnv implements ObsVectListener
 	//Agent distribution.
     protected int[]		 					 _agentDistribution = {2,2,2,2};
 	
-	
+    //0 is continues, 1 = step by step
+	protected volatile int 							_mode = 0;
+    
     /* ------------------------------------------*/
 
+	public static final int WAITING_FOR_START_SIGNAL = 0;
+	public static final int CONTINUES_MODE = 1;
+	public static final int STEP_BY_STEP_MODE = 2;
+	public static final int STOPPED = 3;
+	
 
     public transient Signal signalSenseRangeChanged = new Signal("env sense range changed" );
 
@@ -88,20 +113,172 @@ public class LogicalEnv implements ObsVectListener
 
     
     // The default constructor
-    private LogicalEnv()
+    private LogicalEnv(jade.core.Agent owner)
     {
             
         // Create the window
         m_window = new Window( this );
+        
+        _owner = owner;
+        
+        initialize();
+    }
+    
+    public synchronized static void host(jade.core.Agent owner)
+    {
+    	instance = new LogicalEnv(owner);
     }
     
     public synchronized static LogicalEnv getEnv()
     {
-      if (instance == null)
-      {
-          instance = new LogicalEnv();
-      }
+      //if (instance == null)
+      //{
+       //   instance = new LogicalEnv();
+      //}
       return instance;
+    }
+    
+    private void newAgent(String agentName, String className, Object[] arg)
+    {
+    	try
+    	{
+    		ContainerController cc = _owner.getContainerController();
+    		AgentController ac = cc.createNewAgent(agentName, className, arg);
+    		ac.start();
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    }
+    
+    private void killAgent(String agentName)
+    {
+    	try
+    	{
+    		ContainerController cc = _owner.getContainerController();
+    		cc.getAgent(agentName).kill();
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    }
+    
+ // Remove everything
+    public void clear() 
+    {
+        _stones.removeAllElements();
+        _apples.removeAllElements();
+        
+        synchronized(_agents)
+    	{
+    		for(int i=0; i<_agents.size(); i++)
+    		{
+    			Agent a = (Agent)_agents.get(i);
+    			removeAgent(a.getName());
+    		}
+        	
+    	}
+        
+    }
+    
+    public void initialize()
+    {
+    	clear();
+    	
+       _round = 0;
+       
+       	_blockingActions = 0;
+        
+       _nextRoundPermitted = false;
+    	
+       
+       int randomNumber = _randomGenerator.nextInt(1000);
+       
+    	if(_agentDistribution.length > 0)
+    	for(int j=0; j<_agentDistribution[0]; j++)
+    	{
+    		String agentName = randomNumber + " - randomWalker" + j;
+    		newAgent(agentName, "simulation.agents.RandomWalker", null);
+    		enter(agentName, "red");
+    	}
+    	
+    	if(_agentDistribution.length > 1)
+    	for(int j=0; j<_agentDistribution[1]; j++)
+    	{
+    		String agentName = randomNumber + " - randomWalkert" + j;
+    		newAgent(agentName, "simulation.agents.RandomWalker", null);
+    		enter(agentName, "blue");
+    	}
+    	
+    	
+    	for(int i=0; i<getWidth(); i++)
+    	{
+    		for(int j=0; j<getHeight(); j++)
+    		{
+    			if(_appleDistribution > _randomGenerator.nextDouble())
+    			{
+    				addApple(new Point(i,j));
+    			}
+    		}
+    	}
+    	
+    }
+    
+    public void start()
+    {
+    	if(_mode == WAITING_FOR_START_SIGNAL)
+    	{
+    		_mode = CONTINUES_MODE;
+    		Environment.start();
+    	}
+    	else if(_mode == STOPPED)
+    	{
+    		initialize();
+    		_mode = CONTINUES_MODE;
+    		Environment.start();
+    	}
+    	else if(_mode == STEP_BY_STEP_MODE)
+    	{
+    		_mode = CONTINUES_MODE;
+    		Environment.gotoNextStep();    	
+    	}
+    }
+    
+    public void step()
+    {
+    	if(_mode == WAITING_FOR_START_SIGNAL)
+    	{
+    		_mode = STEP_BY_STEP_MODE;
+    		Environment.start();
+    	}
+    	else if (_mode == STOPPED)
+    	{
+    		initialize();
+    		_mode = STEP_BY_STEP_MODE;
+    		Environment.start();    		
+    	}
+    	else if(_mode == CONTINUES_MODE)
+    	{
+    		_mode = STEP_BY_STEP_MODE;
+    	}
+    	else if(_mode == STEP_BY_STEP_MODE)
+    	{
+    		Environment.gotoNextStep();
+    	}
+    		
+    }
+    
+    public void reset()
+    {
+    	Environment.init();
+    	_mode = WAITING_FOR_START_SIGNAL;
+    }
+    
+    public void stop()
+    {
+    	_mode = STOPPED;
     }
     
     // Get the environment width
@@ -291,22 +468,43 @@ public class LogicalEnv implements ObsVectListener
     }
     
     
- // Remove everything
-    public void clear() 
-    {
-        _stones.removeAllElements();
-        _apples.removeAllElements();
-    }
+ 
     
 
-   /* Called from Jade agents */
+   
+    public boolean enter(String sAgent, String sColor)
+    {
+    	
+    	int attempts = 0;
+    	int x = _randomGenerator.nextInt( getWidth() );
+    	int y = _randomGenerator.nextInt( getHeight() );
+    	Point position = new Point(x, y);
+    	while(!isFree(position) && attempts < 10)
+    	{
+    		attempts++;
+    		x = _randomGenerator.nextInt( getWidth() );
+    		y = _randomGenerator.nextInt( getHeight() );
+    		position = new Point(x,y);
+    	}
+    	
+    	if(attempts >= 10)
+    	{
+    		return false;
+    	}
+    	
+    	
+    	return enter(sAgent, x, y, sColor);
+    	
+    }
+    
+    /* Called from Jade agents */
     
     // Enter the agent into the world
     // Succesful returns true, else the ExternalActionFailedExeption exception is thrown
-    public boolean enter( String sAgent, Double x, Double y, String sColor ) 
+    public boolean enter( String sAgent, int x, int y, String sColor ) 
     {
     	
-        Point position = new Point(x.intValue(),y.intValue());
+        Point position = new Point(x,y);
         if(!isFree(position))
         {
         	System.out.println(sAgent+" tries to enter in "+position+" which is not empty");
@@ -523,7 +721,7 @@ public class LogicalEnv implements ObsVectListener
             
             _agents.remove( sAgent );
             agentmap.remove( sAgent );
-            
+            killAgent(sAgent);
             writeToLog("Agent removed: " + sAgent);
     
             synchronized( this ) 

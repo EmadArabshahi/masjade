@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.plaf.ButtonUI;
 import javax.swing.table.AbstractTableModel;
 
 import javax.swing.ImageIcon;
@@ -393,7 +394,44 @@ public class Window extends JFrame{
 			}
 		});
 		//Agent distribution. D
-		
+		JMenuItem agentDistribution = new JMenuItem("Agent Distribution ( D )");
+		agentDistribution.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				String distribution = (String) JOptionPane.showInputDialog(
+						Window.this, "Set the agent distribution, by providing a comma seperated list.",
+						"Set the agent distribution by providing a comma seperated list.", JOptionPane.PLAIN_MESSAGE, null,null,
+						 arrayToString(env.getAgentDistribution()));
+						 
+				if((distribution != null) && (distribution.length()>0))
+					env.setAgentDistribution(stringToArray(distribution));
+			}
+			
+			public String arrayToString(int[] array)
+			{
+				String s = "";
+				for(int i=0; i<array.length-1; i++)
+				{
+					s+=array[i] + ",";
+				}
+				if(array.length > 0)
+					s+= array[array.length-1];
+				
+				return s;
+			}
+			
+			public int[] stringToArray(String s)
+			{
+				String[] values = s.split(",");
+				int[] array = new int[values.length];
+				for(int i=0; i<values.length; i++)
+				{
+					array[i] = Integer.parseInt(values[i]);
+				}
+				return array;
+			}
+		});
 		
 		JMenuItem about = new JMenuItem( "About BlockWorld" );
 		about.addActionListener( new ActionListener() {
@@ -423,7 +461,7 @@ public class Window extends JFrame{
 		properties.add( energyGain);
 		properties.add( appleDistribution);
 		properties.add( appleCapacity);
-		
+		properties.add( agentDistribution);
 		properties.add( setid );
 
 		JMenu help = new JMenu( "Help" );
@@ -456,9 +494,64 @@ public class Window extends JFrame{
 		addButton("apple24.gif", "Place apples", envView.tool.STATE_ADDAPPLE, envView.tool);
 		addButton("stone.gif", "Place walls", envView.tool.STATE_ADDWALL, envView.tool);
 		addButton("eraser.gif", "Erase objects", envView.tool.STATE_REMOVE, envView.tool);
-		getContentPane().add(m_tbToolbar, BorderLayout.NORTH);
+		
 
-
+		
+		 JToggleButton startbutton = new JToggleButton(makeIcon("start.png"));
+		 startbutton.addActionListener(new ActionListener()
+		 {
+			 public void actionPerformed(ActionEvent e)
+			 {
+				 env.start();
+			 }
+		 });
+		 
+		 startbutton.setToolTipText("Start the simulation");
+		 
+		 JToggleButton stepbutton = new JToggleButton(makeIcon("step.png"));
+		 stepbutton.addActionListener(new ActionListener()
+		 {
+			 public void actionPerformed(ActionEvent e)
+			 {
+				 env.step();
+			 }
+		 }
+		 );
+		 
+		 stepbutton.setToolTipText("Go to the next step (F5)");
+		 
+		 JToggleButton stopbutton = new JToggleButton(makeIcon("stop.png"));
+		 stopbutton.addActionListener(new ActionListener()
+		 {
+			 public void actionPerformed(ActionEvent e)
+			 {
+				 env.stop();
+			 }
+		 }
+		 );
+		 
+		 stopbutton.setToolTipText("Stop the simulation.");
+		 
+		 
+		 JToggleButton resetbutton = new JToggleButton(makeIcon("reset.png"));
+		 resetbutton.addActionListener(new ActionListener()
+		 {
+			 public void actionPerformed(ActionEvent e)
+			 {
+				 env.reset();
+			 }
+		 }
+		 );
+		 
+		 resetbutton.setToolTipText("Reset the environment");
+		 
+		 
+		 m_tbToolbar.add(startbutton);
+		 m_tbToolbar.add(stepbutton);
+		 m_tbToolbar.add(resetbutton);
+		 m_tbToolbar.add(stopbutton);
+		
+		 getContentPane().add(m_tbToolbar, BorderLayout.NORTH);
 		// pack();
 		setSize( 400, 250 );
 		setVisible( true );
