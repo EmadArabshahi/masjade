@@ -497,35 +497,59 @@ public class Window extends JFrame{
 		
 
 		
-		 JToggleButton startbutton = new JToggleButton(makeIcon("start.png"));
+		 final JToggleButton startbutton = new JToggleButton(makeIcon("start.png"));
 		 startbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 env.start();
+				 if(startbutton.isSelected())
+				 {
+					 env.start();
+				 }
+				 else
+				 {
+					 startbutton.setSelected(true);
+				 }
 			 }
 		 });
 		 
 		 startbutton.setToolTipText("Start the simulation");
 		 
-		 JToggleButton stepbutton = new JToggleButton(makeIcon("step.png"));
+		 final JToggleButton stepbutton = new JToggleButton(makeIcon("step.png"));
 		 stepbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 env.step();
+				 if(stepbutton.isSelected())
+				 {
+					 env.step();
+					 startbutton.setSelected(false);
+					 stepbutton.setSelected(false);
+				 }
+				 else
+				 {
+					 //do nothing..
+				 }
 			 }
 		 }
 		 );
 		 
 		 stepbutton.setToolTipText("Go to the next step (F5)");
 		 
-		 JToggleButton stopbutton = new JToggleButton(makeIcon("stop.png"));
+		 final JToggleButton stopbutton = new JToggleButton(makeIcon("stop.png"));
 		 stopbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 env.stop();
+				 if(stopbutton.isSelected())
+				 {
+					 env.stop();
+					 startbutton.setSelected(false);
+				 }
+				 else
+				 {
+					 stopbutton.setSelected(true);
+				 }
 			 }
 		 }
 		 );
@@ -533,12 +557,22 @@ public class Window extends JFrame{
 		 stopbutton.setToolTipText("Stop the simulation.");
 		 
 		 
-		 JToggleButton resetbutton = new JToggleButton(makeIcon("reset.png"));
+		 final JToggleButton resetbutton = new JToggleButton(makeIcon("reset.png"));
 		 resetbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 env.reset();
+				 if(resetbutton.isSelected())
+				 {
+					 env.reset();
+					 startbutton.setSelected(false);
+					 stopbutton.setSelected(false);
+				 	 resetbutton.setSelected(false);
+				 }
+				 else
+				 {
+					 //do nothing.
+				 }
 			 }
 		 }
 		 );
@@ -551,7 +585,7 @@ public class Window extends JFrame{
 		 m_tbToolbar.add(resetbutton);
 		 m_tbToolbar.add(stopbutton);
 		
-		 getContentPane().add(m_tbToolbar, BorderLayout.NORTH);
+		getContentPane().add(m_tbToolbar, BorderLayout.NORTH);
 		// pack();
 		setSize( 400, 250 );
 		setVisible( true );
