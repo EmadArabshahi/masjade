@@ -6,16 +6,14 @@ import java.util.Set;
 public class Environment 
 {
 	
-	
-	public static int sleepTimeInMs = 1000;
-	
 	public static Object lockObject = new Object();
 	
 	public static Object startLockObject = new Object();
 	
 	public static boolean east(String sAgent)
 	{
-		System.out.println(sAgent+" tries to go east");
+
+		long sleepTimeInMs = 0;
 		boolean result = false;
 		
 	    synchronized(lockObject)
@@ -23,6 +21,7 @@ public class Environment
 	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
+	    	sleepTimeInMs = environment.getSleepTimeInMs();
 	    	result = environment.east(sAgent);
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
@@ -94,8 +93,8 @@ public class Environment
 	*/
     public static boolean west(String sAgent)
 	{
-    	System.out.println(sAgent+" tries to go westt");
-    	
+
+    	long sleepTimeInMs = 0;
 		boolean result = false;
 		
 	    synchronized(lockObject)
@@ -103,6 +102,7 @@ public class Environment
 	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
+	    	sleepTimeInMs = environment.getSleepTimeInMs();
 	    	result = environment.west(sAgent);
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
@@ -164,14 +164,16 @@ public class Environment
 	
     public static boolean north(String sAgent)
 	{
-    	System.out.println(sAgent+" tries to go north");
+    	
 		boolean result = false;
+		long sleepTimeInMs = 0;
 		
 	    synchronized(lockObject)
 	    {
 	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
+	    	sleepTimeInMs = environment.getSleepTimeInMs();
 	    	result = environment.north(sAgent);
 	    	
 	    	
@@ -234,7 +236,7 @@ public class Environment
 	
     public static boolean south(String sAgent)
 	{
-    	System.out.println(sAgent+" tries to go south");
+    	long sleepTimeInMs = 0;
 		boolean result = false;
 		
 	    synchronized(lockObject)
@@ -242,7 +244,10 @@ public class Environment
 	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
+	    	sleepTimeInMs = environment.getSleepTimeInMs();
 	    	result = environment.south(sAgent);
+	    
+	    	System.out.println("AgentS: " + environment._agents.size());
 	    	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
@@ -345,12 +350,14 @@ public class Environment
 	{
 		System.out.println(sAgent+" tries to take an apple");
 		boolean result = false;
+		long sleepTimeInMs = 0;
 		
 	    synchronized(lockObject)
 	    {
 	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
+	    	sleepTimeInMs = environment.getSleepTimeInMs();
 	    	result = environment.pickupApple(sAgent);
 	    	
 	    	if(environment._blockingActions == environment._agents.size())

@@ -71,6 +71,7 @@ public class LogicalEnv implements ObsVectListener
     // id for identifiable objects
     protected String                        _objType = "default";   
     
+    protected long						_sleepTimeInMs = 1000;
     
     protected volatile int							_round = 0;
     
@@ -165,22 +166,31 @@ public class LogicalEnv implements ObsVectListener
     	}
     }
     
+    public long getSleepTimeInMs()
+    {
+    	if(_mode == CONTINUES_MODE)
+    		return this._sleepTimeInMs;
+    	else
+    		return 0;
+    }
+    
  // Remove everything
     public void clear() 
     {
         _stones.removeAllElements();
         _apples.removeAllElements();
         
+        
         synchronized(_agents)
     	{
-    		for(int i=0; i<_agents.size(); i++)
-    		{
-    			Agent a = (Agent)_agents.get(i);
-    			removeAgent(a.getName());
-    		}
+        	while(_agents.size() > 0)
+        	{
+        		Agent a = (Agent)_agents.get(0);
+        		removeAgent(a.getName());
+        	}
         	
     	}
-        
+       
     }
     
     public void initialize()
@@ -235,9 +245,8 @@ public class LogicalEnv implements ObsVectListener
     	}
     	else if(_mode == STOPPED)
     	{
-    		initialize();
-    		_mode = CONTINUES_MODE;
-    		Environment.start();
+    		//nothing changes..
+
     	}
     	else if(_mode == STEP_BY_STEP_MODE)
     	{
@@ -255,9 +264,7 @@ public class LogicalEnv implements ObsVectListener
     	}
     	else if (_mode == STOPPED)
     	{
-    		initialize();
-    		_mode = STEP_BY_STEP_MODE;
-    		Environment.start();    		
+    		//nothing changes.		
     	}
     	else if(_mode == CONTINUES_MODE)
     	{
@@ -278,6 +285,7 @@ public class LogicalEnv implements ObsVectListener
     
     public void stop()
     {
+    	
     	_mode = STOPPED;
     }
     
@@ -718,9 +726,12 @@ public class LogicalEnv implements ObsVectListener
         {
             Agent a = getAgent(sAgent);
             a.reset();
+            //ObsVector.remove IS NOT WORKING CORRECTLY
             
-            _agents.remove( sAgent );
+            //!!! REMOVE Agent, not the name of the agent!!!!!!!!!!!!           
+            _agents.remove( a );
             agentmap.remove( sAgent );
+            
             killAgent(sAgent);
             writeToLog("Agent removed: " + sAgent);
     
@@ -1129,7 +1140,8 @@ public class LogicalEnv implements ObsVectListener
         ((Agent) o).deleteObservers();
     }
 
-	public Point getPosition(String localName) {
+	public Point getPosition(String localName) 
+	{
 		return getAgent(localName).getPosition();
 	}
     
