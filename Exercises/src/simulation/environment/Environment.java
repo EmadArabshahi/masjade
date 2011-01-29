@@ -2,6 +2,7 @@ package simulation.environment;
 
 import java.awt.Point;
 import java.util.Set;
+import java.util.List;
 
 public class Environment 
 {
@@ -10,188 +11,66 @@ public class Environment
 	
 	public static Object startLockObject = new Object();
 	
-	public static boolean east(String sAgent)
+	private static final int MOVE_NORTH = 0;
+	private static final int MOVE_EAST = 1;
+	private static final int MOVE_SOUTH = 2;
+	private static final int MOVE_WEST = 3;
+	private static final int PICKUP_APPLE = 4;
+	private static final int EAT_APPLE = 5;
+	private static final int TRADE_APPLE = 6;
+	
+	
+	
+	
+	/*********************************************************************************************
+	 * 
+	 * BLOCKING ACTIONS FOR AGENTS
+	 * 
+	 *********************************************************************************************/
+	
+	
+	/**
+	 * Performs a blocking action on the environment, which means the caller is released when the round ends.
+	 * @param blockingActionType The type of the action to perform
+	 * @param sAgent The name of the agent.
+	 * @return A boolean indicating whether this method was successful.
+	 */
+	private static boolean doBlockingAction(int blockingActionType, String sAgent)
 	{
-
 		long sleepTimeInMs = 0;
 		boolean result = false;
 		
-	    synchronized(lockObject)
-	    {
-	    
-	    	LogicalEnv environment = LogicalEnv.getEnv();
-	    	environment._blockingActions++;
-	    	sleepTimeInMs = environment.getSleepTimeInMs();
-	    	result = environment.east(sAgent);
-	    	
-	    	if(environment._blockingActions == environment._agents.size())
-	    	{
-	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
-	    		{
-	    			environment._blockingActions = 0;
-	    			environment._round++;
-	    			lockObject.notifyAll();
-	    		}
-	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
-	    		{
-	    			if(environment._nextRoundPermitted)
-	    			{
-	    				environment._blockingActions = 0;
-	    				environment._round++;
-	    				environment._nextRoundPermitted = false;
-	    				
-	    				lockObject.notifyAll();
-	    			}
-	    			else
-	    			{	
-	    				try
-	    				{
-	    					lockObject.wait();
-	    				}
-	    				catch(InterruptedException e)
-	    				{
-	    					e.printStackTrace();
-	    				}
-	    			}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		try
-	    		{
-	    			lockObject.wait();
-	    		}
-	    		catch(InterruptedException e)
-	    		{
-	    			//continue
-	    		}
-	    	}
-	    }
-	    
-	    
-		try 
-		{
-			Thread.sleep(sleepTimeInMs);
-		}
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	/*
-	public static boolean enter(String s,Point p,String color)
-	{
 		synchronized(lockObject)
 		{
-			//System.out.println(s+" tries to enter ");
-			return LogicalEnv.getEnv().enter(s,(double)p.x,(double)p.y,color);
-		}
-	}
-	*/
-    public static boolean west(String sAgent)
-	{
-
-    	long sleepTimeInMs = 0;
-		boolean result = false;
-		
-	    synchronized(lockObject)
-	    {
-	    
 	    	LogicalEnv environment = LogicalEnv.getEnv();
 	    	environment._blockingActions++;
 	    	sleepTimeInMs = environment.getSleepTimeInMs();
-	    	result = environment.west(sAgent);
 	    	
+	    	if(environment._mode != LogicalEnv.STOPPED)
+	    	switch(blockingActionType)
+	    	{
+	    		case MOVE_NORTH : result = environment.north(sAgent); break;
+	    		case MOVE_EAST : result = environment.east(sAgent); break;
+	    		case MOVE_SOUTH : result = environment.south(sAgent); break;
+	    		case MOVE_WEST : result = environment.west(sAgent); break;
+	    		case PICKUP_APPLE : result = environment.pickupApple(sAgent); break;
+	    		case EAT_APPLE : result = environment.eatApple(sAgent); break;
+	    		case TRADE_APPLE : result = environment.trade(sAgent); break;
+	    	}
+	    	   	
 	    	if(environment._blockingActions == environment._agents.size())
 	    	{
 	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
 	    		{
-	    			environment._blockingActions = 0;
-	    			environment._round++;
+	    			environment.nextRound();
+	    			
 	    			lockObject.notifyAll();
 	    		}
 	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
 	    		{
 	    			if(environment._nextRoundPermitted)
 	    			{
-	    				environment._blockingActions = 0;
-	    				environment._round++;
-	    				environment._nextRoundPermitted = false;
-	    				
-	    				lockObject.notifyAll();
-	    			}
-	    			else
-	    			{	
-	    				try
-	    				{
-	    					lockObject.wait();
-	    				}
-	    				catch(InterruptedException e)
-	    				{
-	    					e.printStackTrace();
-	    				}
-	    			}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		try
-	    		{
-	    			lockObject.wait();
-	    		}
-	    		catch(InterruptedException e)
-	    		{
-	    			//continue
-	    		}
-	    	}
-	    }
-	    
-	    
-		try 
-		{
-			Thread.sleep(sleepTimeInMs);
-		}
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-    public static boolean north(String sAgent)
-	{
-    	
-		boolean result = false;
-		long sleepTimeInMs = 0;
-		
-	    synchronized(lockObject)
-	    {
-	    
-	    	LogicalEnv environment = LogicalEnv.getEnv();
-	    	environment._blockingActions++;
-	    	sleepTimeInMs = environment.getSleepTimeInMs();
-	    	result = environment.north(sAgent);
-	    	
-	    	
-	    	if(environment._blockingActions == environment._agents.size())
-	    	{
-	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
-	    		{
-	    			environment._blockingActions = 0;
-	    			environment._round++;
-	    			lockObject.notifyAll();
-	    		}
-	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
-	    		{
-	    			if(environment._nextRoundPermitted)
-	    			{
-	    				environment._blockingActions = 0;
-	    				environment._round++;
-	    				environment._nextRoundPermitted = false;
+	    				environment.nextRound();
 	    				
 	    				lockObject.notifyAll();
 	    			}
@@ -208,108 +87,88 @@ public class Environment
 	    	    	}
 	    		}
 	    	}
-	    	else
-	    	{
-	    		try
-	    		{
-	    			lockObject.wait();
-	    		}
-	    		catch(InterruptedException e)
-	    		{
-	    			//continue
-	    		}
-	    	}
-	    }
-	    
-	    
+		    else
+		    {
+		    	try
+		    	{
+		    		lockObject.wait();
+		    	}
+		    	catch(InterruptedException e)
+		    	{
+		    		//continue
+		    	}
+		    }
+		}
 		try 
 		{
 			Thread.sleep(sleepTimeInMs);
 		}
 		catch (InterruptedException e) 
 		{
-			e.printStackTrace();
+			//do nothing
 		}
-		
 		return result;
 	}
 	
-    public static boolean south(String sAgent)
+	public static void waitForStart()
 	{
-    	long sleepTimeInMs = 0;
-		boolean result = false;
-		
-	    synchronized(lockObject)
-	    {
-	    
-	    	LogicalEnv environment = LogicalEnv.getEnv();
-	    	environment._blockingActions++;
-	    	sleepTimeInMs = environment.getSleepTimeInMs();
-	    	result = environment.south(sAgent);
-	    
-	    	System.out.println("AgentS: " + environment._agents.size());
-	    	
-	    	if(environment._blockingActions == environment._agents.size())
-	    	{
-	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
-	    		{
-	    			environment._blockingActions = 0;
-	    			environment._round++;
-	    			lockObject.notifyAll();
-	    		}
-	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
-	    		{
-	    			if(environment._nextRoundPermitted)
-	    			{
-	    				environment._blockingActions = 0;
-	    				environment._round++;
-	    				environment._nextRoundPermitted = false;
-	    				
-	    				lockObject.notifyAll();
-	    			}
-	    			else
-	    			{	
-	    				try
-	    				{
-	    					lockObject.wait();
-	    				}
-	    				catch(InterruptedException e)
-	    				{
-	    					e.printStackTrace();
-	    				}
-	    			}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		try
-	    		{
-	    			lockObject.wait();
-	    		}
-	    		catch(InterruptedException e)
-	    		{
-	    			//continue
-	    		}
-	    	}
-	    }
-	    
-	    
-		try 
+		synchronized(lockObject)
 		{
-			Thread.sleep(sleepTimeInMs);
+			try
+			{
+				lockObject.wait();
+			}
+			catch(InterruptedException e)
+			{
+				//do nothing.
+			}
 		}
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return result;
 	}
+	
+	public static boolean north(String sAgent)
+	{
+		return doBlockingAction(MOVE_NORTH, sAgent);
+	}
+	
+	public static boolean east(String sAgent)
+	{
+		return doBlockingAction(MOVE_EAST, sAgent);
+	}
+	
+	public static boolean south(String sAgent)
+	{
+		return doBlockingAction(MOVE_SOUTH, sAgent);
+	}
+	
+	public static boolean west(String sAgent)
+	{
+		return doBlockingAction(MOVE_WEST, sAgent);
+	}
+	
+	public static boolean pickupApple(String sAgent)
+	{
+		return doBlockingAction(PICKUP_APPLE, sAgent);
+	}
+	
+	public static boolean eatApple(String sAgent)
+	{
+		return doBlockingAction(EAT_APPLE, sAgent);
+	}
+	
+	public static boolean tradeApple(String sAgent)
+	{
+		return doBlockingAction(TRADE_APPLE, sAgent);
+	}
+
+
+	/*********************************************************************************************
+	 * 
+	 * NON-BLOCKING ACTIONS FOR AGENTS
+	 * 
+	 *********************************************************************************************/
 	
     public static Point getPosition(String sAgent)
-	{
-		System.out.println(sAgent+" tries to learn her position");
-		
+	{			
 		synchronized(lockObject)
 		{	
 			return LogicalEnv.getEnv().getPosition(sAgent);
@@ -318,8 +177,6 @@ public class Environment
 	
 	public static Set<Point> senseStones(String sAgent)
 	{
-		System.out.println(sAgent + " tries to sense Stones");
-		
 		synchronized(lockObject)
 		{
 			return LogicalEnv.getEnv().senseStones(sAgent); 
@@ -328,8 +185,6 @@ public class Environment
 	
 	public static Set<Point> senseAgents(String sAgent)
 	{
-		System.out.println(sAgent + " tries to sense Agents");
-		
 		synchronized(lockObject)
 		{
 			return LogicalEnv.getEnv().senseAgents(sAgent); 
@@ -338,89 +193,11 @@ public class Environment
 	
 	public static Set<Point> senseApples(String sAgent)
 	{
-		System.out.println(sAgent+" tries to sense bombs");
-		
 		synchronized(lockObject)
 		{
 			return LogicalEnv.getEnv().senseApples(sAgent);		
 		}
 	}
-	
-	public static boolean takeApple(String sAgent)
-	{
-		System.out.println(sAgent+" tries to take an apple");
-		boolean result = false;
-		long sleepTimeInMs = 0;
-		
-	    synchronized(lockObject)
-	    {
-	    
-	    	LogicalEnv environment = LogicalEnv.getEnv();
-	    	environment._blockingActions++;
-	    	sleepTimeInMs = environment.getSleepTimeInMs();
-	    	result = environment.pickupApple(sAgent);
-	    	
-	    	if(environment._blockingActions == environment._agents.size())
-	    	{
-	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
-	    		{
-	    			environment._blockingActions = 0;
-	    			environment._round++;
-	    			
-	    			lockObject.notifyAll();
-	    		}
-	    		else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
-	    		{
-	    			if(environment._nextRoundPermitted)
-	    			{
-	    				environment._blockingActions = 0;
-	    				environment._round++;
-	    				environment._nextRoundPermitted = false;
-	    				
-	    				lockObject.notifyAll();
-	    			}
-	    			else
-	    	    	{
-	    	    		try
-	    	    		{
-	    	    			lockObject.wait();
-	    	    		}
-	    	    		catch(InterruptedException e)
-	    	    		{
-	    	    			//continue
-	    	    		}
-	    	    	}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		try
-	    		{
-	    			lockObject.wait();
-	    		}
-	    		catch(InterruptedException e)
-	    		{
-	    			//continue
-	    		}
-	    	}
-	    	
-	    	
-	    }
-	    
-	    
-		try 
-		{
-			Thread.sleep(sleepTimeInMs);
-		}
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return result;
-
-	}
-	
 	
 	public static int getMaxAppleCapacity()
 	{
@@ -430,58 +207,194 @@ public class Environment
 		}
 	}
 
-	public static void gotoNextStep()
+	public static int getEnergyCost()
 	{
-		 synchronized(lockObject)
-		 {
-			 LogicalEnv environment = LogicalEnv.getEnv();
-		     
-			 if(environment._blockingActions == environment._agents.size())
-			 {
-				 environment._blockingActions = 0;
- 				environment._round++;
- 				environment._nextRoundPermitted = false;
- 				
- 				lockObject.notifyAll();
-			 }
-			 else
-			 {
-				 environment._nextRoundPermitted = true;
-			 }
-		 }
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getEnergyCost();
+		}
 	}
 	
-	public static void init()
+	public static int getEneryGain()
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getEnergyGain();
+		}
+	}
+	
+	public static int proposeToSell(String sAgent, int moneyInCents)
+	{
+		int proposalId = -1;
+		synchronized(lockObject)
+		{
+			proposalId = Market.getInstance().proposeToSell(sAgent, moneyInCents);
+		}
+		return proposalId;
+	}
+	
+	public static int requestToBuy(String sAgent, int moneyInCents)
+	{
+		int requestId = -1;
+		synchronized(lockObject)
+		{
+			requestId = Market.getInstance().requestToBuy(sAgent, moneyInCents);
+		}
+		return requestId;
+	}
+	
+	public static void removeProposal(String sAgent, int proposalId)
+	{
+		synchronized(lockObject)
+		{
+			Market.getInstance().removeProposal(sAgent, proposalId);
+		}
+	}
+	
+	public static void removeRequest(String sAgent, int requestId)
+	{
+		synchronized(lockObject)
+		{
+			Market.getInstance().removeRequest(sAgent, requestId);
+		}
+	}
+	
+	public static boolean mustTrade(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return Market.getInstance().mustTrade(sAgent);
+		}
+	}
+
+	public static List<TradeDescription> getTradeAction(String sAgent)
+	{
+		List<TradeDescription> list;
+		synchronized(lockObject)
+		{
+			list = Market.getInstance().getTradeAction(sAgent);
+		}
+		return list;
+	}
+	
+	
+	
+	
+	
+
+	/*********************************************************************************************
+	 * 
+	 * NON BLOCKING ACTIONS FOR THE ENVIRONMENT MANAGER
+	 * 
+	 *********************************************************************************************/
+	
+	public static void startButtonPressed()
 	{
 		synchronized(lockObject)
 		{
 			LogicalEnv environment = LogicalEnv.getEnv();
 			
-			environment.initialize();
+			if(environment._mode == LogicalEnv.CONTINUES_MODE)
+			{
+				//Nothing changes, allready in continues mode.
+			}
+			else if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
+			{
+				//Step by step mode, so have to release the next step and changes to continues.
+				environment._mode = LogicalEnv.CONTINUES_MODE;
+				
+				//If all agents are blocked, goto next round and notify all
+				 if(environment._blockingActions == environment._agents.size())
+				 {
+					environment.nextRound();
+	 				
+	 				lockObject.notifyAll();
+				 } //otherwise, set netRoundPermitted = true;
+				 else
+				 {
+					 environment._nextRoundPermitted = true;
+				 }
+			}
+			else if(environment._mode == LogicalEnv.WAITING_FOR_START_SIGNAL)
+			{
+				//Change mode to continues
+				environment._mode = LogicalEnv.CONTINUES_MODE;
+				
+				//Start the round by releasing the agents.
+				lockObject.notifyAll();
+			}
+			else
+			{
+				//If mode is stopped, then the play button has no effect.
+			}
+			
 		}
 	}
 	
-	public static void waitForStart()
+	public static void stepButtonPressed()
 	{
-		synchronized(startLockObject)
+		synchronized(lockObject)
 		{
-			try
+			LogicalEnv environment = LogicalEnv.getEnv();
+			
+			if(environment._mode == LogicalEnv.STEP_BY_STEP_MODE)
 			{
-				startLockObject.wait();
+				//goto the next step, by either releasing all agents if they are blocked, or set the nextround permitted to true.
+				//If all agents are blocked, goto next round and notify all
+				 if(environment._blockingActions == environment._agents.size())
+				 {
+					environment.nextRound();
+	 				
+	 				lockObject.notifyAll();
+				 } //otherwise, set netRoundPermitted = true;
+				 else
+				 {
+					 environment._nextRoundPermitted = true;
+				 }
 			}
-			catch(InterruptedException e)
+			else if(environment._mode == LogicalEnv.CONTINUES_MODE)
 			{
-				//do nothing
+				//change mode to step by step.
+				environment._mode = LogicalEnv.STEP_BY_STEP_MODE;
+				environment._nextRoundPermitted = false;
+			}
+			else if(environment._mode == LogicalEnv.WAITING_FOR_START_SIGNAL)
+			{
+				//Change mode to continues
+				environment._mode = LogicalEnv.STEP_BY_STEP_MODE;
+				
+				//Start the round by releasing the agents.
+				lockObject.notifyAll();
+			}
+			else
+			{
+				//If mode is stopped, then the step button has no effect.
 			}
 		}
 		
+		
+		
 	}
-
-	public static void start()
+	
+	public static void stopButtonPressed()
 	{
-		synchronized(startLockObject)
+		synchronized(lockObject)
 		{
-			startLockObject.notifyAll();
+			LogicalEnv environment = LogicalEnv.getEnv();
+			//It does not matter what mode the environment is in. it is stopped.
+			environment._mode = LogicalEnv.STOPPED;
 		}
 	}
+	
+	public static void resetButtonPressed()
+	{
+		synchronized(lockObject)
+		{
+			LogicalEnv environment = LogicalEnv.getEnv();
+			//It does not matter what mode the environment is in.
+			environment.initialize();
+			environment._mode = LogicalEnv.WAITING_FOR_START_SIGNAL;
+		}
+	}
+	
 }

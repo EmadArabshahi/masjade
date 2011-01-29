@@ -498,13 +498,22 @@ public class Window extends JFrame{
 
 		
 		 final JToggleButton startbutton = new JToggleButton(makeIcon("start.png"));
+		 final JToggleButton stepbutton = new JToggleButton(makeIcon("step.png"));
+		 final JToggleButton stopbutton = new JToggleButton(makeIcon("stop.png"));
+		 final JToggleButton resetbutton = new JToggleButton(makeIcon("reset.png"));
+		 
+		 
 		 startbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 if(startbutton.isSelected())
+				 if(stopbutton.isSelected())
 				 {
-					 env.start();
+					 startbutton.setSelected(false);
+				 }
+				 else if(startbutton.isSelected())
+				 {
+					 Environment.startButtonPressed();
 				 }
 				 else
 				 {
@@ -512,17 +521,20 @@ public class Window extends JFrame{
 				 }
 			 }
 		 });
-		 
 		 startbutton.setToolTipText("Start the simulation");
 		 
-		 final JToggleButton stepbutton = new JToggleButton(makeIcon("step.png"));
+		 
 		 stepbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
-				 if(stepbutton.isSelected())
+				 if(stopbutton.isSelected())
 				 {
-					 env.step();
+					 stepbutton.setSelected(false);
+				 }
+				 else if(stepbutton.isSelected())
+				 {
+					 Environment.stepButtonPressed();
 					 startbutton.setSelected(false);
 					 stepbutton.setSelected(false);
 				 }
@@ -533,17 +545,16 @@ public class Window extends JFrame{
 			 }
 		 }
 		 );
-		 
 		 stepbutton.setToolTipText("Go to the next step (F5)");
 		 
-		 final JToggleButton stopbutton = new JToggleButton(makeIcon("stop.png"));
+		 
 		 stopbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
 				 if(stopbutton.isSelected())
 				 {
-					 env.stop();
+					 Environment.stopButtonPressed();
 					 startbutton.setSelected(false);
 				 }
 				 else
@@ -553,18 +564,18 @@ public class Window extends JFrame{
 			 }
 		 }
 		 );
-		 
 		 stopbutton.setToolTipText("Stop the simulation.");
 		 
 		 
-		 final JToggleButton resetbutton = new JToggleButton(makeIcon("reset.png"));
+		
 		 resetbutton.addActionListener(new ActionListener()
 		 {
 			 public void actionPerformed(ActionEvent e)
 			 {
+				 
 				 if(resetbutton.isSelected())
 				 {
-					 env.reset();
+					 Environment.resetButtonPressed();
 					 startbutton.setSelected(false);
 					 stopbutton.setSelected(false);
 				 	 resetbutton.setSelected(false);
@@ -576,7 +587,6 @@ public class Window extends JFrame{
 			 }
 		 }
 		 );
-		 
 		 resetbutton.setToolTipText("Reset the environment");
 		 
 		 
