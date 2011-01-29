@@ -242,6 +242,8 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	private void addPositionToHistory(Point position)
 	{
+		if(position == null)
+			return;
 		//If the position allready is the current position, it doenst need to be added.
 		if(position.equals(getCurrentPosition()))
 			return;
