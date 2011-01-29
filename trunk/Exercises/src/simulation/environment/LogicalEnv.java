@@ -80,13 +80,13 @@ public class LogicalEnv implements ObsVectListener
     protected volatile boolean 						_nextRoundPermitted = false;
     
     //Sense Range R: max distance of cells visible to each agent
-    protected int                           _senserange = 10;
+    protected int                           _senserange = 5;
 	//Energy Cost K:
 	protected int 							 _energyCost = 5; 
      //EnergyGain L:
 	protected int 							 _energyGain = 25;
 	//Apple Distribution p:
-	protected double					     _appleDistribution = 0.35;
+	protected double					     _appleDistribution = 0.15;
 	//Maximum Apple capacity A:
 	protected int 							 _maxAppleCapacity = 5;
 	//Agent distribution.
@@ -198,9 +198,7 @@ public class LogicalEnv implements ObsVectListener
     	clear();
     	
        _round = 0;
-       
        	_blockingActions = 0;
-        
        _nextRoundPermitted = false;
     	
        
@@ -235,59 +233,23 @@ public class LogicalEnv implements ObsVectListener
     	}
     	
     }
+   
     
-    public void start()
+    public void nextRound()
     {
-    	if(_mode == WAITING_FOR_START_SIGNAL)
-    	{
-    		_mode = CONTINUES_MODE;
-    		Environment.start();
-    	}
-    	else if(_mode == STOPPED)
-    	{
-    		//nothing changes..
-
-    	}
-    	else if(_mode == STEP_BY_STEP_MODE)
-    	{
-    		_mode = CONTINUES_MODE;
-    		Environment.gotoNextStep();    	
-    	}
-    }
-    
-    public void step()
-    {
-    	if(_mode == WAITING_FOR_START_SIGNAL)
-    	{
-    		_mode = STEP_BY_STEP_MODE;
-    		Environment.start();
-    	}
-    	else if (_mode == STOPPED)
-    	{
-    		//nothing changes.		
-    	}
-    	else if(_mode == CONTINUES_MODE)
-    	{
-    		_mode = STEP_BY_STEP_MODE;
-    	}
-    	else if(_mode == STEP_BY_STEP_MODE)
-    	{
-    		Environment.gotoNextStep();
-    	}
-    		
-    }
-    
-    public void reset()
-    {
-    	Environment.init();
-    	_mode = WAITING_FOR_START_SIGNAL;
-    }
-    
-    public void stop()
-    {
+    	//DO OUTSTANDING TRADES!!
     	
-    	_mode = STOPPED;
+    	
+    	_blockingActions = 0;
+		_round++;
+		
+		if(_mode == STEP_BY_STEP_MODE)
+			_nextRoundPermitted = false;
+		
+		
+		//FIND MATCHES
     }
+    
     
     // Get the environment width
     public int getWidth() { return m_size.width; }
@@ -697,7 +659,17 @@ public class LogicalEnv implements ObsVectListener
         return true;        
     }
     
-
+    public boolean eatApple(String sAgent)
+    {
+    	return false;
+    }
+    
+    public boolean trade(String sAgent)
+    {
+    	return false;
+    }
+    
+    
     // what is it
     public String getDescription() { return "Blockworld Environment"; }
 
@@ -799,11 +771,15 @@ public class LogicalEnv implements ObsVectListener
     public Set<Point> senseApples(String agent) 
     {
         // Get the agent his position
-        Point position = getAgent(agent).getPosition();
-        
+        Point position = getPosition(agent);
+                
         // iterate over all bombs and decide according to distance if it is in
         // vision range
         Set<Point> visible = new java.util.HashSet<Point>();
+        
+        if(position == null)
+        	return visible;
+        
         synchronized(_apples){
 	        Iterator i = _apples.iterator();
 	        while( i.hasNext() ) 
@@ -821,11 +797,16 @@ public class LogicalEnv implements ObsVectListener
     public Set<Point> senseAgents(String agent)
     {
     	//gets the agent his position.
-    	Point position = getAgent(agent).getPosition();
+    	Point position = getPosition(agent);
     	
     	// iterate over all traps and decide according to distance if it is in
         // vision range
     	Set<Point> visible = new java.util.HashSet<Point>();
+    	
+    	
+    	if(position == null)
+    		return visible;
+    	
     	synchronized(_agents)
     	{
     		Iterator<Agent> i = _agents.iterator();
@@ -843,11 +824,13 @@ public class LogicalEnv implements ObsVectListener
     //Senses stones in the sense range of the agent.
     public Set<Point> senseStones(String agent)
     {
-    	//gets the agent his position.
-    	Point position = getAgent(agent).getPosition();
+    	Point position = getPosition(agent);
     	
     	//The set to store the positions of the stone.
     	Set<Point> visible = new java.util.HashSet<Point>();
+    	
+    	if(position == null)
+    		return visible;
     	
     	//place artificial stones at the border of the environment.
     	//is inneffient for large grid.
@@ -892,6 +875,7 @@ public class LogicalEnv implements ObsVectListener
     	
     	// iterate over all traps and decide according to distance if it is in
         // vision range
+    	
     	
     	synchronized(_stones)
     	{
@@ -1142,7 +1126,11 @@ public class LogicalEnv implements ObsVectListener
 
 	public Point getPosition(String localName) 
 	{
-		return getAgent(localName).getPosition();
+		Agent a = getAgent(localName);
+		if(a==null)
+			return null;
+		else
+			return a.getPosition();
 	}
     
     /* END Overrides for ObsVector ---------------------------------*/
