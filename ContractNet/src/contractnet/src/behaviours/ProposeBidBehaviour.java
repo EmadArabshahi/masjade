@@ -65,7 +65,8 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					agent.send(bidMsg);				
+					agent.send(bidMsg);
+					Output.AgentMessage( agent, "Offered a tender to " + msg.getSender());
 				}
 				else
 				{
@@ -97,7 +98,8 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 				return null;
 			else
 				newBid.computerList.add(comp);
-		}		
+		}
+		newBid.bidderID = agent.getAID();
 		return newBid; 
 	}
 	
