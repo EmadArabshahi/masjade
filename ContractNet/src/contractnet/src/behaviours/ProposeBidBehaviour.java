@@ -119,7 +119,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 		double bestRatio = -1;
 		for ( Component c : agent.getComponents())
 		{
-			if ( c.getType() == task.getType())
+			if ( c.getType().equals(task.getType()))
 			{
 				double qt = task.getQuality();
 				double pt = task.getPrice();

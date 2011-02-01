@@ -39,7 +39,7 @@ public class ManagerAgent extends Agent {
 	private Timer deadlineTimer;
 	private boolean deadlinePassed;
 	
-	private int deadlineTime;
+	private final int deadlineTime = 5000;
 	
 	private Map<AID, String> conversationIDs;
 	private ManagerWindow managerWindow;
@@ -50,9 +50,12 @@ public class ManagerAgent extends Agent {
 		deadlinePassed = false;
 		deadlineTimer = null;
 		conversationIDs = new HashMap<AID, String>();
-		managerWindow = new ManagerWindow( this);
-		registerService();
 		setTask(new Task());
+		bids = new ArrayList<Bid>();
+		managerWindow = new ManagerWindow( this);
+		
+		
+		registerService();
 		addBehaviours();
 		managerWindow.setVisible(true);
 	}
@@ -120,13 +123,15 @@ public class ManagerAgent extends Agent {
 		behaviours.registerFirstState(new WaitForStartupBehaviour(), "startUp");
 		behaviours.registerState(new AnnounceTaskBehaviour(), "announceTask");
 		behaviours.registerState(new ReceiveBidBehaviour(), "receiveBid");
-		behaviours.registerState(new EvaluateBidsBehaviour(), "evaluateBids");
+		//behaviours.registerState(new EvaluateBidsBehaviour(), "evaluateBids");
 		
 		behaviours.registerDefaultTransition("startUp", "announceTask");
 		behaviours.registerDefaultTransition("announceTask", "receiveBid");
-		behaviours.registerDefaultTransition("receiveBid", "evaluateBids");
+		//behaviours.registerDefaultTransition("receiveBid", "evaluateBids");
 		
 		addBehaviour(behaviours);
+		addBehaviour( new EvaluateBidsBehaviour());
+		
 	}
 
 	public void setTask(Task task) {
@@ -163,10 +168,6 @@ public class ManagerAgent extends Agent {
 
 	public boolean isDeadlinePassed() {
 		return deadlinePassed;
-	}
-
-	public void setDeadlineTime(int deadlineTime) {
-		this.deadlineTime = deadlineTime;
 	}
 
 	public int getDeadlineTime() {
