@@ -14,7 +14,8 @@ public class Bid implements Serializable {
 	
 	public Bid()
 	{
-		
+		computerList = new ArrayList<Computer>();
+		bidderID = null;
 	}
 
 }

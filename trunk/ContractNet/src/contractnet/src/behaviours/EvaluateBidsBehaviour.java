@@ -6,14 +6,15 @@ import contractnet.src.Computer;
 import contractnet.src.agents.ManagerAgent;
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class EvaluateBidsBehaviour extends OneShotBehaviour {
+public class EvaluateBidsBehaviour extends SimpleBehaviour {
 
 	private static final long serialVersionUID = -6529454122358460677L;
 
 	private ManagerAgent agent;
-	
+	private boolean done = false;
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
@@ -45,8 +46,9 @@ public class EvaluateBidsBehaviour extends OneShotBehaviour {
 				resultMsg.setContent( "Tender proposal rejected.");				
 			}
 			resultMsg.addReceiver( bid.bidderID);
-			agent.send( resultMsg);
+			agent.send( resultMsg);			
 		}
+		done = true;
 	}
 	
 	private AID evaluateBids()
@@ -83,5 +85,11 @@ public class EvaluateBidsBehaviour extends OneShotBehaviour {
 			mCoef = 2;
 		
 		return mCoef * comp.getQuality() / comp.getPrice();
+	}
+
+	@Override
+	public boolean done() {
+		// TODO Auto-generated method stub
+		return done;
 	}
 }
