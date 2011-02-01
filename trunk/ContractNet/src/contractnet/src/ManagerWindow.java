@@ -324,11 +324,12 @@ public class ManagerWindow extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					ACLMessage startMsg = new ACLMessage( ACLMessage.INFORM);
+					/*ACLMessage startMsg = new ACLMessage( ACLMessage.INFORM);
 					startMsg.setOntology("Startup");
 					startMsg.setContent("Start execution");
 					startMsg.addReceiver(agent.getAID());
-					agent.send(startMsg);
+					agent.send(startMsg);*/
+					agent.setAnnounceReady(true);
 					infoTextArea.append("Completed the order.\n");
 					
 				}

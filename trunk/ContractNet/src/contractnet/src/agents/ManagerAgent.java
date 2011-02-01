@@ -37,16 +37,17 @@ public class ManagerAgent extends Agent {
 	private ArrayList<Bid> bids;
 	
 	private Timer deadlineTimer;
-	private boolean deadlinePassed;
-	
+	private boolean deadlinePassed;	
 	private final int deadlineTime = 5000;
 	
+	private boolean announceReady;
 	private Map<AID, String> conversationIDs;
 	private ManagerWindow managerWindow;
 
 	@Override
 	protected void setup() {
 		
+		setAnnounceReady(false);
 		deadlinePassed = false;
 		deadlineTimer = null;
 		conversationIDs = new HashMap<AID, String>();
@@ -119,17 +120,21 @@ public class ManagerAgent extends Agent {
 	
 	public void addBehaviours()
 	{
-		FSMBehaviour behaviours = new FSMBehaviour();
-		behaviours.registerFirstState(new WaitForStartupBehaviour(), "startUp");
-		behaviours.registerState(new AnnounceTaskBehaviour(), "announceTask");
-		behaviours.registerState(new ReceiveBidBehaviour(), "receiveBid");
+		//FSMBehaviour behaviours = new FSMBehaviour();
+		//behaviours.registerFirstState(new WaitForStartupBehaviour(), "startUp");
+		//behaviours.registerLastState(new AnnounceTaskBehaviour(), "announceTask");
+		//behaviours.registerState(new ReceiveBidBehaviour(), "receiveBid");
 		//behaviours.registerState(new EvaluateBidsBehaviour(), "evaluateBids");
 		
-		behaviours.registerDefaultTransition("startUp", "announceTask");
-		behaviours.registerDefaultTransition("announceTask", "receiveBid");
+		//behaviours.registerDefaultTransition("startUp", "announceTask");
+		//behaviours.registerDefaultTransition("announceTask", "receiveBid");
 		//behaviours.registerDefaultTransition("receiveBid", "evaluateBids");
 		
-		addBehaviour(behaviours);
+		
+		//addBehaviour(behaviours);
+		//addBehaviour( new WaitForStartupBehaviour());
+		addBehaviour( new AnnounceTaskBehaviour());
+		addBehaviour( new ReceiveBidBehaviour());
 		addBehaviour( new EvaluateBidsBehaviour());
 		
 	}
@@ -184,6 +189,14 @@ public class ManagerAgent extends Agent {
 
 	public ManagerWindow getManagerWindow() {
 		return managerWindow;
+	}
+
+	public void setAnnounceReady(boolean announceReady) {
+		this.announceReady = announceReady;
+	}
+
+	public boolean isAnnounceReady() {
+		return announceReady;
 	}
 	
 }
