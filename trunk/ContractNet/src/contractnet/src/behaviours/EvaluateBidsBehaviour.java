@@ -20,35 +20,38 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 		// TODO Auto-generated method stub
 		agent = (ManagerAgent) myAgent;
 		
-		while ( !agent.isDeadlinePassed()){} //wait till deadline
+		//while ( !agent.isDeadlinePassed()){} //wait till deadline
 		
-		//evaluate bids and select best one
-		AID bestContractorID = evaluateBids();
-		
-		//send accept/reject proposal
-		ACLMessage resultMsg = null;
-		for ( Bid bid : agent.getBids())
+		if ( agent.isDeadlinePassed())
 		{
-			if ( bid.bidderID.equals( bestContractorID))
+			//evaluate bids and select best one
+			AID bestContractorID = evaluateBids();
+			
+			//send accept/reject proposal
+			ACLMessage resultMsg = null;
+			for ( Bid bid : agent.getBids())
 			{
-				resultMsg = new ACLMessage( ACLMessage.ACCEPT_PROPOSAL);
-				resultMsg.setProtocol( "fipa-contract-net");
-				resultMsg.setOntology( "bid-accept");
-				resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
-				resultMsg.setContent( "Tender proposal accepted.");
+				if ( bid.bidderID.equals( bestContractorID))
+				{
+					resultMsg = new ACLMessage( ACLMessage.ACCEPT_PROPOSAL);
+					resultMsg.setProtocol( "fipa-contract-net");
+					resultMsg.setOntology( "bid-accept");
+					resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
+					resultMsg.setContent( "Tender proposal accepted.");
+				}
+				else
+				{
+					resultMsg = new ACLMessage( ACLMessage.REJECT_PROPOSAL);
+					resultMsg.setProtocol( "fipa-contract-net");
+					resultMsg.setOntology( "bid-reject");
+					resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
+					resultMsg.setContent( "Tender proposal rejected.");				
+				}
+				resultMsg.addReceiver( bid.bidderID);
+				agent.send( resultMsg);			
 			}
-			else
-			{
-				resultMsg = new ACLMessage( ACLMessage.REJECT_PROPOSAL);
-				resultMsg.setProtocol( "fipa-contract-net");
-				resultMsg.setOntology( "bid-reject");
-				resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
-				resultMsg.setContent( "Tender proposal rejected.");				
-			}
-			resultMsg.addReceiver( bid.bidderID);
-			agent.send( resultMsg);			
+			done = true;
 		}
-		done = true;
 	}
 	
 	private AID evaluateBids()

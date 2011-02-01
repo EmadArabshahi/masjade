@@ -22,6 +22,7 @@ public class ReceiveBidBehaviour extends SimpleBehaviour {
 		
 		if ( msg != null)
 		{
+			Output.AgentMessage(agent, "Received a tender from agent " + msg.getSender());
 			if ( !agent.isDeadlinePassed())
 			{
 				Bid bid = null;
