@@ -23,6 +23,8 @@ public class AnnounceTaskBehaviour extends OneShotBehaviour {
 		// TODO Auto-generated method stub
 		agent = (ManagerAgent) myAgent;
 		
+		while ( !agent.isAnnounceReady()) {}
+		
 		Output.AgentMessage( agent, "Starting task announcement");
 		
 		ArrayList<AID> contractorAgents = agent.getContractorAIDs();
