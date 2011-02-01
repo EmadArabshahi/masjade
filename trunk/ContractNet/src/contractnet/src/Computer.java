@@ -1,0 +1,58 @@
+package contractnet.src;
+
+import java.io.Serializable;
+
+import contractnet.src.Component.ComponentType;
+
+
+public class Computer implements Serializable {
+	
+	private static final long serialVersionUID = -5433744768986166357L;
+	private Component cpu;
+	private Component gpu;
+	private Component motherboard;
+	
+	public Computer( Component cpu, Component gpu, Component motherboard)
+	{
+		this.cpu = cpu;
+		this.gpu = gpu;
+		this.motherboard = motherboard;
+	}
+
+	public void setCpu(Component cpu) {
+		this.cpu = cpu;
+	}
+
+	public Component getCpu() {
+		return cpu;
+	}
+
+	public void setGpu(Component gpu) {
+		this.gpu = gpu;
+	}
+
+	public Component getGpu() {
+		return gpu;
+	}
+
+	public void setMotherboard(Component motherboard) {
+		this.motherboard = motherboard;
+	}
+
+	public Component getMotherboard() {
+		return motherboard;
+	}
+	
+	public Component getComponentByType( String string)
+	{
+		if ( string.equals("CPU"))
+			return cpu;
+		else if ( string.equals("GPU"))
+			return gpu;
+		else if ( string.equals("M.Board"))
+			return motherboard;
+		else
+			return null;
+	}
+
+}
