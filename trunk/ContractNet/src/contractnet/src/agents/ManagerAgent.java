@@ -1,6 +1,7 @@
 package contractnet.src.agents;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.FSMBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -115,13 +116,17 @@ public class ManagerAgent extends Agent {
 	
 	public void addBehaviours()
 	{
-		SequentialBehaviour behaviours = new SequentialBehaviour();
-		behaviours.addSubBehaviour( new WaitForStartupBehaviour());
-		behaviours.addSubBehaviour( new AnnounceTaskBehaviour());
-		behaviours.addSubBehaviour( new ReceiveBidBehaviour());
+		FSMBehaviour behaviours = new FSMBehaviour();
+		behaviours.registerFirstState(new WaitForStartupBehaviour(), "startUp");
+		behaviours.registerState(new AnnounceTaskBehaviour(), "announceTask");
+		behaviours.registerState(new ReceiveBidBehaviour(), "receiveBid");
+		behaviours.registerState(new EvaluateBidsBehaviour(), "evaluateBids");
+		
+		behaviours.registerDefaultTransition("startUp", "announceTask");
+		behaviours.registerDefaultTransition("announceTask", "receiveBid");
+		behaviours.registerDefaultTransition("receiveBid", "evaluateBids");
 		
 		addBehaviour(behaviours);
-		addBehaviour( new EvaluateBidsBehaviour());
 	}
 
 	public void setTask(Task task) {
