@@ -25,7 +25,7 @@ public class ContractorWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JPanel componentPanel = null;
-	private JPanel textAreaPanel = null;
+	private JScrollPane textAreaPanel = null;
 	private JLabel specifyCompLabel = null;
 	private JPanel selectionPanel = null;
 	private JComboBox typeComboBox = null;
@@ -33,7 +33,7 @@ public class ContractorWindow extends JFrame{
 	private JComboBox qualityComboBox = null;
 	private JComboBox priceComboBox = null;
 	private JButton addCompButton = null;
-	private JTextArea infoTextArea = null;
+	public JTextArea infoTextArea = null;
 
 	/**
 	 * This is the default constructor
@@ -99,13 +99,9 @@ public class ContractorWindow extends JFrame{
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getTextAreaPanel() {
+	private JScrollPane getTextAreaPanel() {
 		if (textAreaPanel == null) {
-			GridLayout gridLayout3 = new GridLayout();
-			gridLayout3.setRows(1);
-			textAreaPanel = new JPanel();
-			textAreaPanel.setLayout(gridLayout3);
-			textAreaPanel.add(getInfoTextArea(), null);
+			textAreaPanel = new JScrollPane(getInfoTextArea());
 		}
 		return textAreaPanel;
 	}
@@ -208,7 +204,7 @@ public class ContractorWindow extends JFrame{
 					Component c = new Component( (String)typeComboBox.getSelectedItem(), (String)manComboBox.getSelectedItem(), dQuality, price);
 					agent.getComponents().add(c);
 					
-					infoTextArea.append("Added(" + c.getType() + ":" + c.getManufacturer() + "," + c.getQuality() + "," + c.getPrice() +")\n");
+					infoTextArea.append("Added(" + c.getType() + ":" + c.getManufacturer() + "," + sQuality + "," + c.getPrice() +")\n");
 				}
 			});
 		}

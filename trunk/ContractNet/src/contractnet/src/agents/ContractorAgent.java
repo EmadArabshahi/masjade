@@ -37,7 +37,7 @@ public class ContractorAgent extends Agent {
 	private ArrayList<SubTaskBid> subBids;
 	private boolean deadlinePassed;
 	private Timer deadlineTimer;
-	private final int deadlineTime = 2500;
+	private final int deadlineTime = 2000;
 	private Map<AID, String> conversationIDs;
 	private boolean readyToPropose;
 	private AID managerAID;
@@ -58,9 +58,7 @@ public class ContractorAgent extends Agent {
 		setManagerAID(null);
 		subTask = null;
 		setReceivedTask(null);
-		//components.add( new Component( ComponentType.CPU, "hp", 2000, 1000));
-		//components.add( new Component( ComponentType.GPU, "hp", 2000, 100));
-		//components.add( new Component( ComponentType.Motherboard, "hp", 2000, 100));
+
 		registerService();
 		addBehaviours();
 		
@@ -210,6 +208,11 @@ public class ContractorAgent extends Agent {
 	public AID getManagerAID() {
 		return managerAID;
 	}
-
+	
+	
+	public void addInfo(String string)
+	{
+		contractorWindow.infoTextArea.append(string);
+	}
 	
 }
