@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JButton;
@@ -50,6 +51,9 @@ public class ManagerWindow extends JFrame {
 	private JScrollPane textAreaPanel = null;
 	private JTextArea infoTextArea = null;
 	private JPanel specifyOrderPanel = null;
+	public String taskStatus = "Not yet sent";
+	
+	public HashMap<String, String> responses = new HashMap<String, String>();
 	/**
 	 * This is the default constructor
 	 */
@@ -58,6 +62,7 @@ public class ManagerWindow extends JFrame {
 		initialize();
 		this.agent = agent;
 		this.setTitle("Manager: " + agent.getLocalName());
+		updateInfoTextArea();
 	}
 
 	/**
@@ -324,15 +329,10 @@ public class ManagerWindow extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					/*ACLMessage startMsg = new ACLMessage( ACLMessage.INFORM);
-					startMsg.setOntology("Startup");
-					startMsg.setContent("Start execution");
-					startMsg.addReceiver(agent.getAID());
-					agent.send(startMsg);*/
 					agent.setAnnounceReady(true);
-					infoTextArea.append("Completed the order.\n");
 					
+					taskStatus = "Task sent, awaiting responses";
+					updateInfoTextArea();					
 				}
 			});
 		}
@@ -346,8 +346,7 @@ public class ManagerWindow extends JFrame {
 	 */
 	private JScrollPane getTextAreaPanel() {
 		if (textAreaPanel == null) {
-			textAreaPanel = new JScrollPane(getInfoTextArea());
-			
+			textAreaPanel = new JScrollPane(getInfoTextArea());	
 		}
 		return textAreaPanel;
 	}
@@ -425,9 +424,19 @@ public class ManagerWindow extends JFrame {
 			return 1;
 	}
 	
-	private void updateInfoTextArea()
+	public void updateInfoTextArea()
 	{
 		infoTextArea.setText("");
+		
+		infoTextArea.append(String.format("Task status: %s\n", taskStatus ));
+		
+		Iterator<String> keys = responses.keySet().iterator();
+		
+		while (keys.hasNext())
+		{
+			String key = keys.next();
+			infoTextArea.append(String.format("\t%s: %s\n", key, responses.get(key)));
+		}
 		
 		Iterator<Computer> i = agent.getTask().computerList.iterator();
 		
@@ -439,9 +448,6 @@ public class ManagerWindow extends JFrame {
 			Component cpu = computer.getCpu();
 			Component gpu = computer.getGpu();
 			Component mb = computer.getMotherboard();
-			
-			
-			
 			
 			infoTextArea.append(String.format("Configuration %s: \n\tComponent: Manufacturer / Quality / Price \n\tCPU: %s / %s / %s \n\tGPU: %s / %s / %s \n\tM.Board:%s / %s / %s\n", 
 					configCounter,

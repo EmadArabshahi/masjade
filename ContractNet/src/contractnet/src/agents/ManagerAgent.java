@@ -199,6 +199,20 @@ public class ManagerAgent extends Agent {
 		return announceReady;
 	}
 	
+	public void setResponse(String agentName, String response)
+	{
+		managerWindow.responses.put(agentName, response);
+	}
+	
+	public void updateInfo()
+	{
+		managerWindow.updateInfoTextArea();
+	}
+	
+	public void setTaskStatus(String taskStatus)
+	{
+		managerWindow.taskStatus = taskStatus;
+	}
 }
 
 

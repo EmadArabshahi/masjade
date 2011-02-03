@@ -24,6 +24,8 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 		
 		if ( agent.isDeadlinePassed())
 		{
+			agent.setTaskStatus("Bidding closed");
+			agent.updateInfo();
 			//evaluate bids and select best one
 			AID bestContractorID = evaluateBids();
 			
