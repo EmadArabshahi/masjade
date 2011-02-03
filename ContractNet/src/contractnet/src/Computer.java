@@ -2,8 +2,6 @@ package contractnet.src;
 
 import java.io.Serializable;
 
-import contractnet.src.Component.ComponentType;
-
 
 public class Computer implements Serializable {
 	
