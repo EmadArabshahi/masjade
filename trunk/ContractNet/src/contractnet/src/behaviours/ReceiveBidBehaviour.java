@@ -22,7 +22,7 @@ public class ReceiveBidBehaviour extends SimpleBehaviour {
 		
 		if ( msg != null)
 		{
-			Output.AgentMessage(agent, "Received a tender from agent " + msg.getSender());
+			Output.AgentMessage(agent, "Received a tender from agent " + msg.getSender().getLocalName());
 			if ( !agent.isDeadlinePassed())
 			{
 				Bid bid = null;
@@ -31,11 +31,11 @@ public class ReceiveBidBehaviour extends SimpleBehaviour {
 				} catch (UnreadableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					Output.AgentMessage( agent, "Cannot read bid from agent" + msg.getSender());
+					Output.AgentMessage( agent, "Cannot read bid from agent" + msg.getSender().getLocalName());
 				}
 				if ( bid != null)
 				{
-					Output.AgentMessage( agent, "Bid recieved from agent " + msg.getSender());
+					Output.AgentMessage( agent, "Bid recieved from agent " + msg.getSender().getLocalName());
 					agent.getBids().add(bid);
 				}
 			}
@@ -49,7 +49,7 @@ public class ReceiveBidBehaviour extends SimpleBehaviour {
 				rejectMsg.addReceiver( msg.getSender());
 				agent.send( rejectMsg);
 				
-				Output.AgentMessage(agent, "Deadline has passed. Sent reject proposal to agent " + msg.getSender());
+				Output.AgentMessage(agent, "Deadline has passed. Sent reject proposal to agent " + msg.getSender().getLocalName());
 			}
 			
 		}
