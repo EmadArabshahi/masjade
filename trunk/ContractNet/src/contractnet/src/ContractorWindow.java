@@ -49,6 +49,7 @@ public class ContractorWindow extends JFrame{
 		super();
 		initialize();
 		this.agent = agent;
+		this.setTitle("Contractor: " + agent.getLocalName());
 	}
 
 	/**
@@ -59,7 +60,6 @@ public class ContractorWindow extends JFrame{
 	private void initialize() {
 		this.setSize(300, 200);
 		this.setContentPane(getJContentPane());
-		this.setTitle("JFrame");
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class ContractorWindow extends JFrame{
 					Component c = new Component( (String)typeComboBox.getSelectedItem(), (String)manComboBox.getSelectedItem(), dQuality, price);
 					agent.getComponents().add(c);
 					
-					infoTextArea.append("Added(" + c.getType() + ":" + c.getManufacturer() + "," + c.getQuality() + "," + c.getManufacturer() +")\n");
+					infoTextArea.append("Added(" + c.getType() + ":" + c.getManufacturer() + "," + c.getQuality() + "," + c.getPrice() +")\n");
 				}
 			});
 		}
