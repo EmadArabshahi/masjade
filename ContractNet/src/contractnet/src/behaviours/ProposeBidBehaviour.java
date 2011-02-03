@@ -40,7 +40,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 				}
 				if ( task != null)
 				{
-					Output.AgentMessage( agent, "Task recieved from manager " + msg.getSender());
+					Output.AgentMessage( agent, "Task recieved from manager " + msg.getSender().getLocalName());
 					//Evaluate the task??
 					Bid bid = evaluate( task);
 					//Send either proposal or reject proposal
@@ -48,12 +48,12 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 					if ( bid != null)
 					{
 						bidMsg = new ACLMessage( ACLMessage.PROPOSE);
-						Output.AgentMessage( agent, "Offering a tender to " + msg.getSender());
+						Output.AgentMessage( agent, "Offering a tender to " + msg.getSender().getLocalName());
 					}
 					else
 					{
 						bidMsg = new ACLMessage( ACLMessage.REFUSE);
-						Output.AgentMessage( agent, "Refusing to make a tender to " + msg.getSender());
+						Output.AgentMessage( agent, "Refusing to make a tender to " + msg.getSender().getLocalName());
 					}
 					bidMsg.setOntology("Bid");
 					bidMsg.setConversationId( msg.getConversationId());
@@ -66,7 +66,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 						e.printStackTrace();
 					}
 					agent.send(bidMsg);
-					Output.AgentMessage( agent, "Offered a tender to " + msg.getSender());
+					Output.AgentMessage( agent, "Offered a tender to " + msg.getSender().getLocalName());
 				}
 				else
 				{
