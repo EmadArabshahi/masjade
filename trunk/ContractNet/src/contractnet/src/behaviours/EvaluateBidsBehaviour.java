@@ -67,7 +67,7 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 			{
 				result += evaluateComputer(i, bid.computerList.get(i));
 			}
-			
+			System.out.println( bid.bidderID.getLocalName() + ":" + result);
 			if ( result > bestBid)
 			{
 				bestBid = result;
@@ -86,7 +86,7 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 	{
 		double mCoef = 1;
 		String taskMan = agent.getTask().computerList.get(i).getComponentByType( comp.getType()).getManufacturer();
-		if ( taskMan == null || taskMan.equals( comp.getManufacturer()))
+		if ( taskMan.equals("") || taskMan.equals( comp.getManufacturer()))
 			mCoef = 2;
 		
 		return mCoef * comp.getQuality() / comp.getPrice();

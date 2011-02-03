@@ -35,11 +35,13 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 			{
 				bidMsg = new ACLMessage( ACLMessage.PROPOSE);
 				Output.AgentMessage( agent, "Offering a tender to " + agent.getManagerAID().getLocalName());
+				agent.addInfo(String.format("Offering a tender to %s\n", agent.getManagerAID().getLocalName()));
 			}
 			else
 			{
 				bidMsg = new ACLMessage( ACLMessage.REFUSE);
 				Output.AgentMessage( agent, "Refusing to make a tender to " + agent.getManagerAID().getLocalName());
+				agent.addInfo(String.format("Refusing to make a tender to %s\n", agent.getManagerAID().getLocalName()));
 			}
 			bidMsg.setOntology("Bid");
 			bidMsg.setConversationId( agent.getConversationIDs().get( agent.getManagerAID()));
@@ -101,7 +103,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 		double bestRatio = -1;
 		for ( Component c : agent.getComponents())
 		{
-			if ( c.getType().equals(task.getType()))
+			if ( c.getType().equals( task.getType()))
 			{
 				double qt = task.getQuality();
 				double pt = task.getPrice();
@@ -114,7 +116,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 					qc = 1;
 				if ( pt == 1)
 					pc = 1;
-				if ( task.getManufacturer() == null || ( task.getManufacturer().equals( c.getManufacturer())))
+				if ( task.getManufacturer().equals("") || ( task.getManufacturer().equals( c.getManufacturer())))
 					mCoef = 10;
 				
 				double taskQPRatio = qt / pt;

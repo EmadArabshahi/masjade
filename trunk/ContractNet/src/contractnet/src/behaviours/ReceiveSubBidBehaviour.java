@@ -23,6 +23,7 @@ public class ReceiveSubBidBehaviour extends SimpleBehaviour {
 		if ( msg != null)
 		{
 			Output.AgentMessage(agent, "Received a tender from agent " + msg.getSender().getLocalName());
+			agent.addInfo(String.format("Received a tender from %s\n", msg.getSender().getLocalName()));
 			if ( !agent.isDeadlinePassed())
 			{
 				SubTaskBid bid = null;
@@ -46,9 +47,10 @@ public class ReceiveSubBidBehaviour extends SimpleBehaviour {
 				rejectMsg.setOntology( "bid-reject");
 				rejectMsg.setContent( "Deadline has passed.");
 				rejectMsg.addReceiver( msg.getSender());
+				agent.addInfo(String.format("Deadline has passed. Sent reject proposal to %s\n", msg.getSender().getLocalName()));
 				agent.send( rejectMsg);
 				
-				Output.AgentMessage(agent, "Deadline has passed. Sent reject proposal to agent " + msg.getSender());
+				//Output.AgentMessage(agent, "Deadline has passed. Sent reject proposal to agent " + msg.getSender());
 			}
 			
 		}

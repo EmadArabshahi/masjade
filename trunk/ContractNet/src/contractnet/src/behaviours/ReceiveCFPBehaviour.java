@@ -45,6 +45,7 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 				if ( task != null)
 				{
 					Output.AgentMessage( agent, "Task recieved from agent" + msg.getSender().getLocalName());
+					agent.addInfo(String.format("Task recieved from %s\n", msg.getSender().getLocalName()));
 					
 					agent.setReceivedTask(task);
 					agent.setManagerAID( msg.getSender());
@@ -55,6 +56,8 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 					{
 						//makeSubtask and send CFP
 						Output.AgentMessage(agent, "Lack of resource, sub-contracting");
+						agent.addInfo("Lack of resource, sub-contracting.\n");
+						
 						SubTask subtask = createSubTask(task);
 						agent.setSubTask(subtask);
 						ArrayList<AID> contractorAgents = agent.getContractorAIDs();
@@ -110,6 +113,8 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 				if ( subtask != null)
 				{
 					Output.AgentMessage( agent, "Sub-task recieved from agent" + msg.getSender().getLocalName());
+					agent.addInfo(String.format("Sub-task recieved from %s\n", msg.getSender().getLocalName()));
+					
 					//Evaluate the task??
 					SubTaskBid bid = evaluate( subtask);
 					//Send either proposal or reject proposal
@@ -118,11 +123,13 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 					{
 						bidMsg = new ACLMessage( ACLMessage.PROPOSE);
 						Output.AgentMessage( agent, "Offering a tender to " + msg.getSender().getLocalName());
+						agent.addInfo(String.format("Offering a tender to %s\n", msg.getSender().getLocalName()));
 					}
 					else
 					{
 						bidMsg = new ACLMessage( ACLMessage.REFUSE);
 						Output.AgentMessage( agent, "Refusing to make a tender to " + msg.getSender().getLocalName());
+						agent.addInfo(String.format("Refusing to make a tender to %s\n", msg.getSender().getLocalName()));
 					}
 					bidMsg.setOntology("Bid");
 					bidMsg.setConversationId( msg.getConversationId());
@@ -154,7 +161,7 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 			if ( comp == null)
 				return null;
 			else
-				newBid.componentList.add(c);
+				newBid.componentList.add(comp);
 		}
 		newBid.bidderID = agent.getAID();
 		return newBid;
@@ -179,7 +186,7 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 					qc = 1;
 				if ( pt == 1)
 					pc = 1;
-				if ( task.getManufacturer() == null || ( task.getManufacturer().equals( c.getManufacturer())))
+				if ( task.getManufacturer().equals("") || ( task.getManufacturer().equals( c.getManufacturer())))
 					mCoef = 10;
 				
 				double taskQPRatio = qt / pt;
