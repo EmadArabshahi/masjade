@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
 
 import contractnet.src.agents.ManagerAgent;
@@ -45,7 +47,7 @@ public class ManagerWindow extends JFrame {
 	private JComboBox mbPriceComboBox = null;
 	private JButton addCompButton = null;
 	private JButton completeOrderButton = null;
-	private JPanel textAreaPanel = null;
+	private JScrollPane textAreaPanel = null;
 	private JTextArea infoTextArea = null;
 	private JPanel specifyOrderPanel = null;
 	/**
@@ -55,6 +57,7 @@ public class ManagerWindow extends JFrame {
 		super();
 		initialize();
 		this.agent = agent;
+		this.setTitle("Manager: " + agent.getLocalName());
 	}
 
 	/**
@@ -65,7 +68,6 @@ public class ManagerWindow extends JFrame {
 	private void initialize() {
 		this.setSize(400, 300);
 		this.setContentPane(getJContentPane());
-		this.setTitle("Manager Window");
 	}
 
 	/**
@@ -303,8 +305,7 @@ public class ManagerWindow extends JFrame {
 					//computer
 					Computer c = new Computer(cpu, gpu, mb);
 					agent.getTask().computerList.add(c);
-					infoTextArea.append("Computer added.\n");
-					
+					updateInfoTextArea();
 				}
 			});
 		}
@@ -343,12 +344,10 @@ public class ManagerWindow extends JFrame {
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getTextAreaPanel() {
+	private JScrollPane getTextAreaPanel() {
 		if (textAreaPanel == null) {
-			textAreaPanel = new JPanel();
-			textAreaPanel.setLayout(new BorderLayout());
-			textAreaPanel.setPreferredSize(new Dimension(400, 150));
-			textAreaPanel.add(getInfoTextArea(), BorderLayout.NORTH);
+			textAreaPanel = new JScrollPane(getInfoTextArea());
+			
 		}
 		return textAreaPanel;
 	}
@@ -361,8 +360,6 @@ public class ManagerWindow extends JFrame {
 	private JTextArea getInfoTextArea() {
 		if (infoTextArea == null) {
 			infoTextArea = new JTextArea();
-			infoTextArea.setPreferredSize(new Dimension(400, 145));
-			JScrollPane scrollPane = new JScrollPane( infoTextArea);
 			infoTextArea.setEditable(false);
 		}
 		return infoTextArea;
@@ -405,6 +402,19 @@ public class ManagerWindow extends JFrame {
 			return 1;
 	}
 	
+	private String getQualityDisplay (double value)
+	{
+		if (value == 100)
+			return "Average";
+		else if (value == 500)
+			return "Good";
+		else if (value == 1000)
+			return "Best";
+		else
+			return "Not Set";
+		
+	}
+	
 	private double getPrice( String string)
 	{
 		if ( string.equals("100"))
@@ -414,7 +424,49 @@ public class ManagerWindow extends JFrame {
 		else
 			return 1;
 	}
-
-
-
+	
+	private void updateInfoTextArea()
+	{
+		infoTextArea.setText("");
+		
+		Iterator<Computer> i = agent.getTask().computerList.iterator();
+		
+		int configCounter = 1;
+		while (i.hasNext())
+		{
+			Computer computer = i.next();
+			
+			Component cpu = computer.getCpu();
+			Component gpu = computer.getGpu();
+			Component mb = computer.getMotherboard();
+			
+			
+			
+			
+			infoTextArea.append(String.format("Configuration %s: \n\tComponent: Manufacturer / Quality / Price \n\tCPU: %s / %s / %s \n\tGPU: %s / %s / %s \n\tM.Board:%s / %s / %s\n", 
+					configCounter,
+					getManufacturerDisplay(cpu.getManufacturer()), getQualityDisplay(cpu.getQuality()), getPriceDisplay(cpu.getPrice()),
+					getManufacturerDisplay(gpu.getManufacturer()), getQualityDisplay(gpu.getQuality()), getPriceDisplay(gpu.getPrice()),
+					getManufacturerDisplay(mb.getManufacturer()), getQualityDisplay(mb.getQuality()), getPriceDisplay(mb.getPrice())));
+			
+			configCounter++;
+		}
+	}
+	
+	private String getManufacturerDisplay(String string)
+	{
+		if (string.equals(""))
+			string = "Not set";
+		return string;
+	}
+	
+	private String getPriceDisplay(double price)
+	{
+		String string = "Not Set";
+		if (price > 1)
+		{
+			string = String.valueOf(price);
+		}
+		return string;			
+	}
 }  //  @jve:decl-index=0:visual-constraint="11,-10"
