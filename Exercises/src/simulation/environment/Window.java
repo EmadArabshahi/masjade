@@ -2,6 +2,8 @@ package simulation.environment;
 
 import simulation.environment.lib.Signal;
 
+import simulation.environment.graphs.*;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -22,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -476,9 +479,13 @@ public class Window extends JFrame{
 		getContentPane().setLayout( new BorderLayout() );
 
 		final EnvView envView = new EnvView( env );
-		final Statistics stats = new Statistics( envView );
-		final JComponent statsView = new JScrollPane( new JTable( stats ) );
-
+		//final Statistics stats = new Statistics( envView );
+		final JComponent statsView = new JPanel();
+        final EnergyGraph graph1 = new EnergyGraph();
+        statsView.add(graph1);
+		
+		
+		
 		final JSplitPane sp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
 				envView, statsView );
 		sp.setOneTouchExpandable( true );

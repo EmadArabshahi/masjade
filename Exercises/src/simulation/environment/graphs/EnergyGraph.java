@@ -2,25 +2,42 @@ package simulation.environment.graphs;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import org.jfree.*;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.*;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.general.DatasetChangeListener;
+import org.jfree.data.general.DatasetGroup;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.*;
+
+import simulation.environment.LogicalEnv;
 
 public class EnergyGraph extends ChartPanel
 {
 
+	private static XYSeries _meanEnergy = new XYSeries("Mean Energy Level");
+	private static XYSeries _energyVariance = new XYSeries("Energy Variance");
+		
+	private static XYSeries _agentType1AliveRatios = new XYSeries("Agent Type 1");
+	private static XYSeries _agentType2AliveRatios = new XYSeries("Agent Type 2");
+	private static XYSeries _agentType3AliveRatios = new XYSeries("Agent Type 3");
+	private static XYSeries _agentType4AliveRatios = new XYSeries("Agent Type 4");
+	
 	public EnergyGraph()
 	{
 		super(createChart(createDataset()));
@@ -36,18 +53,20 @@ public class EnergyGraph extends ChartPanel
      *
      * @return A chart.
      */
-    private static JFreeChart createChart(XYDataset dataset) {
-
-        JFreeChart chart = ChartFactory.createTimeSeriesChart(
-            "Legal & General Unit Trust Prices",  // title
-            "Date",             // x-axis label
-            "Price Per Unit",   // y-axis label
-            dataset,            // data
-            true,               // create legend?
-            true,               // generate tooltips?
-            false               // generate URLs?
-        );
-
+    private static JFreeChart createChart(XYDataset dataset) 
+    {
+    	
+    	JFreeChart chart = ChartFactory.createXYLineChart(
+    			"Mean Energy Level",   		// title 
+    			"Round", 			   		// x-axis label
+    			"Energy",              		// y-axis label
+    			dataset,			   		// data 
+    			PlotOrientation.VERTICAL,   // orientation
+    			true, 						// create legend?
+    			true, 						// generate tooltips?
+    			false						// generate urls?
+    			);
+    	
         chart.setBackgroundPaint(Color.white);
 
         XYPlot plot = (XYPlot) chart.getPlot();
@@ -66,8 +85,10 @@ public class EnergyGraph extends ChartPanel
             renderer.setDrawSeriesLineAsPath(true);
         }
 
-        DateAxis axis = (DateAxis) plot.getDomainAxis();
-        axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+        
+        
+   //     DateAxis axis = (DateAxis) plot.getDomainAxis();
+   //     axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
 
         return chart;
 
@@ -78,64 +99,93 @@ public class EnergyGraph extends ChartPanel
      *
      * @return The dataset.
      */
-    private static XYDataset createDataset() {
-
-        TimeSeries s1 = new TimeSeries("L&G European Index Trust");
-        s1.add(new Month(2, 2001), 181.8);
-        s1.add(new Month(3, 2001), 167.3);
-        s1.add(new Month(4, 2001), 153.8);
-        s1.add(new Month(5, 2001), 167.6);
-        s1.add(new Month(6, 2001), 158.8);
-        s1.add(new Month(7, 2001), 148.3);
-        s1.add(new Month(8, 2001), 153.9);
-        s1.add(new Month(9, 2001), 142.7);
-        s1.add(new Month(10, 2001), 123.2);
-        s1.add(new Month(11, 2001), 131.8);
-        s1.add(new Month(12, 2001), 139.6);
-        s1.add(new Month(1, 2002), 142.9);
-        s1.add(new Month(2, 2002), 138.7);
-        s1.add(new Month(3, 2002), 137.3);
-        s1.add(new Month(4, 2002), 143.9);
-        s1.add(new Month(5, 2002), 139.8);
-        s1.add(new Month(6, 2002), 137.0);
-        s1.add(new Month(7, 2002), 132.8);
-
-        TimeSeries s2 = new TimeSeries("L&G UK Index Trust");
-        s2.add(new Month(2, 2001), 129.6);
-        s2.add(new Month(3, 2001), 123.2);
-        s2.add(new Month(4, 2001), 117.2);
-        s2.add(new Month(5, 2001), 124.1);
-        s2.add(new Month(6, 2001), 122.6);
-        s2.add(new Month(7, 2001), 119.2);
-        s2.add(new Month(8, 2001), 116.5);
-        s2.add(new Month(9, 2001), 112.7);
-        s2.add(new Month(10, 2001), 101.5);
-        s2.add(new Month(11, 2001), 106.1);
-        s2.add(new Month(12, 2001), 110.3);
-        s2.add(new Month(1, 2002), 111.7);
-        s2.add(new Month(2, 2002), 111.0);
-        s2.add(new Month(3, 2002), 109.6);
-        s2.add(new Month(4, 2002), 113.2);
-        s2.add(new Month(5, 2002), 111.6);
-        s2.add(new Month(6, 2002), 108.8);
-        s2.add(new Month(7, 2002), 101.6);
-
-        // ******************************************************************
-        //  More than 150 demo applications are included with the JFreeChart
-        //  Developer Guide...for more information, see:
-        //
-        //  >   http://www.object-refinery.com/jfreechart/guide.html
-        //
-        // ******************************************************************
-
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(s1);
-        dataset.addSeries(s2);
-
+    private static XYDataset createDataset() 
+    {
+        
+        //TimeSeriesCollection dataset = new TimeSeriesCollection();
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(_meanEnergy);
+        dataset.addSeries(_energyVariance);
         return dataset;
 
     }
+    
+    public static void update(int roundNr, int[][] agentEnergyLevels)
+    {   		
+    	double meanEnergyLevel = calulateMeanEnergyLevel(agentEnergyLevels);
+    	double varianceEnergyLevel = calculateVarianceEnergyLevel(agentEnergyLevels, meanEnergyLevel);
+    	double[] aliveRatios = calculateAliveRatios(agentEnergyLevels);
+    	
+    	_meanEnergy.add(roundNr, meanEnergyLevel);
+    	_energyVariance.add(roundNr, varianceEnergyLevel);
+    	_agentType1AliveRatios.add(roundNr, aliveRatios[0]);
+    	_agentType2AliveRatios.add(roundNr, aliveRatios[1]);
+    	_agentType3AliveRatios.add(roundNr, aliveRatios[2]);
+    	_agentType4AliveRatios.add(roundNr, aliveRatios[3]);
+    }
 
+    
+    private static double[] calculateAliveRatios(int[][] agentEnergyLevels)
+    {
+    	
+    	double[] aliveRatios = new double[agentEnergyLevels.length];
+    	
+    	int aliveAgents = 0;
+		int totalAgents = 0;
+    	
+    	for(int i=0; i<agentEnergyLevels.length; i++)
+    	{
+    		aliveAgents = 0;
+    		totalAgents = 0;
+    		for(int j=0; j<agentEnergyLevels[i].length; j++)
+    		{
+    			if(agentEnergyLevels[i][j] > 0)
+    				aliveAgents++;
+    			totalAgents += 1;
+    		}
+    		aliveRatios[i] = ((double)aliveAgents) / ((double)totalAgents);
+    	}
+    	
+    	return aliveRatios;
+    }
+    
+    private static double calculateVarianceEnergyLevel(int[][] agentEnergyLevels, double mean)
+    {
+    	double totalDeviation = 0;
+    	int totalAgents = 0;
+    	
+    	for(int i=0; i<agentEnergyLevels.length; i++)
+    	{
+    		for(int j=0; j<agentEnergyLevels[i].length; j++)
+    		{
+    			totalDeviation += Math.abs(agentEnergyLevels[i][j] - mean);
+    			totalAgents += 1;
+    		}
+    	}
+    	
+    	double varianceEnergyLevel = (totalDeviation / ((double)totalAgents));
+    	return varianceEnergyLevel;
+    }
+    
+    private static double calulateMeanEnergyLevel(int[][] agentEnergyLevels)
+    {
+    	int totalEnergy = 0;
+    	int totalAgents = 0;
+    	
+    	for(int i=0; i<agentEnergyLevels.length; i++)
+    	{
+    		for(int j=0; j<agentEnergyLevels[i].length; j++)
+    		{
+    			totalEnergy += agentEnergyLevels[i][j];
+    			totalAgents += 1;
+    		}
+    	}
+    	
+    	
+    	double meanEnergyLevel = (((double)totalEnergy) / ((double)totalAgents)) ;
+    	return meanEnergyLevel;
+    }
+    
     
     /*
     

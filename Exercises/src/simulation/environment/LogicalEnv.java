@@ -4,6 +4,7 @@ package simulation.environment;
 
 // Standard java imports
 
+import simulation.environment.graphs.EnergyGraph;
 import simulation.environment.lib.ObsVect;
 import simulation.environment.lib.ObsVectListener;
 import simulation.environment.lib.Signal;
@@ -237,6 +238,11 @@ public class LogicalEnv implements ObsVectListener
     
     public void nextRound()
     {
+    	int[][] energyLevels = new int[][]{{100,100},{100,100},{100,100},{100,100}};
+    	//update Graph
+    	EnergyGraph.update(_round, energyLevels);
+    	
+    	
     	//DO OUTSTANDING TRADES!!
     	
     	
