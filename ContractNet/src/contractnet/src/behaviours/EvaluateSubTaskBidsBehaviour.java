@@ -88,7 +88,7 @@ public class EvaluateSubTaskBidsBehaviour extends SimpleBehaviour {
 	{
 		double mCoef = 1;
 		String taskMan = agent.getSubTask().components.get(i).getManufacturer();
-		if ( taskMan == null || taskMan.equals( comp.getManufacturer()))
+		if ( taskMan.equals("") || taskMan.equals( comp.getManufacturer()))
 			mCoef = 2;
 		
 		return mCoef * comp.getQuality() / comp.getPrice();
