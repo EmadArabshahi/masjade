@@ -466,6 +466,7 @@ public class ManagerWindow extends JFrame {
 						getManufacturerDisplay(mb.getManufacturer()), getQualityDisplay(mb.getQuality()), getPriceDisplay(mb.getPrice())));
 				
 				configCounter++;
+				infoTextArea.append("\n");
 			}
 		}
 			
@@ -491,6 +492,7 @@ public class ManagerWindow extends JFrame {
 					getManufacturerDisplay(mb.getManufacturer()), getQualityDisplay(mb.getQuality()), getPriceDisplay(mb.getPrice())));
 			
 			configCounter++;
+			infoTextArea.append("\n");
 		}
 	}
 	
