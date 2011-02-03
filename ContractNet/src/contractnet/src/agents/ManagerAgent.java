@@ -117,23 +117,9 @@ public class ManagerAgent extends Agent {
 	
 	public void addBehaviours()
 	{
-		//FSMBehaviour behaviours = new FSMBehaviour();
-		//behaviours.registerFirstState(new WaitForStartupBehaviour(), "startUp");
-		//behaviours.registerLastState(new AnnounceTaskBehaviour(), "announceTask");
-		//behaviours.registerState(new ReceiveBidBehaviour(), "receiveBid");
-		//behaviours.registerState(new EvaluateBidsBehaviour(), "evaluateBids");
-		
-		//behaviours.registerDefaultTransition("startUp", "announceTask");
-		//behaviours.registerDefaultTransition("announceTask", "receiveBid");
-		//behaviours.registerDefaultTransition("receiveBid", "evaluateBids");
-		
-		
-		//addBehaviour(behaviours);
-		//addBehaviour( new WaitForStartupBehaviour());
 		addBehaviour( new AnnounceTaskBehaviour());
 		addBehaviour( new ReceiveBidBehaviour());
-		addBehaviour( new EvaluateBidsBehaviour());
-		
+		addBehaviour( new EvaluateBidsBehaviour());	
 	}
 
 	public void setTask(Task task) {

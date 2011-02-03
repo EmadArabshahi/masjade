@@ -16,9 +16,7 @@ public class EvaluateSubTaskBidsBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-	agent = (ContractorAgent) myAgent;
-		
-		//while ( !agent.isDeadlinePassed()){} //wait till deadline
+		agent = (ContractorAgent) myAgent;
 		
 		if ( agent.isDeadlinePassed())
 		{
@@ -39,10 +37,13 @@ public class EvaluateSubTaskBidsBehaviour extends SimpleBehaviour {
 						resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
 						resultMsg.setContent( "Tender proposal accepted.");
 						//add it to the agent components
+						
 						for ( Component c : bid.componentList)
 						{
 							agent.getComponents().add(c);
 						}
+						
+						agent.addInfo(String.format("Sub-contract accepted from %s\n", bid.bidderID.getLocalName()));
 					}
 					else
 					{
