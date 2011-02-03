@@ -66,7 +66,6 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 						e.printStackTrace();
 					}
 					agent.send(bidMsg);
-					Output.AgentMessage( agent, "Offered a tender to " + msg.getSender().getLocalName());
 				}
 				else
 				{
