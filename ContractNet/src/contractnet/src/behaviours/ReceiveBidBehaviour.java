@@ -38,9 +38,9 @@ public class ReceiveBidBehaviour extends SimpleBehaviour {
 					if ( bid != null)
 					{
 						Output.AgentMessage( agent, "Bid received from agent " + msg.getSender().getLocalName());
-						agent.setResponse(msg.getSender().getLocalName(), "Bid received");
-						agent.updateInfo();
 						agent.getBids().add(bid);
+						agent.setResponse(msg.getSender().getLocalName(), "Proposal received");
+						agent.updateInfo();
 					}
 				}
 				else

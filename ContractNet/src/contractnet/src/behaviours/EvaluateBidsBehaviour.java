@@ -16,10 +16,7 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 	private boolean done = false;
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
 		agent = (ManagerAgent) myAgent;
-		
-		//while ( !agent.isDeadlinePassed()){} //wait till deadline
 		
 		if ( agent.isDeadlinePassed())
 		{
@@ -39,6 +36,8 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 					resultMsg.setOntology( "bid-accept");
 					resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
 					resultMsg.setContent( "Tender proposal accepted.");
+					agent.setResponse(bestContractorID.getLocalName(), "Proposal accepted!");
+					agent.updateInfo();
 				}
 				else
 				{
@@ -46,7 +45,9 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 					resultMsg.setProtocol( "fipa-contract-net");
 					resultMsg.setOntology( "bid-reject");
 					resultMsg.setConversationId( agent.getConversationIDs().get(bid.bidderID));
-					resultMsg.setContent( "Tender proposal rejected.");				
+					resultMsg.setContent( "Tender proposal rejected.");	
+					agent.setResponse(bid.bidderID.getLocalName(), "Proposal rejected");
+					agent.updateInfo();
 				}
 				resultMsg.addReceiver( bid.bidderID);
 				agent.send( resultMsg);			
@@ -93,7 +94,6 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return done;
 	}
 }

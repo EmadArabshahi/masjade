@@ -35,7 +35,7 @@ public class ManagerAgent extends Agent {
 	
 	private Timer deadlineTimer;
 	private boolean deadlinePassed;	
-	private final int deadlineTime = 30000;
+	private final int deadlineTime = 3000;
 	
 	private boolean announceReady;
 	private Map<AID, String> conversationIDs;
