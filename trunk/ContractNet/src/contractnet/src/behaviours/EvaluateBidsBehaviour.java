@@ -1,13 +1,12 @@
 package contractnet.src.behaviours;
 
+import jade.core.AID;
+import jade.core.behaviours.SimpleBehaviour;
+import jade.lang.acl.ACLMessage;
 import contractnet.src.Bid;
 import contractnet.src.Component;
 import contractnet.src.Computer;
 import contractnet.src.agents.ManagerAgent;
-import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
 
 public class EvaluateBidsBehaviour extends SimpleBehaviour {
 

@@ -24,7 +24,7 @@ public class ReceiveBidResultBehaviour extends SimpleBehaviour {
 		{
 			if ( msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL)
 			{
-				Output.AgentMessage(agent, "Received accept proposal message from manager agent " + msg.getSender().getLocalName());
+				Output.AgentMessage(agent, "Received accept proposal message from agent " + msg.getSender().getLocalName());
 				
 				ACLMessage informDoneMsg = new ACLMessage( ACLMessage.INFORM);
 				informDoneMsg.setProtocol( msg.getProtocol());
@@ -32,13 +32,14 @@ public class ReceiveBidResultBehaviour extends SimpleBehaviour {
 				informDoneMsg.setOntology( "inform-done");
 				informDoneMsg.setContent( "Task done.");
 				informDoneMsg.addReceiver( msg.getSender());
+				Output.AgentMessage(agent, "Sent inform-done message to agent " + msg.getSender().getLocalName());
 				agent.send( informDoneMsg);
 				
-				Output.AgentMessage(agent, "Sent inform-done message to manager agent " + msg.getSender().getLocalName());
+				
 			}
 			else if ( msg.getPerformative() == ACLMessage.REJECT_PROPOSAL)
 			{
-				Output.AgentMessage(agent, "Tender has been rejected by manager agent " + msg.getSender().getLocalName() + 
+				Output.AgentMessage(agent, "Tender has been rejected by agent " + msg.getSender().getLocalName() + 
 						"\n Reason: " + msg.getContent());
 			}
 		}

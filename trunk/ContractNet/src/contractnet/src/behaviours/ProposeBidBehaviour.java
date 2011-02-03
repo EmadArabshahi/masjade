@@ -1,5 +1,8 @@
 package contractnet.src.behaviours;
 
+import jade.core.behaviours.SimpleBehaviour;
+import jade.lang.acl.ACLMessage;
+
 import java.io.IOException;
 
 import contractnet.src.Bid;
@@ -8,78 +11,56 @@ import contractnet.src.Computer;
 import contractnet.src.Output;
 import contractnet.src.Task;
 import contractnet.src.agents.ContractorAgent;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 
 public class ProposeBidBehaviour extends SimpleBehaviour {
 
 	private static final long serialVersionUID = 4001679695379004945L;
 	
 	private ContractorAgent agent;
-	private final boolean done = false;
+	private boolean done = false;
 	
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
 		agent = (ContractorAgent) myAgent;
 		
-		ACLMessage msg = agent.receive( MessageTemplate.MatchPerformative( ACLMessage.CFP));
-		
-		if ( msg != null)
+		if ( agent.isReadyToPropose())
 		{
-			if ( msg.getOntology().equals( "task"))
+		
+			//Evaluate the task
+			Bid bid = evaluate( agent.getReceivedTask());
+			//Send either proposal or reject proposal
+			ACLMessage bidMsg;
+			if ( bid != null)
 			{
-				Task task = null;
-				try {
-					task = (Task) msg.getContentObject();
-				} catch (UnreadableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if ( task != null)
-				{
-					Output.AgentMessage( agent, "Task recieved from manager " + msg.getSender().getLocalName());
-					//Evaluate the task??
-					Bid bid = evaluate( task);
-					//Send either proposal or reject proposal
-					ACLMessage bidMsg;
-					if ( bid != null)
-					{
-						bidMsg = new ACLMessage( ACLMessage.PROPOSE);
-						Output.AgentMessage( agent, "Offering a tender to " + msg.getSender().getLocalName());
-					}
-					else
-					{
-						bidMsg = new ACLMessage( ACLMessage.REFUSE);
-						Output.AgentMessage( agent, "Refusing to make a tender to " + msg.getSender().getLocalName());
-					}
-					bidMsg.setOntology("Bid");
-					bidMsg.setConversationId( msg.getConversationId());
-					bidMsg.setProtocol( msg.getProtocol());
-					bidMsg.addReceiver( msg.getSender());
-					try {
-						bidMsg.setContentObject( bid);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					agent.send(bidMsg);
-				}
-				else
-				{
-					Output.AgentMessage( agent, "Cannot read task.");
-				}
+				bidMsg = new ACLMessage( ACLMessage.PROPOSE);
+				Output.AgentMessage( agent, "Offering a tender to " + agent.getManagerAID().getLocalName());
 			}
-			else if ( msg.getOntology().equals( "sub-task")) // for sub contracted tasks?
+			else
 			{
-				
-			}			
-		}
+				bidMsg = new ACLMessage( ACLMessage.REFUSE);
+				Output.AgentMessage( agent, "Refusing to make a tender to " + agent.getManagerAID().getLocalName());
+			}
+			bidMsg.setOntology("Bid");
+			bidMsg.setConversationId( agent.getConversationIDs().get( agent.getManagerAID()));
+			bidMsg.setProtocol( "fipa-contract-net");
+			bidMsg.addReceiver( agent.getManagerAID());
+			try {
+				bidMsg.setContentObject( bid);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			agent.send( bidMsg);
+			done = true;
+
+		}					
+		
 		else
 			block(100);
 	}
+
+	
 
 	@Override
 	public boolean done() {
@@ -89,7 +70,7 @@ public class ProposeBidBehaviour extends SimpleBehaviour {
 	
 	private Bid evaluate( Task task)
 	{
-		Bid newBid = new Bid();
+		Bid newBid = new Bid( agent.getAID());
 		for ( Computer c : task.computerList)
 		{
 			Computer comp = evaluate(c);

@@ -12,10 +12,10 @@ public class Bid implements Serializable {
 	public ArrayList<Computer> computerList;
 	public AID bidderID;
 	
-	public Bid()
+	public Bid( AID bidderID)
 	{
 		computerList = new ArrayList<Computer>();
-		bidderID = null;
+		this.bidderID = bidderID;
 	}
 
 }

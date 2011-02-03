@@ -1,8 +1,6 @@
 package contractnet.src.agents;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.FSMBehaviour;
-import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -26,7 +24,6 @@ import contractnet.src.Task;
 import contractnet.src.behaviours.AnnounceTaskBehaviour;
 import contractnet.src.behaviours.EvaluateBidsBehaviour;
 import contractnet.src.behaviours.ReceiveBidBehaviour;
-import contractnet.src.behaviours.WaitForStartupBehaviour;
 
 
 public class ManagerAgent extends Agent {

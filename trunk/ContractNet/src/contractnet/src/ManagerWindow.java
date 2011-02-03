@@ -1,7 +1,5 @@
 package contractnet.src;
 
-import jade.lang.acl.ACLMessage;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
