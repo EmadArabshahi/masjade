@@ -436,7 +436,44 @@ public class ManagerWindow extends JFrame {
 			infoTextArea.append(String.format("\t%s: %s\n", key, responses.get(key)));
 		}
 		
+		Iterator<Bid> bids = agent.getBids().iterator();
+		
+		if (bids.hasNext())
+			infoTextArea.append("Bids:\n");
+		
+		while (bids.hasNext())
+		{
+			Bid bid = bids.next();
+			
+			Iterator<Computer> computers = bid.computerList.iterator();
+			
+			if (computers.hasNext())
+				infoTextArea.append(String.format("- %s:\n", bid.bidderID.getLocalName()));
+			
+			int configCounter = 1;
+			while (computers.hasNext())
+			{
+				Computer computer = computers.next();
+			
+				Component cpu = computer.getCpu();
+				Component gpu = computer.getGpu();
+				Component mb = computer.getMotherboard();
+				
+				infoTextArea.append(String.format("\tConfiguration %s: \n\tComponent: Manufacturer / Quality / Price \n\tCPU: %s / %s / %s \n\tGPU: %s / %s / %s \n\tM.Board:%s / %s / %s\n", 
+						configCounter,
+						getManufacturerDisplay(cpu.getManufacturer()), getQualityDisplay(cpu.getQuality()), getPriceDisplay(cpu.getPrice()),
+						getManufacturerDisplay(gpu.getManufacturer()), getQualityDisplay(gpu.getQuality()), getPriceDisplay(gpu.getPrice()),
+						getManufacturerDisplay(mb.getManufacturer()), getQualityDisplay(mb.getQuality()), getPriceDisplay(mb.getPrice())));
+				
+				configCounter++;
+			}
+		}
+			
+		
 		Iterator<Computer> i = agent.getTask().computerList.iterator();
+		
+		if (i.hasNext())
+			infoTextArea.append("Request:\n");
 		
 		int configCounter = 1;
 		while (i.hasNext())
@@ -447,7 +484,7 @@ public class ManagerWindow extends JFrame {
 			Component gpu = computer.getGpu();
 			Component mb = computer.getMotherboard();
 			
-			infoTextArea.append(String.format("Configuration %s: \n\tComponent: Manufacturer / Quality / Price \n\tCPU: %s / %s / %s \n\tGPU: %s / %s / %s \n\tM.Board:%s / %s / %s\n", 
+			infoTextArea.append(String.format("\tConfiguration %s: \n\tComponent: Manufacturer / Quality / Price \n\tCPU: %s / %s / %s \n\tGPU: %s / %s / %s \n\tM.Board:%s / %s / %s\n", 
 					configCounter,
 					getManufacturerDisplay(cpu.getManufacturer()), getQualityDisplay(cpu.getQuality()), getPriceDisplay(cpu.getPrice()),
 					getManufacturerDisplay(gpu.getManufacturer()), getQualityDisplay(gpu.getQuality()), getPriceDisplay(gpu.getPrice()),
