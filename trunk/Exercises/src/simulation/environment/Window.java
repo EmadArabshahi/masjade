@@ -482,12 +482,12 @@ public class Window extends JFrame{
 		//final Statistics stats = new Statistics( envView );
 		final JComponent statsView = new JPanel();
         final EnergyGraph graph1 = new EnergyGraph();
-        statsView.add(graph1);
+        //statsView.add(graph1);
 		
 		
 		
 		final JSplitPane sp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
-				envView, statsView );
+				envView, graph1 );
 		sp.setOneTouchExpandable( true );
 		sp.setDividerLocation( 230 );
 		sp.setResizeWeight(1);
