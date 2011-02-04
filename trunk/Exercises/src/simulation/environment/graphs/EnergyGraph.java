@@ -1,9 +1,11 @@
 package simulation.environment.graphs;
 
 import java.awt.Color;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.jfree.*;
@@ -44,27 +46,67 @@ public class EnergyGraph extends JPanel
 	private static XYSeries _agentType4AliveRatios = new XYSeries("Agent Type 4");
 	
 	private static XYSeries _minimalApplePrice = new XYSeries("Minimal Apple price in market");
-	private static XYSeries _averageApplePrice = new XYSeries("Average Apple price paid for");
+	private static XYSeries _meanApplePrice = new XYSeries("Average Apple price paid for");
 	private static XYSeries _varianceApplePrice = new XYSeries("Variance in apple price paid");
 	
+	private static JLabel _aliveRatioLabel = new JLabel(
+			"<html><table>" +
+			"<tr><th colspan='8'>Alive ratios:</td></th>" +
+			"<tr><td>Agent Type 1</td><td></td><td>1</td><td></td>" +
+			"<td>Agent Type 2</td><td></td><td>1</td><td></td></tr>" +
+			"<tr><td>Agent Type 3</td><td></td><td>1</td><td></td>" +
+			"<td>Agent Type 4</td><td></td><td>1</td><td></td></tr>" +
+			"</table></html>");
 	
+	
+	private static String getAliveRatioString(double[] aliveRatios)
+	{
+		
+		
+		NumberFormat percentFormatter = NumberFormat.getPercentInstance();
+		String arg1 = percentFormatter.format(aliveRatios[0]);
+		String arg2 = percentFormatter.format(aliveRatios[1]);
+		String arg3 = percentFormatter.format(aliveRatios[2]);
+		String arg4 = percentFormatter.format(aliveRatios[3]);
+		
+		String formatString = "<html><table>" +
+		"<tr><th colspan='8'>Alive ratios:</td></th>" +
+		"<tr><td>Agent Type 1</td><td></td><td>" + arg1 +
+		"</td><td width='40px'></td>" +
+		"<td>Agent Type 2</td><td></td><td>" + arg2 +
+		"</td><td width='40px'></td></tr>" +
+		"<tr><td>Agent Type 3</td><td></td><td>" + arg3 + 
+		"</td><td width='40px'></td>" +
+		"<td>Agent Type 4</td><td></td><td>" + arg4 + 
+		"</td><td width='40px'></td></tr>" +
+		"</table></html>";
+		
+		return formatString;
+	}
 	
 	
 	public EnergyGraph()
 	{
 		ChartPanel energyLevel = new ChartPanel(createEnergyChart(createEnergyDataset()));
 		ChartPanel aliveRatio = new ChartPanel(createAliveChart(createAliveDataset()));
+		ChartPanel apples = new ChartPanel(createAppleChart(createAppleDataset()));
 		
 		energyLevel.setFillZoomRectangle(true);
         energyLevel.setMouseWheelEnabled(true);
-		//energyLevel.setPreferredSize(new java.awt.Dimension(500, 270));
+		energyLevel.setPreferredSize(new java.awt.Dimension(450, 290));
 		
-		aliveRatio.setFillZoomRectangle(true);
-		aliveRatio.setMouseWheelEnabled(true);
-		//aliveRatio.setPreferredSize(new java.awt.Dimension(500,270));
+	//	aliveRatio.setFillZoomRectangle(true);
+	//	aliveRatio.setMouseWheelEnabled(true);
+	//	aliveRatio.setPreferredSize(new java.awt.Dimension(450,230));
+		
+		apples.setFillZoomRectangle(true);
+		apples.setMouseWheelEnabled(true);
+		apples.setPreferredSize(new java.awt.Dimension(450,290));
+	
 		
 		add(energyLevel);
-		add(aliveRatio);
+		add(_aliveRatioLabel);
+		add(apples);
 	}
 	
 	/**
@@ -256,11 +298,35 @@ public class EnergyGraph extends JPanel
 
     }
     
-    public static void update(int roundNr, int[][] agentEnergyLevels)
+    
+    /**
+     * Creates a dataset, consisting of two series of monthly data.
+     *
+     * @return The dataset.
+     */
+    private static XYDataset createAppleDataset() 
+    {
+        
+        //TimeSeriesCollection dataset = new TimeSeriesCollection();
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(_meanApplePrice);
+        dataset.addSeries(_varianceApplePrice);
+        dataset.addSeries(_minimalApplePrice);
+        return dataset;
+
+    }
+    
+    
+    
+    public static void update(int roundNr, int[][] agentEnergyLevels, int[] pricesPaidForApples, int[] pricesInMarket)
     {   		
     	double meanEnergyLevel = calulateMeanEnergyLevel(agentEnergyLevels);
     	double varianceEnergyLevel = calculateVarianceEnergyLevel(agentEnergyLevels, meanEnergyLevel);
     	double[] aliveRatios = calculateAliveRatios(agentEnergyLevels);
+    	double meanApplePrice = calculateMeanApplePrice(pricesPaidForApples);
+    	double varianceApplePrice = calculateVarianceApplePrice(pricesPaidForApples, meanApplePrice);
+    	double minimalApplePrice = calculateMinimalApplePrice(pricesInMarket);
+    	
     	
     	_meanEnergy.add(roundNr, meanEnergyLevel);
     	_energyVariance.add(roundNr, varianceEnergyLevel);
@@ -271,6 +337,11 @@ public class EnergyGraph extends JPanel
     		_agentType3AliveRatios.add(roundNr, aliveRatios[2]);
     		_agentType4AliveRatios.add(roundNr, aliveRatios[3]);
     	}
+    	_aliveRatioLabel.setText(getAliveRatioString(aliveRatios));
+    	_meanApplePrice.add(roundNr, meanApplePrice);
+    	_varianceApplePrice.add(roundNr, varianceApplePrice);
+    	_minimalApplePrice.add(roundNr, minimalApplePrice);
+    	
     }
 
     
@@ -302,9 +373,24 @@ public class EnergyGraph extends JPanel
     	return aliveRatios;
     }
     
+    private static double calculateMinimalApplePrice(int[] pricesInMarket)
+    {
+    	if(pricesInMarket.length == 0)
+    		return Double.NaN;
+    	
+    	double minimumApplePrice = pricesInMarket[0];
+    	for(int i=1; i<pricesInMarket.length; i++)
+    	{
+    		if(pricesInMarket[i] < minimumApplePrice)
+    			minimumApplePrice = pricesInMarket[i];
+    	}
+    	
+    	return minimumApplePrice;
+    }
+    
     private static double calculateVarianceEnergyLevel(int[][] agentEnergyLevels, double mean)
     {
-    	if(mean == Double.NaN)
+    	if(Double.isNaN(mean))
     		return Double.NaN;
     	
     	double totalDeviation = 0;
@@ -325,7 +411,7 @@ public class EnergyGraph extends JPanel
     
     private static double calculateVarianceApplePrice(int[] pricesPaidForApples, double mean)
     {
-    	if(mean == Double.NaN)
+    	if(Double.isNaN(mean))
     		return Double.NaN;
     	
     	double totalDeviation = 0;

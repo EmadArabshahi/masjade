@@ -239,8 +239,10 @@ public class LogicalEnv implements ObsVectListener
     public void nextRound()
     {
     	int[][] energyLevels = new int[][]{{100,100},{100,100},{100,100},{100,100}};
+    	int[] pricesPaidForApples = new int[]{6,4,7,3};
+    	int[] pricesInMarket = new int[]{3,7,56,3,6,34,2};
     	//update Graph
-    	EnergyGraph.update(_round, energyLevels);
+    	EnergyGraph.update(_round, energyLevels, pricesPaidForApples, pricesInMarket);
     	
     	
     	//DO OUTSTANDING TRADES!!
