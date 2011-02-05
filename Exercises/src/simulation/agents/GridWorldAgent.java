@@ -49,6 +49,13 @@ public abstract class GridWorldAgent extends Agent
 		
 	private int _maxAppleCapacity = 0;
 	
+	private int _money = 0;
+	private int _energy = 0;
+	
+	private int _energyCost = 0;
+	private int _energyGain = 0;
+	
+	
 	
 	protected void setup()
 	{
@@ -63,6 +70,12 @@ public abstract class GridWorldAgent extends Agent
 		_positionHistorySize = 100;
 		//construct empty list, with _positionHistorySize capacity.
 		_positionHistory = new ArrayList<Point>(_positionHistorySize);
+		
+		_maxAppleCapacity = Environment.getMaxAppleCapacity();
+		_energyCost = Environment.getEnergyCost();
+		_energyGain = Environment.getEneryGain();
+		_money = Environment.getStartingMoney();
+		_energy = Environment.getStartingEnergyLevel();
 		
 		setupAgent();
 		
@@ -85,6 +98,12 @@ public abstract class GridWorldAgent extends Agent
 	public boolean knowsApples()
 	{
 		return _knownApples.size() > 0;
+	}
+	
+	
+	public void proppertiesSensed(Propperties propperties)
+	{
+		
 	}
 	
 	/**
