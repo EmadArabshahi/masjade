@@ -199,6 +199,22 @@ public class Environment
 		}
 	}
 	
+	public static int getStartingMoney()
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getStartingMoney();
+		}
+	}
+	
+	public static int getStartingEnergyLevel()
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getStartingEnergyLevel();
+		}
+	}
+	
 	public static int getMaxAppleCapacity()
 	{
 		synchronized(lockObject)

@@ -93,6 +93,10 @@ public class LogicalEnv implements ObsVectListener
 	//Agent distribution.
     protected int[]		 					 _agentDistribution = {2,2,2,2};
 	
+    protected int _startingMoney = 100;
+    protected int _startingEnergyLevel = 100;
+    
+    
     //0 is continues, 1 = step by step
 	protected volatile int 							_mode = 0;
     
@@ -191,6 +195,8 @@ public class LogicalEnv implements ObsVectListener
         	}
         	
     	}
+        Market.getInstance().clear();
+        EnergyGraph.clear();
        
     }
     
@@ -208,19 +214,34 @@ public class LogicalEnv implements ObsVectListener
     	if(_agentDistribution.length > 0)
     	for(int j=0; j<_agentDistribution[0]; j++)
     	{
-    		String agentName = randomNumber + " - randomWalker" + j;
+    		String agentName = randomNumber + " - GREEDY" + j;
     		newAgent(agentName, "simulation.agents.RandomWalker", null);
-    		enter(agentName, "red");
+    		enter(agentName, 0, "red");
     	}
     	
     	if(_agentDistribution.length > 1)
     	for(int j=0; j<_agentDistribution[1]; j++)
     	{
-    		String agentName = randomNumber + " - randomWalkert" + j;
+    		String agentName = randomNumber + " - COMMUNIST" + j;
     		newAgent(agentName, "simulation.agents.RandomWalker", null);
-    		enter(agentName, "blue");
+    		enter(agentName, 1, "blue");
     	}
     	
+    	if(_agentDistribution.length > 2)
+        	for(int j=0; j<_agentDistribution[2]; j++)
+        	{
+        		String agentName = randomNumber + " - LIBERAL" + j;
+        		newAgent(agentName, "simulation.agents.RandomWalker", null);
+        		enter(agentName, 2, "green");
+        	}
+    	
+    	if(_agentDistribution.length > 3)
+        	for(int j=0; j<_agentDistribution[3]; j++)
+        	{
+        		String agentName = randomNumber + " - FREE MIND" + j;
+        		newAgent(agentName, "simulation.agents.RandomWalker", null);
+        		enter(agentName, 3, "yellow");
+        	}
     	
     	for(int i=0; i<getWidth(); i++)
     	{
@@ -236,17 +257,132 @@ public class LogicalEnv implements ObsVectListener
     }
    
     
+    public void doOutstandngTrades()
+    {
+    	Market market = Market.getInstance();
+    	Iterator<Agent> i = _agents.iterator();
+    	while(i.hasNext())
+    	{
+    		Agent a = i.next();
+    		if(market.registeredForTrade(a.getName()))
+    		{
+    			
+    			java.util.List<TradeDescription> tradeDescriptions = market.getTradeAction(a.getName());
+    			for(TradeDescription d : tradeDescriptions)
+    			{
+    				if(d.getAction() == TradeDescription.BUY)
+    				{
+    					//if other agent is able to perform trade
+    					if(market.registeredForTrade(d.getOtherAgentName()))
+    					{
+    						a._moneyInEuroCents -= d.getPrice();
+    						a._apples++;
+    					}
+    					// Agent is unable to perform trade so no deal.
+    					else
+    					{
+    						//
+    					}
+    				}
+    				else if(d.getAction() == TradeDescription.SELL)
+    				{
+    					a._moneyInEuroCents += d.getPrice();
+    					a._apples--;
+    				}
+    			}
+    			
+    			
+    		}
+    	}
+    }
+    
+    public int[][] getEnergyLevels()
+    {
+    	int[][] energyLevels = new int[3][];
+   
+    	ArrayList<Integer> agentType1 = new ArrayList<Integer>();
+    	ArrayList<Integer> agentType2 = new ArrayList<Integer>();
+    	ArrayList<Integer> agentType3 = new ArrayList<Integer>();
+    	ArrayList<Integer> agentType4 = new ArrayList<Integer>();
+    	
+    	Iterator<Agent> i = _agents.iterator();
+    	while(i.hasNext())
+    	{
+    		Agent a = i.next();
+    		if(a.getType() == 0)
+    		{
+    			agentType1.add(a.getEnergylevel());
+    		}
+    		else if(a.getType() == 1)
+    		{
+    			agentType2.add(a.getEnergylevel());
+    		}
+    		else if(a.getType() == 2)
+    		{
+    			agentType3.add(a.getEnergylevel());
+    		}
+    		else if(a.getType() == 3)
+    		{
+    			agentType4.add(a.getEnergylevel());
+    		}
+    	}
+    	
+    	energyLevels[0] = new int[_agentDistribution[0]];
+    	for(int j=0; j<_agentDistribution[0]; j++)
+    	{
+    		if(agentType1.size() < j)
+    			energyLevels[0][j] = agentType1.get(j);
+    		else
+    			energyLevels[0][j] = 0;
+    	}
+    	
+    	energyLevels[1] = new int[_agentDistribution[1]];
+    	for(int j=0; j<_agentDistribution[1]; j++)
+    	{
+    		if(agentType2.size() < j)
+    			energyLevels[1][j] = agentType2.get(j);
+    		else
+    			energyLevels[1][j] = 0;
+    	}
+    	
+    	energyLevels[2] = new int[_agentDistribution[2]];
+    	for(int j=0; j<_agentDistribution[2]; j++)
+    	{
+    		if(agentType3.size() < j)
+    			energyLevels[2][j] = agentType3.get(j);
+    		else
+    			energyLevels[2][j] = 0;
+    	}
+    	
+    	energyLevels[3] = new int[_agentDistribution[3]];
+    	for(int j=0; j<_agentDistribution[3]; j++)
+    	{
+    		if(agentType4.size() < j)
+    			energyLevels[3][j] = agentType4.get(j);
+    		else
+    			energyLevels[3][j] = 0;
+    	}
+    	
+    	return energyLevels;
+    	
+    }
+    
     public void nextRound()
     {
+    	Market market = Market.getInstance();
+    	
+    	
+    	
     	int[][] energyLevels = new int[][]{{100,100},{100,100},{100,100},{100,100}};
     	int[] pricesPaidForApples = new int[]{6,4,7,3};
     	int[] pricesInMarket = new int[]{3,7,56,3,6,34,2};
     	//update Graph
-    	EnergyGraph.update(_round, energyLevels, pricesPaidForApples, pricesInMarket);
+    	EnergyGraph.update(_round, energyLevels, market.getPricesPaidForApples(), market.getPricesInMarket());
     	
     	
     	//DO OUTSTANDING TRADES!!
-    	
+    	//Money and apples is transfered here for agents who are able to perform the action.
+    	doOutstandngTrades();
     	
     	_blockingActions = 0;
 		_round++;
@@ -256,6 +392,7 @@ public class LogicalEnv implements ObsVectListener
 		
 		
 		//FIND MATCHES
+		Market.getInstance().findMatches();
     }
     
     
@@ -300,6 +437,16 @@ public class LogicalEnv implements ObsVectListener
     {
         _senserange = senserange;
         signalSenseRangeChanged.emit();
+    }
+    
+    public int getStartingEnergyLevel()
+    {
+    	return _startingEnergyLevel;
+    }
+    
+    public int getStartingMoney()
+    {
+    	return _startingMoney;
     }
     
     public int getMaximumAppleCapacity()
@@ -450,7 +597,7 @@ public class LogicalEnv implements ObsVectListener
     
 
    
-    public boolean enter(String sAgent, String sColor)
+    public boolean enter(String sAgent, int agentType, String sColor)
     {
     	
     	int attempts = 0;
@@ -471,7 +618,7 @@ public class LogicalEnv implements ObsVectListener
     	}
     	
     	
-    	return enter(sAgent, x, y, sColor);
+    	return enter(sAgent, agentType, x, y, sColor);
     	
     }
     
@@ -479,7 +626,7 @@ public class LogicalEnv implements ObsVectListener
     
     // Enter the agent into the world
     // Succesful returns true, else the ExternalActionFailedExeption exception is thrown
-    public boolean enter( String sAgent, int x, int y, String sColor ) 
+    public boolean enter( String sAgent, int agentType, int x, int y, String sColor ) 
     {
     	
         Point position = new Point(x,y);
@@ -497,7 +644,7 @@ public class LogicalEnv implements ObsVectListener
             return false;
 //          throw new ExternalActionFailedExeption("Agent \""+agent.getName()+"\" has already entered.");
         }
-        addAgent(sAgent);
+        addAgent(sAgent, agentType);
         agent = getAgent(sAgent);
         
         // Give a signal that we want to move
@@ -669,12 +816,71 @@ public class LogicalEnv implements ObsVectListener
     
     public boolean eatApple(String sAgent)
     {
-    	return false;
+    	Agent agent = getAgent(sAgent);
+    	agent.signalEat.emit();
+    	
+    	//see if we have an apple
+    	if(agent.getApples() < 1)
+    	{
+    		System.out.println(sAgent + "tried to eat an apple but doenst have any.");
+    		return false;
+    	}
+    	
+    	agent._apples--;
+    	agent._energyLevel += _energyGain;
+    	
+    	agent.signalEatSucces.emit();
+    	
+    	return true;
     }
     
+    /**
+     * A trade action of the agent. Determines if the agent is able to perform the corresponding tradesequence.
+     * If the agent does not have the money to perform the trade sequence false is returned.
+     * The money earned from trades is not taken into account.
+     * However it is possible a trade between an other agent which doenst have the money for it fails.
+     * @param sAgent
+     * @return A boolean indicating wether the given agent can perform the trade sequence.
+     */
     public boolean trade(String sAgent)
     {
-    	return false;
+    	Market market = Market.getInstance();
+    	Agent agent = getAgent(sAgent);
+    	
+    	
+    	agent.signalTrade.emit();
+    	
+    	//Agent is not registered for trade.
+    	if(!market.mustTrade(sAgent))
+    		return false;
+    	
+    	java.util.List<TradeDescription> tradeDescriptions = market.getTradeAction(sAgent);
+    	
+    	int totalCost = 0;
+    	
+    	//you can use money earned in tradesequence from selling in same sequence to buy.
+    	//
+    	for(TradeDescription d : tradeDescriptions)
+    	{
+    		if(d.getAction() == TradeDescription.SELL)
+    		{
+    			totalCost += d.getPrice();
+    		}
+    	}
+    	
+    	//The agent should have a balance greater or equal of 0 at end of trade action.
+    	if((agent._moneyInEuroCents - totalCost) >= 0)
+    	{
+    		market.registerTradeOutcome(sAgent,true);
+    		agent.signalTradeSucces.emit();
+    		return true; //can still be false if other agent fails.
+    	}
+    	else
+    	{
+    		market.registerTradeOutcome(sAgent,false);
+    		return false;
+    	}
+    	
     }
     
     
@@ -689,9 +895,9 @@ public class LogicalEnv implements ObsVectListener
 
     
         // Add an agent to the environment
-    public void addAgent(String sAgent)
+    public void addAgent(String sAgent, int agentType)
     {
-        final Agent agent = new Agent( sAgent );
+        final Agent agent = new Agent( sAgent, agentType );
         _agents.add( agent );
         agentmap.put(sAgent,agent);
         

@@ -489,7 +489,7 @@ public class Window extends JFrame{
 		final JSplitPane sp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
 				envView, graph1 );
 		sp.setOneTouchExpandable( true );
-		sp.setDividerLocation( 540 );
+		sp.setDividerLocation( 550 );
 		sp.setResizeWeight(1);
 		getContentPane().add( sp, BorderLayout.CENTER );
 		setJMenuBar( menubar );

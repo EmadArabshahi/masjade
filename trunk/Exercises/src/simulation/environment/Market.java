@@ -17,6 +17,8 @@ public class Market
 	private Map<Integer, TradeUnit> _sellProposals;
 	private Map<Integer, TradeUnit> _buyRequests;
 	private List<Tuple<Integer,Integer>> _trades;
+	private Map<String, Boolean> _tradeOutcomes;
+	
 	
 	private static Market _instance;
 	
@@ -25,6 +27,7 @@ public class Market
 		_sellProposals = new HashMap<Integer,TradeUnit>();
 		_buyRequests = new HashMap<Integer,TradeUnit>();
 		_trades = new ArrayList<Tuple<Integer,Integer>>();
+		_tradeOutcomes = new HashMap<String, Boolean>();
 		_proposalKeyCount = 0;
 		_requestKeyCount = 0;
 	}
@@ -37,6 +40,21 @@ public class Market
 			return _instance;
 		}
 		return _instance;
+	}
+	
+	public void registerTradeOutcome(String sAgent, boolean outcome)
+	{
+		_tradeOutcomes.put(sAgent, outcome);
+	}
+	
+	public boolean registeredForTrade(String sAgent)
+	{
+		if(_tradeOutcomes.containsKey(sAgent))
+		{
+			Boolean canTrade = _tradeOutcomes.get(sAgent);
+			return canTrade;
+		}
+		return false;
 	}
 	
 	//Puts a sell proposal in the market, returns the proposal id
@@ -113,6 +131,7 @@ public class Market
 		_buyRequests.clear();
 		_sellProposals.clear();
 		_trades.clear();
+		_tradeOutcomes.clear();
 	}
 	
 	//Is called at the end of each round and find matches between proposals and requeest.
@@ -120,6 +139,8 @@ public class Market
 	{
 		//clear any remaining marked for trades (should actually not occur, but just to be sure)
 		_trades.clear();
+		_tradeOutcomes.clear();
+		
 		for(TradeUnit buyRequest : _buyRequests.values())
 			buyRequest.setMarkedForTrade(false);
 		for(TradeUnit sellProposal : _sellProposals.values())
@@ -180,8 +201,6 @@ public class Market
 		return resultSet;
 	}
 
-	
-	
 	public boolean mustTrade(String sAgent)
 	{
 		for(Tuple<Integer,Integer> tuple: _trades)
@@ -221,6 +240,53 @@ public class Market
 	}
 	
 	
+	public int[] getPricesPaidForApples()
+	{
+		List<Integer> pricesPaid = new ArrayList<Integer>();
+		
+		for(Tuple<Integer,Integer> tuple : _trades)
+		{
+			TradeUnit buyRequest = _buyRequests.get(tuple.getFirst());
+			TradeUnit sellProposal = _sellProposals.get(tuple.getSecond());
+			
+			//if the agent who wants to buy is registered as succesfull trade outcome in the _tradeoucomes list.
+			if(buyRequest != null && _tradeOutcomes.get(buyRequest.getAgentName()))
+			{
+				//And the agent who wants to sell is also registered as succesfull trade outcome in the _tradeoutcomes list.
+				if(sellProposal != null && _tradeOutcomes.get(sellProposal.getAgentName()))
+				{
+					pricesPaid.add(sellProposal.getPrice());
+				}
+			}
+		}
+		
+		
+		//convert list<Integer> to int[].;
+		int[] intArray = new int[pricesPaid.size()];
+		for(int i=0; i<intArray.length; i++)
+		{
+			intArray[i] = pricesPaid.get(i);
+		}
+		return intArray;
+	}
+	
+	public int[] getPricesInMarket()
+	{
+		List<Integer> pricesInMarket = new ArrayList<Integer>();
+		
+		for(TradeUnit u : _sellProposals.values())
+		{
+			pricesInMarket.add( u.getPrice() ) ;
+		}
+		
+		//convert list<Integer> to int[].;
+		int[] intArray = new int[pricesInMarket.size()];
+		for(int i=0; i<intArray.length; i++)
+		{
+			intArray[i] = pricesInMarket.get(i);
+		}
+		return intArray;
+	}
 	
 }
 
