@@ -20,7 +20,7 @@ public class SensingAction extends OneShotBehaviour
 	/**
 	 * Flags to turn sensing of a specific kind of object on or off.
 	 */
-	private boolean _senseLocation, _senseStones, _senseApples, _senseAgents;
+	private boolean _senseLocation, _senseStones, _senseApples, _senseAgents, _sensePropperties;
 	
 	/**
 	 * Constructs a new SensingBehaviour that will senses all objects in the environment.
