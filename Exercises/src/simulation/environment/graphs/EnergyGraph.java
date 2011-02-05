@@ -49,14 +49,7 @@ public class EnergyGraph extends JPanel
 	private static XYSeries _meanApplePrice = new XYSeries("Average Apple price paid for");
 	private static XYSeries _varianceApplePrice = new XYSeries("Variance in apple price paid");
 	
-	private static JLabel _aliveRatioLabel = new JLabel(
-			"<html><table>" +
-			"<tr><th colspan='8'>Alive ratios:</td></th>" +
-			"<tr><td>Agent Type 1</td><td></td><td>1</td><td></td>" +
-			"<td>Agent Type 2</td><td></td><td>1</td><td></td></tr>" +
-			"<tr><td>Agent Type 3</td><td></td><td>1</td><td></td>" +
-			"<td>Agent Type 4</td><td></td><td>1</td><td></td></tr>" +
-			"</table></html>");
+	private static JLabel _aliveRatioLabel = new JLabel(getAliveRatioString(new double[]{1.0,1.0,1.0,1.0}));
 	
 	
 	private static String getAliveRatioString(double[] aliveRatios)
@@ -93,7 +86,7 @@ public class EnergyGraph extends JPanel
 		
 		energyLevel.setFillZoomRectangle(true);
         energyLevel.setMouseWheelEnabled(true);
-		energyLevel.setPreferredSize(new java.awt.Dimension(450, 290));
+		energyLevel.setPreferredSize(new java.awt.Dimension(450, 285));
 		
 	//	aliveRatio.setFillZoomRectangle(true);
 	//	aliveRatio.setMouseWheelEnabled(true);
@@ -101,12 +94,23 @@ public class EnergyGraph extends JPanel
 		
 		apples.setFillZoomRectangle(true);
 		apples.setMouseWheelEnabled(true);
-		apples.setPreferredSize(new java.awt.Dimension(450,290));
+		apples.setPreferredSize(new java.awt.Dimension(450,285));
 	
 		
 		add(energyLevel);
 		add(_aliveRatioLabel);
 		add(apples);
+	}
+	
+	
+	public static void clear()
+	{
+		_meanEnergy.clear();
+		_energyVariance.clear();
+		_minimalApplePrice.clear();
+		_meanApplePrice.clear();
+		_varianceApplePrice.clear();
+		_aliveRatioLabel.setText(getAliveRatioString(new double[]{1.0,1.0,1.0,1.0}));
 	}
 	
 	/**

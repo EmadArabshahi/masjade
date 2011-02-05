@@ -18,23 +18,35 @@ import java.util.List;
 // / Agent representation in Env. This doubles as a plugin instance.
 public class Agent 
 {
+	public static final int GREEDY = 0;
+	public static final int COMMUNIST = 1;
+	public static final int LIBERAL = 2;
+	public static final int FREE_MIND = 3;
+	
 	protected String _name = null;
 	
 	Point _position = null;
 
 	int _apples = 0;
 	
-	int _energyLevel = 0;
+	int _energyLevel = Environment.getStartingEnergyLevel();
 	
-	int _moneyInEuroCents = 0;
+	int _moneyInEuroCents = Environment.getStartingMoney();
 	
 	int _colorID = 0;
 	
+	int _type;
 
-	public Agent( String name ) 
+	public Agent( String name, int type ) 
 	{
 		_name = name;
+		_type = type;
 		init();
+	}
+	
+	public int getType()
+	{
+		return _type;
 	}
 	
 	public void init()
@@ -49,7 +61,7 @@ public class Agent
 	{
 		return _name;
 	}
-
+	
 	/**
 	 * Get current agent position. \returns This will return null if the agent
 	 * is not entered in the world.
