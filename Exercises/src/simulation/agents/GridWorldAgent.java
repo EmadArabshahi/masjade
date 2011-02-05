@@ -52,8 +52,6 @@ public abstract class GridWorldAgent extends Agent
 	
 	protected void setup()
 	{
-		Environment.getMaxAppleCapacity();
-		
 		_knownApples = new HashSet<Point>();
 		_knownStones = new HashSet<Point>();
 		_knownAgents = new HashSet<Point>();
@@ -98,7 +96,7 @@ public abstract class GridWorldAgent extends Agent
 		_knownApples.addAll(applePositions);
 	}
 	
-	public void addKnownBomb(Point applePosition) 
+	public void addKnownApple(Point applePosition) 
 	{
 		_knownApples.add(applePosition);
 	}
