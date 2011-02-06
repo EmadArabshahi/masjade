@@ -166,7 +166,8 @@ public class Market
 			}
 		}
 		
-		
+		_buyRequests.clear();
+		_sellProposals.clear();
 	}
 	
 	private List<Integer> getCheapestMatchingProposals(int buyPrice, String sAgent)

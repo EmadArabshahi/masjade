@@ -23,15 +23,18 @@ public class Agent
 	public static final int LIBERAL = 2;
 	public static final int FREE_MIND = 3;
 	
+	public static final int startingEnergyLevel = 100;
+	public static final int startingMoney = 100;
+	
 	protected String _name = null;
 	
 	Point _position = null;
 
 	int _apples = 0;
 	
-	int _energyLevel = Environment.getStartingEnergyLevel();
+	int _energyLevel = startingEnergyLevel;
 	
-	int _moneyInEuroCents = Environment.getStartingMoney();
+	int _moneyInEuroCents = startingMoney;
 	
 	int _colorID = 0;
 	
@@ -80,7 +83,11 @@ public class Agent
 	{
 		return _apples;
 	}
-
+	
+	public int getMoney()
+	{
+		return _moneyInEuroCents;
+	}
 	
 	public void pickupApple(TypeObject apple)
 	{
