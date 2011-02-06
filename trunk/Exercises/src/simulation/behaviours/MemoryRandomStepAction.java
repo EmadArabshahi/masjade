@@ -20,7 +20,6 @@ public class MemoryRandomStepAction extends OneShotBehaviour
 	@Override
 	public void action() 
 	{
-		System.out.println("In MemoryRandomStepBehaviour action");
 		
 		List<Point> moveablePositions = _owner.getRandomMoveablePositions();
 		List<Point> visitedPositions = _owner.getPositionHistory();
