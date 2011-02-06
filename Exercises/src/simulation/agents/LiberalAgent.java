@@ -5,9 +5,9 @@ import simulation.environment.Market;
 import jade.core.behaviours.FSMBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class CommunistAgent extends GridWorldAgent 
+public class LiberalAgent extends GridWorldAgent 
 {
-
+	
 
 	@Override
 	protected void setupAgent() 
@@ -57,38 +57,46 @@ public class CommunistAgent extends GridWorldAgent
 		
 		int lastPrice = 0;
 		if(hasOutstandingRequest())
+		{
 			lastPrice =  Market.getInstance().getRequestPrice(getLocalName(), getOutstandingRequest());
+		}
 		
-		System.out.println("In GET REQUEST TO BUY PRICE: LASTPRICE = " + lastPrice +    "  MONEY = " + _money);
 		
 		if( lastPrice == 0 && _money >= 1)
 		{
 			return 1;
 		}
-		else if(_money >= lastPrice * 2)
+		else if(_money >= (lastPrice * 2 ))
 		{
-			return lastPrice * 2;
+			return (lastPrice * 2);
 		}
 		else if(_money >= lastPrice + 1)
 		{
 			return lastPrice + 1;
 		}
-		else if(_money >= lastPrice)
+		else if(_money >= lastPrice) 
 		{
 			return lastPrice;
 		}
 		else
 		{
 			return _money;
-		}
-		
+		}		
 	}
 
 	
 	@Override
-	public int getProposeToSellPrice() {
-		// TODO Auto-generated method stub
-		return 1;
+	public int getProposeToSellPrice() 
+	{
+		
+		int lastPrice = (getStartingMoney() / 10);
+		if(hasOutstandingProposal())
+			lastPrice = Market.getInstance().getProposalPrice(getLocalName(), getOutstandingProposal());
+		
+		if(lastPrice > 1)
+			return lastPrice-1;
+		else
+			return 1;
 	}
 
 
