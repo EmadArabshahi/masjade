@@ -47,14 +47,14 @@ public abstract class GridWorldAgent extends Agent
 	private int _positionHistorySize;
 	
 		
-	private int _maxAppleCapacity = 0;
+	protected int _maxAppleCapacity = 0;
 	
-	private int _money = 0;
-	private int _energy = 0;
+	protected int _money = 0;
+	protected int _energy = 0;
 	
-	private int _energyCost = 0;
-	private int _energyGain = 0;
-	
+	protected int _energyCost = 0;
+	protected int _energyGain = 0;
+	protected int _maxEnergy = 100;
 	
 	
 	protected void setup()
@@ -70,20 +70,24 @@ public abstract class GridWorldAgent extends Agent
 		_positionHistorySize = 100;
 		//construct empty list, with _positionHistorySize capacity.
 		_positionHistory = new ArrayList<Point>(_positionHistorySize);
+				
+		
+		
+		//Environment.getMaxAppleCapacity();
+		//enter(_startingPoint, color);
+		
+		
+		Environment.waitForStart();
 		
 		_maxAppleCapacity = Environment.getMaxAppleCapacity();
 		_energyCost = Environment.getEnergyCost();
 		_energyGain = Environment.getEneryGain();
 		_money = Environment.getStartingMoney();
 		_energy = Environment.getStartingEnergyLevel();
+		_maxEnergy = Environment.getStartingEnergyLevel();
 		
 		setupAgent();
-		
-		//Environment.getMaxAppleCapacity();
-		//enter(_startingPoint, color);
-		
 		System.out.println(getLocalName() + " is ready.");
-		Environment.waitForStart();
 	}
 	
 	/*
@@ -95,17 +99,31 @@ public abstract class GridWorldAgent extends Agent
 	
 	protected abstract void setupAgent();
 	
+	public abstract int getRequestToBuyPrice();
+	
+	public abstract int getProposeToSellPrice();
+	
+	
+	
+	public boolean mustTrade()
+	{
+		return Environment.mustTrade(getLocalName());
+	}
+	
 	public boolean knowsApples()
 	{
 		return _knownApples.size() > 0;
 	}
 	
-	
-	public void proppertiesSensed(Propperties propperties)
+	public boolean hasLackOfEnergy()
 	{
-		
+		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
 	}
 	
+	public boolean isHungry()
+	{
+		return (_energy <= 5*_energyCost);
+	}
 	/**
 	 * This method is called by a behaviour to pass the bombs that are sensed.
 	 * @param bombPositions A set with the locations of the bombs that are sensed.
@@ -136,6 +154,7 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	public void agentsSensed(Set<Point> agentsPositions)
 	{
+		//since agents move, clear the known set.
 		_knownAgents.clear();
 		_knownAgents.addAll(agentsPositions);
 	}
@@ -162,14 +181,44 @@ public abstract class GridWorldAgent extends Agent
 	
 	public void applePickedUp(boolean success)
 	{
+		_energy -= _energyCost;
 		if(!atCapacity())
+		{
+			if(success)
+			{
+				_knownApples.remove(getCurrentPosition());
+				_apples++;
+			}
+			else
+			{
+				//failed to pickup apple mans the apple is not there anymore.
+				_knownApples.remove(getCurrentPosition());
+			}
+		}
+		
+	}
+	
+	public void appleEaten(boolean success)
+	{
+		_energy -= _energyCost;
 		if(success)
 		{
-			_knownApples.remove(getCurrentPosition());
-			_apples++;
+			_apples--;
+			_energy += _energyGain;
+		}
+		else
+		{
+			
 		}
 	}
 	
+
+	public void applesTraded(boolean success)
+	{
+		_energy -= _energyCost;
+		_money = Environment.getMoney(getLocalName());
+		_apples = Environment.getApples(getLocalName());
+	}
 	
 	/**
 	 * Gets the position history of the agent.
@@ -250,8 +299,7 @@ public abstract class GridWorldAgent extends Agent
 			return null;
 	}
 	
-	
-	public abstract void messageReceived(ACLMessage message);
+
 	
 	/**
 	 * Adds a new point to the position history, meaning this point is the new current point.
@@ -369,6 +417,7 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	public boolean step(int i)
 	{
+		_energy -= _energyCost;
 		boolean succesfullyMoved = false;
 		
 		switch(i)
