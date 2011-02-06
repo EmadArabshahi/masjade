@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.*;
 
 import simulation.environment.Environment;
+import simulation.environment.Market;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
@@ -56,6 +57,13 @@ public abstract class GridWorldAgent extends Agent
 	protected int _energyGain = 0;
 	protected int _maxEnergy = 100;
 	
+	protected int _startingMoney = 100;
+	
+	//in order of time
+	protected int _outstandingRequest = -1;
+	protected int _outstandingProposal = -1;
+	
+	
 	
 	protected void setup()
 	{
@@ -85,6 +93,7 @@ public abstract class GridWorldAgent extends Agent
 		_money = Environment.getStartingMoney();
 		_energy = Environment.getStartingEnergyLevel();
 		_maxEnergy = Environment.getStartingEnergyLevel();
+		_startingMoney = Environment.getStartingMoney();
 		
 		setupAgent();
 		System.out.println(getLocalName() + " is ready.");
@@ -103,7 +112,41 @@ public abstract class GridWorldAgent extends Agent
 	
 	public abstract int getProposeToSellPrice();
 	
+	public int getStartingMoney()
+	{
+		return _startingMoney;
+	}
 	
+	
+	public int getOutstandingRequest()
+	{
+		return _outstandingRequest;
+	}
+	
+	public int getOutstandingProposal()
+	{
+		return _outstandingProposal;
+	}
+	
+	public void appleRequested(int requestId)
+	{
+		_outstandingRequest = requestId;
+	}
+	
+	public void appleProposed(int proposalId)
+	{
+		_outstandingProposal = proposalId;
+	}
+	
+	public boolean hasOutstandingRequest()
+	{
+		return _outstandingRequest > -1;
+	}
+	
+	public boolean hasOutstandingProposal()
+	{
+		return _outstandingProposal > -1;
+	}
 	
 	public boolean mustTrade()
 	{
@@ -218,6 +261,11 @@ public abstract class GridWorldAgent extends Agent
 		_energy -= _energyCost;
 		_money = Environment.getMoney(getLocalName());
 		_apples = Environment.getApples(getLocalName());
+		Market.getInstance().removeAllRequest(getLocalName());
+		Market.getInstance().removeAllProposals(getLocalName());
+		_outstandingProposal = -1;
+		_outstandingRequest = -1;
+		
 	}
 	
 	/**
