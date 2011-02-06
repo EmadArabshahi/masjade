@@ -86,6 +86,17 @@ public class Environment
 	    	    		}
 	    	    	}
 	    		}
+	    		else
+	    		{
+	    			try
+    	    		{
+    	    			lockObject.wait();
+    	    		}
+    	    		catch(InterruptedException e)
+    	    		{
+    	    			//continue
+    	    		}
+	    		}
 	    	}
 		    else
 		    {
