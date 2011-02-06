@@ -23,10 +23,22 @@ public class RequestToBuyAction extends OneShotBehaviour {
 	@Override
 	public void action() 
 	{
-		
-		int price = _owner.getRequestToBuyPrice();
-		Environment.requestToBuy(_owner.getLocalName(), price );
-		
+		if(!_owner.hasOutstandingRequest())
+		{
+			int price = _owner.getRequestToBuyPrice();
+			System.out.println("NO LAST REQUEST FOUND : REQUESTING TO BUY APPLE FOR " + price + "           agent: " + _owner.getLocalName());
+			
+			if(price > 0)
+				_owner.appleRequested(Environment.requestToBuy(_owner.getLocalName(), price ));
+		}
+		else
+		{
+			int price = _owner.getRequestToBuyPrice();
+			Environment.removeRequest(_owner.getLocalName(), _owner.getOutstandingRequest());
+			System.out.println("REQUESTING TO BUY APPLE FOR " + price + "           agent: " + _owner.getLocalName());
+			if(price > 0)
+				_owner.appleRequested(Environment.requestToBuy(_owner.getLocalName(), price ));
+		}
 	}
 	
 	
