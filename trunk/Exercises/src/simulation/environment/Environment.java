@@ -58,7 +58,7 @@ public class Environment
 	    		case TRADE_APPLE : result = environment.trade(sAgent); break;
 	    	}
 	    	   	
-	    	if(environment._blockingActions == environment._agents.size())
+	    	if(environment._blockingActions >= environment._agents.size())
 	    	{
 	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
 	    		{
@@ -201,18 +201,12 @@ public class Environment
 	
 	public static int getStartingMoney()
 	{
-		synchronized(lockObject)
-		{
-			return LogicalEnv.getEnv().getStartingMoney();
-		}
+		return Agent.startingMoney;
 	}
 	
 	public static int getStartingEnergyLevel()
 	{
-		synchronized(lockObject)
-		{
-			return LogicalEnv.getEnv().getStartingEnergyLevel();
-		}
+		return Agent.startingEnergyLevel;
 	}
 	
 	public static int getMaxAppleCapacity()
@@ -223,6 +217,22 @@ public class Environment
 		}
 	}
 
+	public static int getApples(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getApples(sAgent);
+		}
+	}
+	
+	public static int getMoney(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getMoney(sAgent);
+		}
+	}
+	
 	public static int getEnergyCost()
 	{
 		synchronized(lockObject)

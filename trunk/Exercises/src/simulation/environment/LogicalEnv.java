@@ -93,8 +93,6 @@ public class LogicalEnv implements ObsVectListener
 	//Agent distribution.
     protected int[]		 					 _agentDistribution = {2,2,2,2};
 	
-    protected int _startingMoney = 100;
-    protected int _startingEnergyLevel = 100;
     
     
     //0 is continues, 1 = step by step
@@ -215,7 +213,7 @@ public class LogicalEnv implements ObsVectListener
     	for(int j=0; j<_agentDistribution[0]; j++)
     	{
     		String agentName = randomNumber + " - GREEDY" + j;
-    		newAgent(agentName, "simulation.agents.RandomWalker", null);
+    		newAgent(agentName, "simulation.agents.GreedyAgent", null);
     		enter(agentName, 0, "red");
     	}
     	
@@ -231,7 +229,7 @@ public class LogicalEnv implements ObsVectListener
         	for(int j=0; j<_agentDistribution[2]; j++)
         	{
         		String agentName = randomNumber + " - LIBERAL" + j;
-        		newAgent(agentName, "simulation.agents.RandomWalker", null);
+        		newAgent(agentName, "simulation.agents.CommunistAgent", null);
         		enter(agentName, 2, "green");
         	}
     	
@@ -239,7 +237,7 @@ public class LogicalEnv implements ObsVectListener
         	for(int j=0; j<_agentDistribution[3]; j++)
         	{
         		String agentName = randomNumber + " - FREE MIND" + j;
-        		newAgent(agentName, "simulation.agents.RandomWalker", null);
+        		newAgent(agentName, "simulation.agents.CommunistAgent", null);
         		enter(agentName, 3, "yellow");
         	}
     	
@@ -298,7 +296,7 @@ public class LogicalEnv implements ObsVectListener
     
     public int[][] getEnergyLevels()
     {
-    	int[][] energyLevels = new int[3][];
+    	int[][] energyLevels = new int[4][];
    
     	ArrayList<Integer> agentType1 = new ArrayList<Integer>();
     	ArrayList<Integer> agentType2 = new ArrayList<Integer>();
@@ -309,19 +307,19 @@ public class LogicalEnv implements ObsVectListener
     	while(i.hasNext())
     	{
     		Agent a = i.next();
-    		if(a.getType() == 0)
+    		if(a.getType() == Agent.COMMUNIST)
     		{
     			agentType1.add(a.getEnergylevel());
     		}
-    		else if(a.getType() == 1)
+    		else if(a.getType() == Agent.GREEDY)
     		{
     			agentType2.add(a.getEnergylevel());
     		}
-    		else if(a.getType() == 2)
+    		else if(a.getType() == Agent.LIBERAL)
     		{
     			agentType3.add(a.getEnergylevel());
     		}
-    		else if(a.getType() == 3)
+    		else if(a.getType() == Agent.FREE_MIND)
     		{
     			agentType4.add(a.getEnergylevel());
     		}
@@ -330,7 +328,7 @@ public class LogicalEnv implements ObsVectListener
     	energyLevels[0] = new int[_agentDistribution[0]];
     	for(int j=0; j<_agentDistribution[0]; j++)
     	{
-    		if(agentType1.size() < j)
+    		if(j < agentType1.size())
     			energyLevels[0][j] = agentType1.get(j);
     		else
     			energyLevels[0][j] = 0;
@@ -339,7 +337,7 @@ public class LogicalEnv implements ObsVectListener
     	energyLevels[1] = new int[_agentDistribution[1]];
     	for(int j=0; j<_agentDistribution[1]; j++)
     	{
-    		if(agentType2.size() < j)
+    		if(j < agentType2.size())
     			energyLevels[1][j] = agentType2.get(j);
     		else
     			energyLevels[1][j] = 0;
@@ -348,7 +346,7 @@ public class LogicalEnv implements ObsVectListener
     	energyLevels[2] = new int[_agentDistribution[2]];
     	for(int j=0; j<_agentDistribution[2]; j++)
     	{
-    		if(agentType3.size() < j)
+    		if(j < agentType3.size())
     			energyLevels[2][j] = agentType3.get(j);
     		else
     			energyLevels[2][j] = 0;
@@ -357,7 +355,7 @@ public class LogicalEnv implements ObsVectListener
     	energyLevels[3] = new int[_agentDistribution[3]];
     	for(int j=0; j<_agentDistribution[3]; j++)
     	{
-    		if(agentType4.size() < j)
+    		if(j < agentType4.size())
     			energyLevels[3][j] = agentType4.get(j);
     		else
     			energyLevels[3][j] = 0;
@@ -373,11 +371,11 @@ public class LogicalEnv implements ObsVectListener
     	
     	
     	
-    	int[][] energyLevels = new int[][]{{100,100},{100,100},{100,100},{100,100}};
-    	int[] pricesPaidForApples = new int[]{6,4,7,3};
-    	int[] pricesInMarket = new int[]{3,7,56,3,6,34,2};
+    	//int[][] energyLevels = new int[][]{{100,100},{100,100},{100,100},{100,100}};
+    	//int[] pricesPaidForApples = new int[]{6,4,7,3};
+    	//int[] pricesInMarket = new int[]{3,7,56,3,6,34,2};
     	//update Graph
-    	EnergyGraph.update(_round, energyLevels, market.getPricesPaidForApples(), market.getPricesInMarket());
+    	EnergyGraph.update(_round, getEnergyLevels(), market.getPricesPaidForApples(), market.getPricesInMarket());
     	
     	
     	//DO OUTSTANDING TRADES!!
@@ -441,12 +439,32 @@ public class LogicalEnv implements ObsVectListener
     
     public int getStartingEnergyLevel()
     {
-    	return _startingEnergyLevel;
+    	return Agent.startingEnergyLevel;
     }
+    
+    
+    public int getMoney(String sAgent)
+    {
+    	Agent a = getAgent(sAgent);
+    	if(a != null)
+    		return a.getMoney();
+    	else
+    		return 0;
+    }
+    
+    public int getApples(String sAgent)
+    {
+    	Agent a = getAgent(sAgent);
+    	if(a != null)
+    		return a.getApples();
+    	else
+    		return 0;
+    }
+    
     
     public int getStartingMoney()
     {
-    	return _startingMoney;
+    	return Agent.startingMoney;
     }
     
     public int getMaximumAppleCapacity()
@@ -593,8 +611,28 @@ public class LogicalEnv implements ObsVectListener
     }
     
     
- 
+    public boolean substractEnergy(Agent agent)
+    {
+    	if(agent == null)
+    		return false;
+    	
+    	if(agent._energyLevel >= _energyCost)
+    	{	
+    		agent._energyLevel -= _energyCost;
+    		return true;
+    	}
+    	else
+    	{
+    		agent._energyLevel = 0;
+    		return false;
+    	}
+    }
     
+    public void agentDies(Agent agent)
+    {
+    	if(agent != null)
+    		removeAgent(agent.getName());
+    }
 
    
     public boolean enter(String sAgent, int agentType, String sColor)
@@ -683,6 +721,11 @@ public class LogicalEnv implements ObsVectListener
         // Get the correct agent
         Agent agent = getAgent(sAgent);
         
+        if(!substractEnergy(agent))
+        {
+        	agentDies(agent);
+        	return false;
+        }
         // Get the agent his position
         Point p = (Point) agent.getPosition().clone();
         p.y = p.y - 1;
@@ -707,6 +750,12 @@ public class LogicalEnv implements ObsVectListener
         // Get the correct agent
         Agent agent = getAgent(sAgent);
         
+        if(!substractEnergy(agent))
+        {
+        	agentDies(agent);
+        	return false;
+        }
+        
         // Get the agent his position
         Point p = (Point) agent.getPosition().clone();
         p.x = p.x + 1;
@@ -730,6 +779,14 @@ public class LogicalEnv implements ObsVectListener
     {
         // Get the correct agent
         Agent agent = getAgent(sAgent);
+        
+        
+        if(!substractEnergy(agent))
+        {
+        	agentDies(agent);
+        	return false;
+        }
+        
         
         // Get the agent his position
         Point p = (Point) agent.getPosition().clone();
@@ -756,6 +813,14 @@ public class LogicalEnv implements ObsVectListener
         // Get the correct agent
         Agent agent = getAgent(sAgent);
         
+        
+        if(!substractEnergy(agent))
+        {
+        	agentDies(agent);
+        	return false;
+        }
+        
+        
         // Get the agent his position
         Point p = (Point) agent.getPosition().clone();
         p.x = p.x - 1;
@@ -780,6 +845,12 @@ public class LogicalEnv implements ObsVectListener
     {
         // Get the agent
         Agent agent = getAgent(sAgent);
+        
+        if(!substractEnergy(agent))
+        {
+        	agentDies(agent);
+        	return false;
+        }
         
         // Let everyone know we are going to pick up a bomb 
         agent.signalPickupApple.emit();
@@ -817,6 +888,15 @@ public class LogicalEnv implements ObsVectListener
     public boolean eatApple(String sAgent)
     {
     	Agent agent = getAgent(sAgent);
+    	
+    	
+    	  if(!substractEnergy(agent))
+    	  {
+    		  agentDies(agent);
+    		  return false;
+    	  }
+    	
+    	
     	agent.signalEat.emit();
     	
     	//see if we have an apple
@@ -847,6 +927,12 @@ public class LogicalEnv implements ObsVectListener
     	Market market = Market.getInstance();
     	Agent agent = getAgent(sAgent);
     	
+    	if(!substractEnergy(agent))
+    	{
+    		agentDies(agent);
+    		return false;
+    	}
+    	  
     	
     	agent.signalTrade.emit();
     	
@@ -915,6 +1001,8 @@ public class LogicalEnv implements ObsVectListener
             //ObsVector.remove IS NOT WORKING CORRECTLY
             
             //!!! REMOVE Agent, not the name of the agent!!!!!!!!!!!!           
+            Market.getInstance().removeAgent(sAgent);
+            
             _agents.remove( a );
             agentmap.remove( sAgent );
             
