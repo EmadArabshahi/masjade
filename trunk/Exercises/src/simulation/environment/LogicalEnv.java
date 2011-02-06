@@ -56,7 +56,7 @@ public class LogicalEnv implements ObsVectListener
     final protected Random					_randomGenerator = new Random();
     
     // size of environment
-    protected Dimension                     m_size = new Dimension( 16, 16 );
+    protected Dimension                     m_size = new Dimension( 32, 32 );
     
     private HashMap<String,Agent>           agentmap = new HashMap<String,Agent>();
     
@@ -91,7 +91,7 @@ public class LogicalEnv implements ObsVectListener
 	//Maximum Apple capacity A:
 	protected int 							 _maxAppleCapacity = 5;
 	//Agent distribution.
-    protected int[]		 					 _agentDistribution = {2,2,2,2};
+    protected int[]		 					 _agentDistribution = {10,10,10,10};
 	
     
     
@@ -221,7 +221,7 @@ public class LogicalEnv implements ObsVectListener
     	for(int j=0; j<_agentDistribution[1]; j++)
     	{
     		String agentName = randomNumber + " - COMMUNIST" + j;
-    		newAgent(agentName, "simulation.agents.RandomWalker", null);
+    		newAgent(agentName, "simulation.agents.CommunistAgent", null);
     		enter(agentName, 1, "blue");
     	}
     	
@@ -229,7 +229,7 @@ public class LogicalEnv implements ObsVectListener
         	for(int j=0; j<_agentDistribution[2]; j++)
         	{
         		String agentName = randomNumber + " - LIBERAL" + j;
-        		newAgent(agentName, "simulation.agents.CommunistAgent", null);
+        		newAgent(agentName, "simulation.agents.LiberalAgent", null);
         		enter(agentName, 2, "green");
         	}
     	
@@ -237,7 +237,7 @@ public class LogicalEnv implements ObsVectListener
         	for(int j=0; j<_agentDistribution[3]; j++)
         	{
         		String agentName = randomNumber + " - FREE MIND" + j;
-        		newAgent(agentName, "simulation.agents.CommunistAgent", null);
+        		newAgent(agentName, "simulation.agents.RandomWalker", null);
         		enter(agentName, 3, "yellow");
         	}
     	
@@ -721,6 +721,9 @@ public class LogicalEnv implements ObsVectListener
         // Get the correct agent
         Agent agent = getAgent(sAgent);
         
+        if(agent == null)
+         return false;
+        
         if(!substractEnergy(agent))
         {
         	agentDies(agent);
@@ -749,6 +752,9 @@ public class LogicalEnv implements ObsVectListener
     {
         // Get the correct agent
         Agent agent = getAgent(sAgent);
+        
+        if(agent == null)
+        	return false;
         
         if(!substractEnergy(agent))
         {
@@ -780,6 +786,8 @@ public class LogicalEnv implements ObsVectListener
         // Get the correct agent
         Agent agent = getAgent(sAgent);
         
+        if(agent == null)
+        	return false;
         
         if(!substractEnergy(agent))
         {
@@ -846,6 +854,9 @@ public class LogicalEnv implements ObsVectListener
         // Get the agent
         Agent agent = getAgent(sAgent);
         
+        if(agent == null)
+        	return false;
+        
         if(!substractEnergy(agent))
         {
         	agentDies(agent);
@@ -889,6 +900,8 @@ public class LogicalEnv implements ObsVectListener
     {
     	Agent agent = getAgent(sAgent);
     	
+    	if(agent == null)
+    		return false;
     	
     	  if(!substractEnergy(agent))
     	  {

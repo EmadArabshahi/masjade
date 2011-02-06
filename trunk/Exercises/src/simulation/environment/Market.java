@@ -12,12 +12,12 @@ public class Market
 {
 	//A map with the agentID as key, and the value is also a Map.
 	//The value has as key an proposal id, and as value the minimum price of the proposal.
-	private int _proposalKeyCount;
-	private int _requestKeyCount;
-	private Map<Integer, TradeUnit> _sellProposals;
-	private Map<Integer, TradeUnit> _buyRequests;
-	private List<Tuple<Integer,Integer>> _trades;
-	private Map<String, Boolean> _tradeOutcomes;
+	private volatile int _proposalKeyCount;
+	private volatile int _requestKeyCount;
+	private volatile Map<Integer, TradeUnit> _sellProposals;
+	private volatile Map<Integer, TradeUnit> _buyRequests;
+	private volatile List<Tuple<Integer,Integer>> _trades;
+	private volatile Map<String, Boolean> _tradeOutcomes;
 	
 	
 	private static Market _instance;
@@ -42,12 +42,12 @@ public class Market
 		return _instance;
 	}
 	
-	public void registerTradeOutcome(String sAgent, boolean outcome)
+	public synchronized void registerTradeOutcome(String sAgent, boolean outcome)
 	{
 		_tradeOutcomes.put(sAgent, outcome);
 	}
 	
-	public boolean registeredForTrade(String sAgent)
+	public synchronized  boolean registeredForTrade(String sAgent)
 	{
 		if(_tradeOutcomes.containsKey(sAgent))
 		{
@@ -57,8 +57,28 @@ public class Market
 		return false;
 	}
 	
+	
+	public synchronized int getRequestPrice(String sAgent, int requestId)
+	{
+		TradeUnit t = _buyRequests.get(requestId);
+		if(t == null)
+			return 0;
+		else
+			return t.getPrice();
+	}
+	
+	
+	public synchronized int getProposalPrice(String sAgent, int proposalId)
+	{
+		TradeUnit t = _sellProposals.get(proposalId);
+		if(t==null)
+			return 0;
+		else
+			return t.getPrice();
+	}
+	
 	//Puts a sell proposal in the market, returns the proposal id
-	public int proposeToSell(String sAgent, int price)
+	public synchronized int proposeToSell(String sAgent, int price)
 	{
 		int key = _proposalKeyCount;
 		_sellProposals.put(key, new TradeUnit(sAgent, price));
@@ -80,15 +100,23 @@ public class Market
 		return false;
 	}
 	
-	public void removeAllProposals(String sAgent)
+	public synchronized void removeAllProposals(String sAgent)
 	{
+		List<Integer> keysToRemove = new ArrayList<Integer>();
+		
 		for(int key : _sellProposals.keySet())
 		{
-			removeProposal(sAgent, key);
+			if(_sellProposals.get(key).getAgentName().equals(sAgent))
+				keysToRemove.add(key);
+		}
+		
+		for(int i=0; i<keysToRemove.size(); i++)
+		{
+			removeProposal(sAgent, keysToRemove.get(i));
 		}
 	}
 	
-	public int requestToBuy(String sAgent, int price)
+	public synchronized int requestToBuy(String sAgent, int price)
 	{
 		int key = _requestKeyCount;
 		_buyRequests.put(key, new TradeUnit(sAgent, price));
@@ -97,7 +125,7 @@ public class Market
 		return key;
 	}
 	
-	public boolean removeRequest(String sAgent, int requestId)
+	public synchronized boolean removeRequest(String sAgent, int requestId)
 	{
 		TradeUnit tradeUnit = _buyRequests.get(requestId);
 		if(tradeUnit != null && tradeUnit.getAgentName().equals(sAgent))
@@ -108,15 +136,24 @@ public class Market
 		return false;
 	}
 	
-	public void removeAllRequest(String sAgent)
+	public synchronized void removeAllRequest(String sAgent)
 	{
+		List<Integer> keysToRemove = new ArrayList<Integer>();
 		for(int key : _buyRequests.keySet())
 		{
-			removeRequest(sAgent, key);
+			if(_buyRequests.get(key).getAgentName().equals(sAgent))
+				keysToRemove.add(key);
 		}
+		
+		for(int i=0; i<keysToRemove.size(); i++)
+		{
+			removeRequest(sAgent, keysToRemove.get(i));
+		}
+		
+		
 	}
 	
-	public boolean removeAgent(String sAgent)
+	public synchronized boolean removeAgent(String sAgent)
 	{
 		removeAllProposals(sAgent);
 		removeAllRequest(sAgent);
@@ -124,7 +161,7 @@ public class Market
 		return false;
 	}
 	
-	public void clear()
+	public synchronized void clear()
 	{
 		_proposalKeyCount = 0;
 		_requestKeyCount = 0;
@@ -135,17 +172,24 @@ public class Market
 	}
 	
 	//Is called at the end of each round and find matches between proposals and requeest.
-	public void findMatches()
+	public synchronized void findMatches()
 	{
 		//clear any remaining marked for trades (should actually not occur, but just to be sure)
 		_trades.clear();
 		_tradeOutcomes.clear();
 		
-		for(TradeUnit buyRequest : _buyRequests.values())
-			buyRequest.setMarkedForTrade(false);
-		for(TradeUnit sellProposal : _sellProposals.values())
-			sellProposal.setMarkedForTrade(false);
+		System.out.println("************** BEGIN FIND MATCHES **************");
 		
+		for(TradeUnit buyRequest : _buyRequests.values())
+		{
+			System.out.println("BUYREQUEST: " + buyRequest.getAgentName() + " : " + buyRequest.getPrice());
+			buyRequest.setMarkedForTrade(false);
+		}
+		for(TradeUnit sellProposal : _sellProposals.values())
+		{
+			System.out.println("SELLPROPOSAL: " + sellProposal.getAgentName() + " : " + sellProposal.getPrice());
+			sellProposal.setMarkedForTrade(false);
+		}
 		//The map is sorted by the keys, so this way older requests get handled first.
 		Set<Integer> keys = _buyRequests.keySet();
 		for(int requestId : keys)
@@ -162,15 +206,19 @@ public class Market
 				sellProposal.setMarkedForTrade(true);
 				buyRequest.setMarkedForTrade(true);
 				
+				System.out.println("FOUND MATCH:   buyRequest: " + buyRequest.getAgentName() + " : " + buyRequest.getPrice() 
+						+ " sellProposal" + sellProposal.getAgentName() + " : " + sellProposal.getPrice());
+				
+				
 				_trades.add(new Tuple<Integer, Integer>(requestId, sellProposalId));
 			}
 		}
 		
-		_buyRequests.clear();
-		_sellProposals.clear();
+		System.out.println("************** END FIND MATCHES **************");
+		
 	}
 	
-	private List<Integer> getCheapestMatchingProposals(int buyPrice, String sAgent)
+	private synchronized List<Integer> getCheapestMatchingProposals(int buyPrice, String sAgent)
 	{
 		Set<Integer> keys = _sellProposals.keySet();
 		int cheapest = Integer.MAX_VALUE;
@@ -202,7 +250,7 @@ public class Market
 		return resultSet;
 	}
 
-	public boolean mustTrade(String sAgent)
+	public synchronized boolean mustTrade(String sAgent)
 	{
 		for(Tuple<Integer,Integer> tuple: _trades)
 		{
@@ -217,7 +265,7 @@ public class Market
 		return false;
 	}
 	
-	public List<TradeDescription> getTradeAction(String sAgent)
+	public synchronized List<TradeDescription> getTradeAction(String sAgent)
 	{
 		List<TradeDescription> list = new ArrayList<TradeDescription>();
 		
@@ -227,11 +275,11 @@ public class Market
 			TradeUnit sellProposal = _sellProposals.get(tuple.getSecond());
 			
 			//The price of the seller is maintained. So the buyer may get lucky.
-			if(buyRequest != null && buyRequest.getAgentName().equals(sAgent))
+			if(sellProposal != null && buyRequest != null && buyRequest.getAgentName().equals(sAgent))
 			{
 				list.add(new TradeDescription(TradeDescription.BUY, sellProposal.getPrice(), sAgent, sellProposal.getAgentName()));
 			}
-			else if(sellProposal != null && sellProposal.getAgentName().equals(sAgent))
+			else if(sellProposal != null && buyRequest != null && sellProposal.getAgentName().equals(sAgent))
 			{
 				list.add(new TradeDescription(TradeDescription.SELL, sellProposal.getPrice(), sAgent, buyRequest.getAgentName()));
 			}
@@ -241,7 +289,7 @@ public class Market
 	}
 	
 	
-	public int[] getPricesPaidForApples()
+	public synchronized int[] getPricesPaidForApples()
 	{
 		List<Integer> pricesPaid = new ArrayList<Integer>();
 		
@@ -251,10 +299,10 @@ public class Market
 			TradeUnit sellProposal = _sellProposals.get(tuple.getSecond());
 			
 			//if the agent who wants to buy is registered as succesfull trade outcome in the _tradeoucomes list.
-			if(buyRequest != null && _tradeOutcomes.get(buyRequest.getAgentName()))
+			if(buyRequest != null && _tradeOutcomes.get(buyRequest.getAgentName()) != null && _tradeOutcomes.get(buyRequest.getAgentName()))
 			{
 				//And the agent who wants to sell is also registered as succesfull trade outcome in the _tradeoutcomes list.
-				if(sellProposal != null && _tradeOutcomes.get(sellProposal.getAgentName()))
+				if(sellProposal != null && _tradeOutcomes.get(sellProposal.getAgentName()) != null && _tradeOutcomes.get(sellProposal.getAgentName()))
 				{
 					pricesPaid.add(sellProposal.getPrice());
 				}
@@ -271,7 +319,7 @@ public class Market
 		return intArray;
 	}
 	
-	public int[] getPricesInMarket()
+	public synchronized int[] getPricesInMarket()
 	{
 		List<Integer> pricesInMarket = new ArrayList<Integer>();
 		

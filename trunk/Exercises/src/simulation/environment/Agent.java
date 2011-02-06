@@ -56,8 +56,8 @@ public class Agent
 	{
 		_position = null;
 		_apples = 0;
-		_energyLevel = 100;
-		_moneyInEuroCents = 10000;
+		_energyLevel = startingEnergyLevel;
+		_moneyInEuroCents = startingMoney;
 	}
 	
 	public String getName() 
