@@ -40,7 +40,6 @@ public abstract class WalkBehaviour extends SimpleBehaviour
 	
 	public final void action()
 	{
-		new SensingAction(_owner, _senseLocation, _senseStones, _senseAgents, _senseApples);
 		new SensingAction(_owner, _senseLocation, _senseStones, _senseAgents, _senseApples).action();
 		walk();
 		new SensingAction(_owner, _senseLocation, _senseStones, _senseAgents, _senseApples).action();
