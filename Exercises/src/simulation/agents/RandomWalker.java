@@ -19,6 +19,19 @@ public class RandomWalker extends GridWorldAgent
 
 		addBehaviour(fsm);
 	}
+
+	@Override
+	public int getRequestToBuyPrice() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getProposeToSellPrice() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 	
 
 }
