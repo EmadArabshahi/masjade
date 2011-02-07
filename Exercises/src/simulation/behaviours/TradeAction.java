@@ -24,8 +24,8 @@ public class TradeAction extends OneShotBehaviour {
 	public void action() 
 	{
 		_owner.applesTraded(Environment.tradeApple(_owner.getLocalName()));
-		int price = _owner.getRequestToBuyPrice();
-		Environment.requestToBuy(_owner.getLocalName(), price );
+		//int price = _owner.getRequestToBuyPrice();
+		//Environment.requestToBuy(_owner.getLocalName(), price );
 		
 	}
 	

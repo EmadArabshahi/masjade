@@ -42,6 +42,7 @@ public class SimpleCollectBehaviour extends WalkBehaviour
 		if(_owner.isOnApple())
 		{
 			new PickUpAppleAction(_owner).action();
+			return;
 		}
 		
 		if(!_owner.knowsApples())
