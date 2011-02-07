@@ -40,16 +40,23 @@ public class GreedyAgent extends GridWorldAgent
 	}
 
 	@Override
-	public int getRequestToBuyPrice() 
+	public boolean hasLackOfEnergy()
 	{
+		
+		return (_energy <= (_maxEnergy - (_energyGain) + _energyCost));
+	}
+
+
+	@Override
+	public void handleRequests() {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 	@Override
-	public int getProposeToSellPrice() {
+	public void handleProposals() {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 

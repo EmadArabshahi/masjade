@@ -19,17 +19,23 @@ public class RandomWalker extends GridWorldAgent
 
 		addBehaviour(fsm);
 	}
-
+	
 	@Override
-	public int getRequestToBuyPrice() {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean hasLackOfEnergy()
+	{
+		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
 	}
 
 	@Override
-	public int getProposeToSellPrice() {
+	public void handleRequests() {
 		// TODO Auto-generated method stub
-		return 0;
+		
+	}
+
+	@Override
+	public void handleProposals() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
