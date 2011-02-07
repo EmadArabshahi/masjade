@@ -74,7 +74,7 @@ public class ReceiveCFPBehaviour extends SimpleBehaviour {
 							cfpMsg.setConversationId( "sub." + Integer.toString(counter));
 							cfpMsg.setReplyByDate( new Date( Calendar.getInstance().getTimeInMillis() + agent.getDeadlineTime()));
 							contractor = i.next();
-							if ( contractor != agent.getAID())
+							if ( !contractor.equals(agent.getAID()))
 							{
 								cfpMsg.addReceiver( contractor);
 								try {
