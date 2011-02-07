@@ -219,6 +219,7 @@ public class ContractorWindow extends JFrame{
 	private JTextArea getInfoTextArea() {
 		if (infoTextArea == null) {
 			infoTextArea = new JTextArea();
+			@SuppressWarnings("unused")
 			JScrollPane scrollPane = new JScrollPane( infoTextArea);
 			infoTextArea.setEditable(false);
 		}

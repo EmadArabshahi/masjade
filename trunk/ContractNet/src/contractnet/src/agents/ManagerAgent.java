@@ -82,7 +82,7 @@ public class ManagerAgent extends Agent {
 	public void sendMessageToContractors( ACLMessage msg) {		
 		ArrayList<AID> contractorAgents = getContractorAIDs();
 		Iterator<AID> i = contractorAgents.iterator();
-		int counter = 1;
+		//int counter = 1;
 		while (i.hasNext())
 		{
 			AID contractor = i.next();
@@ -142,6 +142,8 @@ public class ManagerAgent extends Agent {
 	{
 		Action stopReceive = new AbstractAction() {
 			
+			private static final long serialVersionUID = 4777801809419921003L;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
