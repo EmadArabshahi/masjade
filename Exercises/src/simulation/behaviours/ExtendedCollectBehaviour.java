@@ -49,14 +49,14 @@ public class ExtendedCollectBehaviour extends WalkBehaviour
 			new EatAppleAction(_owner).action();
 			return;
 		}
-		else if(_owner.isOnApple())
+		else if(_owner.isOnApple() && !_owner.atCapacity())
 		{
 			new PickUpAppleAction(_owner).action();
 			return;
 		}
-		
-		if(!_owner.knowsApples())
+		else if(!_owner.knowsApples())
 		{
+			new MemoryRandomStepAction(_owner).action();
 			return;
 		}
 		
@@ -77,6 +77,8 @@ public class ExtendedCollectBehaviour extends WalkBehaviour
 		}
 		//step in position of the closest bomb
 		new StepToPositionAction(_owner, minimalDistanceApple).action();
+		
+		
 	}
 	
 	@Override

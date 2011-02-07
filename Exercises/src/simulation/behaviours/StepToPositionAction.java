@@ -33,7 +33,7 @@ public class StepToPositionAction extends OneShotBehaviour
 		//If there are still no positions left, agent is trapped and cant move..
 		if(moveablePositions.size() == 0)
 		{
-			System.out.println("unable to move.!!");
+			_owner.unableToMove();
 			return;
 		}
 			
@@ -55,7 +55,7 @@ public class StepToPositionAction extends OneShotBehaviour
 		if(!_owner.step(minimalDistancePoint))
 		{	
 			Point current = Environment.getPosition(_owner.getLocalName());
-			System.out.println("Agent tried to move from" + current + " to" + minimalDistancePoint + " thinking it was at" + _owner.getCurrentPosition() + "but was unable too.!!!!");
+			
 		}
 	}
 	

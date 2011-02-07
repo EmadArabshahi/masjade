@@ -24,7 +24,7 @@ public class PickUpAppleAction extends OneShotBehaviour {
 	@Override
 	public void action() 
 	{
-		if (_owner.isOnApple())
+		if (_owner.isOnApple() && !_owner.atCapacity())
 		{
 			_owner.applePickedUp(Environment.pickupApple(_owner.getLocalName()));
 			_endState = PICKED_UP_BOMB;
