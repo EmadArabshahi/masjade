@@ -2,8 +2,6 @@ package simulation.environment;
 
 import simulation.environment.lib.Signal;
 
-import simulation.environment.graphs.*;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
