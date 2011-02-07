@@ -236,7 +236,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 		*/
 
 
-
+		
 		try
 		{
 			// Changed SA:
@@ -247,7 +247,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 			xEx.printStackTrace();
 		}
 
-		
+	
 		
 		try 
 		{
@@ -498,6 +498,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 	}
 
 	public void onRemove( int i, Object o ) {
+		
 		repaint();
 	}
 
