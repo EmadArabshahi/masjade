@@ -16,11 +16,8 @@ public class ExtendedCollectBehaviour extends WalkBehaviour
 	private static final long serialVersionUID = -1654409861694726237L;
 	
 	//in order of which they are checked. so must trade has highest priority.
-	public static int MUST_TRADE_NEXT_ROUND = 0;
-	public static int LACK_OF_ENERGY_AND_HAS_APPLE = 1;
-	public static int IS_HUNGRY_AND_HAS_NO_APPLE = 2;
-	public static int HAS_APPLE = 3;
-	public static int DOESNT_KNOW_APPLES = 4;
+	public static int HAS_APPLE = 1;
+	public static int DOESNT_KNOW_APPLES = 2;
 	
 	
 	private int  _endResult = -1;
@@ -38,12 +35,24 @@ public class ExtendedCollectBehaviour extends WalkBehaviour
 	
 	public void walk()
 	{
-		if(_owner.mustTrade())
-			return;
+		_owner.beginRound();
+		_owner.handleProposals();
+		_owner.handleRequests();
 		
-		if(_owner.isOnApple())
+		if(_owner.mustTrade())
+		{
+			new TradeAction(_owner).action();
+			return;
+		}
+		else if(_owner.hasLackOfEnergy() && _owner.hasApples())
+		{
+			new EatAppleAction(_owner).action();
+			return;
+		}
+		else if(_owner.isOnApple())
 		{
 			new PickUpAppleAction(_owner).action();
+			return;
 		}
 		
 		if(!_owner.knowsApples())
@@ -75,18 +84,15 @@ public class ExtendedCollectBehaviour extends WalkBehaviour
 	{
 		if(_owner.mustTrade())
 		{
-			_endResult = MUST_TRADE_NEXT_ROUND;
-			return true;
+			return false;
 		}
 		else if(_owner.hasLackOfEnergy() && _owner.hasApples())
 		{
-			_endResult = LACK_OF_ENERGY_AND_HAS_APPLE;
-			return true;
+			return false;
 		}
 		else if(_owner.isHungry() && !_owner.hasApples())
 		{
-			_endResult = IS_HUNGRY_AND_HAS_NO_APPLE;
-			return true;
+			return false;
 		}
 		else if(_owner.hasApples())
 		{
