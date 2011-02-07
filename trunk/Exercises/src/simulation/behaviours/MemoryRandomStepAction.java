@@ -35,7 +35,7 @@ public class MemoryRandomStepAction extends OneShotBehaviour
 		//If there are still no positions left, agent is trapped and cant move..
 		if(moveablePositions.size() == 0)
 		{
-			System.out.println("unable to move.!!");
+			_owner.unableToMove();
 			return;
 		}
 			
@@ -43,7 +43,6 @@ public class MemoryRandomStepAction extends OneShotBehaviour
 		if(!_owner.step(moveablePositions.get(0)))
 		{	
 			Point current = Environment.getPosition(_owner.getLocalName());
-			System.out.println("Agent tried to move from" + current + " to" + moveablePositions.get(0) + " thinking it was at" + _owner.getCurrentPosition() + "but was unable too.!!!!");
 		}
 	}
 	

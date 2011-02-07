@@ -36,10 +36,12 @@ public class SimpleCollectBehaviour extends WalkBehaviour
 	
 	public void walk()
 	{
+		_owner.beginRound();
+		
 		if(_owner.mustTrade())
 			return;
 		
-		if(_owner.isOnApple())
+		if(_owner.isOnApple() && !_owner.atCapacity())
 		{
 			new PickUpAppleAction(_owner).action();
 			return;

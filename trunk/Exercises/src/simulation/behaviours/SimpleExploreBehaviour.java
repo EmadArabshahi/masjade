@@ -32,6 +32,8 @@ public class SimpleExploreBehaviour extends WalkBehaviour
 	
 	public void walk()
 	{
+		_owner.beginRound();
+		
 		if(_owner.mustTrade())
 			return;
 		
