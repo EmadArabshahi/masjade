@@ -72,7 +72,7 @@ public class LogicalEnv implements ObsVectListener
     // id for identifiable objects
     protected String                        _objType = "default";   
     
-    protected long						_sleepTimeInMs = 1000;
+    protected long						_sleepTimeInMs = 100;
     
     protected volatile int							_round = 0;
     
@@ -214,7 +214,7 @@ public class LogicalEnv implements ObsVectListener
     	{
     		String agentName = randomNumber + " - GREEDY" + j;
     		newAgent(agentName, "simulation.agents.GreedyAgent", null);
-    		enter(agentName, 0, "red");
+    		enter(agentName, Agent.GREEDY, "red");
     	}
     	
     	if(_agentDistribution.length > 1)
@@ -222,7 +222,7 @@ public class LogicalEnv implements ObsVectListener
     	{
     		String agentName = randomNumber + " - COMMUNIST" + j;
     		newAgent(agentName, "simulation.agents.CommunistAgent", null);
-    		enter(agentName, 1, "blue");
+    		enter(agentName, Agent.COMMUNIST, "blue");
     	}
     	
     	if(_agentDistribution.length > 2)
@@ -230,15 +230,15 @@ public class LogicalEnv implements ObsVectListener
         	{
         		String agentName = randomNumber + " - LIBERAL" + j;
         		newAgent(agentName, "simulation.agents.LiberalAgent", null);
-        		enter(agentName, 2, "green");
+        		enter(agentName, Agent.LIBERAL, "green");
         	}
     	
     	if(_agentDistribution.length > 3)
         	for(int j=0; j<_agentDistribution[3]; j++)
         	{
         		String agentName = randomNumber + " - FREE MIND" + j;
-        		newAgent(agentName, "simulation.agents.RandomWalker", null);
-        		enter(agentName, 3, "yellow");
+        		newAgent(agentName, "simulation.agents.FreemindAgent", null);
+        		enter(agentName, Agent.FREE_MIND, "yellow");
         	}
     	
     	for(int i=0; i<getWidth(); i++)
@@ -259,6 +259,9 @@ public class LogicalEnv implements ObsVectListener
     {
     	Market market = Market.getInstance();
     	Iterator<Agent> i = _agents.iterator();
+    	
+    	System.out.println("*********** BEGIN OF OUTSTANDING TRADES **************");
+    	
     	while(i.hasNext())
     	{
     		Agent a = i.next();
@@ -275,23 +278,46 @@ public class LogicalEnv implements ObsVectListener
     					{
     						a._moneyInEuroCents -= d.getPrice();
     						a._apples++;
+    						
+    						
+    						System.out.println("SUCCESFULLY BOUGHT APPLE: " +  a.getName() + " for: " + d.getPrice() + "   from: " + d.getOtherAgentName());
+    						
     					}
     					// Agent is unable to perform trade so no deal.
     					else
     					{
+    						System.out.println("UNSUCCESFULlY BOUGHT APPLE: " + d.getOtherAgentName() + "  is unable to perform trade.");
     						//
     					}
     				}
     				else if(d.getAction() == TradeDescription.SELL)
     				{
-    					a._moneyInEuroCents += d.getPrice();
-    					a._apples--;
+    					if(market.registeredForTrade(d.getOtherAgentName()))
+    					{
+    						a._moneyInEuroCents += d.getPrice();
+    						a._apples--;
+    					
+    						
+    						System.out.println("SUCCESFULLY SOLD APPLE: " + a.getName() + " for: " + d.getPrice() + "   to: " + d.getOtherAgentName());
+    						
+    					}
+    					// Agent is unable to perform trade so no deal
+    					else
+    					{
+    						System.out.println("UNSUCCESFULlY SOLD APPLE: " + d.getOtherAgentName() + "  is unable to perform trade.");
+    						//
+    					}
     				}
     			}
     			
     			
     		}
     	}
+    	
+    	
+    	market.clearTradedActions();
+    	
+    	System.out.println("*********** BEGIN OF OUTSTANDING TRADES **************");
     }
     
     public int[][] getEnergyLevels()
@@ -306,6 +332,7 @@ public class LogicalEnv implements ObsVectListener
     	Iterator<Agent> i = _agents.iterator();
     	while(i.hasNext())
     	{
+    		
     		Agent a = i.next();
     		if(a.getType() == Agent.COMMUNIST)
     		{
@@ -363,6 +390,46 @@ public class LogicalEnv implements ObsVectListener
     	
     	return energyLevels;
     	
+    }
+    
+    public void RemoveAgentsWhichLackEnergy()
+    {
+    	Iterator<Agent> i = _agents.iterator();
+    	ArrayList<String> agentsToRemove = new ArrayList<String>();
+    	while(i.hasNext())
+    	{
+    		Agent a = i.next();
+    		if(a.getEnergylevel() < _energyCost)
+    			agentsToRemove.add(a.getName());
+    	}
+    	
+    	for(String s : agentsToRemove)
+    	{
+    		removeAgent(s);
+    	}
+    }
+    
+    public void beginRound()
+    {
+    	_round++;
+    	_blockingActions = 0;
+    	if(_mode == STEP_BY_STEP_MODE)
+			_nextRoundPermitted = false;
+    	
+    	//Remove agents who are unable to perform next action.
+    	RemoveAgentsWhichLackEnergy();
+    	
+    	//Matches outstanding requests and proposals.
+    	Market.getInstance().findMatches();
+    }
+    public void endRound()
+    {
+    	Market market = Market.getInstance();
+    	//The graph is updated
+    	EnergyGraph.update(_round, getEnergyLevels(), market.getPricesPaidForApples(), market.getPricesInMarket());
+    	
+    	//Money and apples is transfered to the agents.
+    	doOutstandngTrades();
     }
     
     public void nextRound()
@@ -956,26 +1023,36 @@ public class LogicalEnv implements ObsVectListener
     	java.util.List<TradeDescription> tradeDescriptions = market.getTradeAction(sAgent);
     	
     	int totalCost = 0;
+    	int appleCost = 0;
     	
-    	//you can use money earned in tradesequence from selling in same sequence to buy.
+    	//you can'not use money earned in tradesequence from selling in same sequence to buy.
     	//
     	for(TradeDescription d : tradeDescriptions)
     	{
     		if(d.getAction() == TradeDescription.SELL)
     		{
+    			appleCost++;
+    		}
+    		else
+    		{
+    			appleCost--;
     			totalCost += d.getPrice();
     		}
     	}
     	
     	//The agent should have a balance greater or equal of 0 at end of trade action.
-    	if((agent._moneyInEuroCents - totalCost) >= 0)
+    	if(((agent._moneyInEuroCents - totalCost) >= 0) && (appleCost <= agent._apples))
     	{
+    		System.out.println("TRADE action confirmed SUCCESFULL: " + sAgent);
+    		
     		market.registerTradeOutcome(sAgent,true);
     		agent.signalTradeSucces.emit();
     		return true; //can still be false if other agent fails.
     	}
     	else
     	{
+    		System.out.println("TRADE action UNSUCCESFULL: " + sAgent);
+    		
     		market.registerTradeOutcome(sAgent,false);
     		return false;
     	}

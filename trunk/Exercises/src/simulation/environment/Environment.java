@@ -60,9 +60,11 @@ public class Environment
 	    	   	
 	    	if(environment._blockingActions >= environment._agents.size())
 	    	{
+	    		environment.endRound();
+	    		
 	    		if(environment._mode == LogicalEnv.CONTINUES_MODE)
 	    		{
-	    			environment.nextRound();
+	    			environment.beginRound();
 	    			
 	    			lockObject.notifyAll();
 	    		}
@@ -70,7 +72,7 @@ public class Environment
 	    		{
 	    			if(environment._nextRoundPermitted)
 	    			{
-	    				environment.nextRound();
+	    				environment.beginRound();
 	    				
 	    				lockObject.notifyAll();
 	    			}
@@ -280,6 +282,39 @@ public class Environment
 		return requestId;
 	}
 	
+	public static void removeAllProposals(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			Market.getInstance().removeAllProposals(sAgent);
+		}
+	}
+	
+	public static void removeAllRequests(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			Market.getInstance().removeAllRequest(sAgent);
+		}
+	}
+	
+	public static List<Integer> getSuccesfullBuys(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return Market.getInstance().getSuccesfullBuys(sAgent);
+		}
+	}
+	
+	public static List<Integer> getSuccesfullSells(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return Market.getInstance().getSuccesfullSells(sAgent);
+		}
+	}
+	
+	
 	public static void removeProposal(String sAgent, int proposalId)
 	{
 		synchronized(lockObject)
@@ -300,7 +335,10 @@ public class Environment
 	{
 		synchronized(lockObject)
 		{
-			return Market.getInstance().mustTrade(sAgent);
+			boolean mustTrade = Market.getInstance().mustTrade(sAgent);
+			if(mustTrade)
+				System.out.println("" + sAgent + " must Trade!!!");
+			return mustTrade;
 		}
 	}
 
@@ -343,8 +381,7 @@ public class Environment
 				//If all agents are blocked, goto next round and notify all
 				 if(environment._blockingActions == environment._agents.size())
 				 {
-					environment.nextRound();
-	 				
+	 				environment.beginRound();
 	 				lockObject.notifyAll();
 				 } //otherwise, set netRoundPermitted = true;
 				 else
@@ -356,6 +393,8 @@ public class Environment
 			{
 				//Change mode to continues
 				environment._mode = LogicalEnv.CONTINUES_MODE;
+				
+				environment.beginRound();
 				
 				//Start the round by releasing the agents.
 				lockObject.notifyAll();
@@ -378,9 +417,9 @@ public class Environment
 			{
 				//goto the next step, by either releasing all agents if they are blocked, or set the nextround permitted to true.
 				//If all agents are blocked, goto next round and notify all
-				 if(environment._blockingActions == environment._agents.size())
-				 {
-					environment.nextRound();
+				 if(environment._blockingActions >= environment._agents.size())
+				 {			 
+					environment.beginRound();
 	 				
 	 				lockObject.notifyAll();
 				 } //otherwise, set netRoundPermitted = true;
@@ -399,6 +438,8 @@ public class Environment
 			{
 				//Change mode to continues
 				environment._mode = LogicalEnv.STEP_BY_STEP_MODE;
+				
+				environment.beginRound();
 				
 				//Start the round by releasing the agents.
 				lockObject.notifyAll();

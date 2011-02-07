@@ -6,14 +6,16 @@ public class TradeDescription
 	private int _price;
 	private String _thisAgentName;
 	private String _otherAgentName;
+	private int _correspondingId;
 	
 	public static final int SELL = 1;
 	public static final int BUY = 0;
 	
-	public TradeDescription(int action, int price, String thisAgentName, String otherAgentName)
+	public TradeDescription(int action, int price, int correspondingId, String thisAgentName, String otherAgentName)
 	{
 		this._action = action;
 		this._price = price;
+		this._correspondingId = correspondingId;
 		this._thisAgentName = thisAgentName;
 		this._otherAgentName = otherAgentName;
 	}
@@ -38,4 +40,8 @@ public class TradeDescription
 		return this._otherAgentName;
 	}
 	
+	public int getCorrespondingId()
+	{
+		return this._correspondingId;
+	}
 }

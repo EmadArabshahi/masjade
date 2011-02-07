@@ -19,6 +19,8 @@ public class Market
 	private volatile List<Tuple<Integer,Integer>> _trades;
 	private volatile Map<String, Boolean> _tradeOutcomes;
 	
+	private volatile Map<String, List<Integer>> _succesfullBuys;
+	private volatile Map<String, List<Integer>> _succesfullSells;
 	
 	private static Market _instance;
 	
@@ -28,11 +30,14 @@ public class Market
 		_buyRequests = new HashMap<Integer,TradeUnit>();
 		_trades = new ArrayList<Tuple<Integer,Integer>>();
 		_tradeOutcomes = new HashMap<String, Boolean>();
+		_succesfullBuys = new HashMap<String, List<Integer>>();
+		_succesfullSells = new HashMap<String, List<Integer>>();
+		
 		_proposalKeyCount = 0;
 		_requestKeyCount = 0;
 	}
 	
-	public static Market getInstance()
+	public synchronized static Market getInstance()
 	{
 		if(_instance == null)
 		{
@@ -41,6 +46,68 @@ public class Market
 		}
 		return _instance;
 	}
+	
+	public synchronized List<Integer> getSuccesfullBuys(String sAgent)
+	{
+		return _succesfullBuys.get(sAgent);
+	}
+	
+	public synchronized List<Integer> getSuccesfullSells(String sAgent)
+	{
+		return _succesfullSells.get(sAgent);
+	}
+	
+	public synchronized void clearTradedActions()
+	{
+		
+		for(Tuple<Integer,Integer> tuple : _trades)
+		{
+			TradeUnit buy = _buyRequests.get(tuple.getFirst());
+			TradeUnit sell = _sellProposals.get(tuple.getSecond());
+			
+			if(buy != null && sell != null)
+			{
+				//The buy action is performed
+				if( _tradeOutcomes.get(buy.getAgentName()) != null && _tradeOutcomes.get(buy.getAgentName()))
+				{
+					//the sell action is performed
+					if(_tradeOutcomes.get(sell.getAgentName()) != null && _tradeOutcomes.get(sell.getAgentName()))
+					{
+						_buyRequests.remove(tuple.getFirst());
+						_sellProposals.remove(tuple.getSecond());
+						
+						
+						if(_succesfullBuys.containsKey(buy.getAgentName()))
+						{
+							_succesfullBuys.get(buy.getAgentName()).add(sell.getPrice());
+						}
+						else
+						{
+							List<Integer> l = new ArrayList<Integer>();
+							l.add(sell.getPrice());
+							_succesfullBuys.put(buy.getAgentName(), l);
+						}
+						if(_succesfullSells.containsKey(sell.getAgentName()))
+						{
+							_succesfullSells.get(sell.getAgentName()).add(sell.getPrice());
+							
+						}
+						else
+						{
+							List<Integer> l = new ArrayList<Integer>();
+							l.add(sell.getPrice());
+							_succesfullSells.put(sell.getAgentName(), l);
+						}
+						
+					}
+				}
+				
+			}
+			
+			
+		}
+	}
+	
 	
 	public synchronized void registerTradeOutcome(String sAgent, boolean outcome)
 	{
@@ -190,8 +257,9 @@ public class Market
 			System.out.println("SELLPROPOSAL: " + sellProposal.getAgentName() + " : " + sellProposal.getPrice());
 			sellProposal.setMarkedForTrade(false);
 		}
-		//The map is sorted by the keys, so this way older requests get handled first.
+		//The map is so.
 		Set<Integer> keys = _buyRequests.keySet();
+		
 		for(int requestId : keys)
 		{
 			TradeUnit buyRequest = _buyRequests.get(requestId);
@@ -212,6 +280,11 @@ public class Market
 				
 				_trades.add(new Tuple<Integer, Integer>(requestId, sellProposalId));
 			}
+		}
+		
+		for(Tuple<Integer,Integer> t : _trades)
+		{
+			System.out.println("In _trades: " + t.getFirst() + " - " + t.getSecond());
 		}
 		
 		System.out.println("************** END FIND MATCHES **************");
@@ -277,11 +350,11 @@ public class Market
 			//The price of the seller is maintained. So the buyer may get lucky.
 			if(sellProposal != null && buyRequest != null && buyRequest.getAgentName().equals(sAgent))
 			{
-				list.add(new TradeDescription(TradeDescription.BUY, sellProposal.getPrice(), sAgent, sellProposal.getAgentName()));
+				list.add(new TradeDescription(TradeDescription.BUY, sellProposal.getPrice(), tuple.getFirst(), sAgent, sellProposal.getAgentName()));
 			}
 			else if(sellProposal != null && buyRequest != null && sellProposal.getAgentName().equals(sAgent))
 			{
-				list.add(new TradeDescription(TradeDescription.SELL, sellProposal.getPrice(), sAgent, buyRequest.getAgentName()));
+				list.add(new TradeDescription(TradeDescription.SELL, sellProposal.getPrice(), tuple.getSecond(), sAgent, buyRequest.getAgentName()));
 			}
 		}
 		
