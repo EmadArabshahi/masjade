@@ -4,7 +4,6 @@ package simulation.environment;
 
 // Standard java imports
 
-import simulation.environment.graphs.EnergyGraph;
 import simulation.environment.lib.ObsVect;
 import simulation.environment.lib.ObsVectListener;
 import simulation.environment.lib.Signal;
@@ -334,11 +333,11 @@ public class LogicalEnv implements ObsVectListener
     	{
     		
     		Agent a = i.next();
-    		if(a.getType() == Agent.COMMUNIST)
+    		if(a.getType() == Agent.GREEDY)
     		{
     			agentType1.add(a.getEnergylevel());
     		}
-    		else if(a.getType() == Agent.GREEDY)
+    		else if(a.getType() == Agent.COMMUNIST)
     		{
     			agentType2.add(a.getEnergylevel());
     		}
