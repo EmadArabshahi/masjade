@@ -64,13 +64,13 @@ public class EnergyGraph extends JPanel
 		
 		String formatString = "<html><table>" +
 		"<tr><th colspan='8'>Alive ratios:</td></th>" +
-		"<tr><td>Agent Type 1</td><td></td><td>" + arg1 +
+		"<tr><td>Greedy Agent</td><td></td><td>" + arg1 +
 		"</td><td width='40px'></td>" +
-		"<td>Agent Type 2</td><td></td><td>" + arg2 +
+		"<td>Communist Agent</td><td></td><td>" + arg2 +
 		"</td><td width='40px'></td></tr>" +
-		"<tr><td>Agent Type 3</td><td></td><td>" + arg3 + 
+		"<tr><td>Liberal Agent</td><td></td><td>" + arg3 + 
 		"</td><td width='40px'></td>" +
-		"<td>Agent Type 4</td><td></td><td>" + arg4 + 
+		"<td>Free-minded Agent</td><td></td><td>" + arg4 + 
 		"</td><td width='40px'></td></tr>" +
 		"</table></html>";
 		
