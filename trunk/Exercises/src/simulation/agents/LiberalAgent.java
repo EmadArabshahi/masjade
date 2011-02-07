@@ -41,7 +41,9 @@ public class LiberalAgent extends GridWorldAgent
 	public boolean hasLackOfEnergy()
 	{
 		
-		return (_energy <= (_maxEnergy - (_energyGain*2) + _energyCost));
+		boolean maximumEnergyGain = (_energy <= (_maxEnergy - _energyGain*2 + _energyCost));
+		boolean onlyFewStepsLeft = getRoundsLeft() < 3;
+		return (maximumEnergyGain || onlyFewStepsLeft);
 	}
 	
 	@Override

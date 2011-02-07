@@ -34,7 +34,9 @@ public class CommunistAgent extends GridWorldAgent
 	@Override
 	public boolean hasLackOfEnergy()
 	{
-		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
+		boolean maximumEnergyGain = (_energy <= (_maxEnergy - _energyGain + _energyCost));
+		boolean onlyFewStepsLeft = getRoundsLeft() < 3;
+		return (maximumEnergyGain || onlyFewStepsLeft);
 	}
 	
 	@Override

@@ -93,7 +93,6 @@ public abstract class GridWorldAgent extends Agent
 		_startingMoney = Environment.getStartingMoney();
 		
 		setupAgent();
-		System.out.println(getLocalName() + " is ready.");
 	}
 	
 	/*
@@ -114,6 +113,7 @@ public abstract class GridWorldAgent extends Agent
 	{
 		_apples = Environment.getApples(getLocalName());
 		_money = Environment.getMoney(getLocalName());
+		_energy = Environment.getEnergy(getLocalName());
 		List<Integer> succesfullBuys = Environment.getSuccesfullBuys(getLocalName());
 		List<Integer> succesfullSells = Environment.getSuccesfullSells(getLocalName());
 		
@@ -121,9 +121,22 @@ public abstract class GridWorldAgent extends Agent
 			_succesfullBuys = succesfullBuys;
 		if(succesfullSells != null)
 			_succesfullSells = succesfullSells;
-		
 	}
 	
+	public void endRound()
+	{
+		_apples = Environment.getApples(getLocalName());
+		_money = Environment.getMoney(getLocalName());
+		_energy = Environment.getEnergy(getLocalName());
+		List<Integer> succesfullBuys = Environment.getSuccesfullBuys(getLocalName());
+		List<Integer> succesfullSells = Environment.getSuccesfullSells(getLocalName());
+		
+		if(succesfullBuys != null)
+			_succesfullBuys = succesfullBuys;
+		if(succesfullSells != null)
+			_succesfullSells = succesfullSells;
+	
+	}
 	
 	public int getRoundsLeft()
 	{
@@ -216,41 +229,35 @@ public abstract class GridWorldAgent extends Agent
 	
 	public void applePickedUp(boolean success)
 	{
-		_energy -= _energyCost;
-		if(!atCapacity())
-		{
+		
+		//if(!atCapacity())
+		//{
 			if(success)
 			{
 				_knownApples.remove(getCurrentPosition());
-				_apples++;
 			}
 			else
 			{
 				//failed to pickup apple mans the apple is not there anymore.
 				_knownApples.remove(getCurrentPosition());
 			}
-		}
+		//}
 		
+			
+			endRound();
 	}
 	
 	public void appleEaten(boolean success)
 	{
-		_energy -= _energyCost;
-		if(success)
-		{
-			_apples--;
-			_energy += _energyGain;
-		}
-		else
-		{
-			
-		}
+		
+		endRound();
+		
 	}
 	
 
 	public void applesTraded(boolean success)
 	{
-		_energy -= _energyCost;
+		
 		
 		//_money = Environment.getMoney(getLocalName());
 		//_apples = Environment.getApples(getLocalName());
@@ -258,7 +265,7 @@ public abstract class GridWorldAgent extends Agent
 		//Market.getInstance().removeAllProposals(getLocalName());
 		//_outstandingProposal = -1;
 		//_outstandingRequest = -1;
-		
+		endRound();
 	}
 	
 	/**
@@ -458,7 +465,7 @@ public abstract class GridWorldAgent extends Agent
 	 */
 	public boolean step(int i)
 	{
-		_energy -= _energyCost;
+		
 		boolean succesfullyMoved = false;
 		
 		switch(i)
@@ -478,8 +485,14 @@ public abstract class GridWorldAgent extends Agent
 			addPositionToHistory(newPosition);
 		}
 		*/
+		endRound();
 		
 		return succesfullyMoved;
+	}
+	
+	public void unableToMove()
+	{
+		Environment.pleaseKillMe(getLocalName());
 	}
 	
 	/**
