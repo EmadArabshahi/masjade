@@ -1,16 +1,15 @@
 package simulation.agents;
 
-import simulation.behaviours.*;
-import simulation.environment.Environment;
-import simulation.environment.Market;
 import jade.core.behaviours.FSMBehaviour;
-import jade.lang.acl.ACLMessage;
+import simulation.behaviours.ExtendedCollectBehaviour;
+import simulation.behaviours.ExtendedExploreBehaviour;
+import simulation.environment.Environment;
 
-public class CommunistAgent extends GridWorldAgent 
+public class FreemindAgent extends GridWorldAgent 
 {
-	int oustandingRequest = -1;
-	int outstandingProposal;
 
+	protected int outstandingProposal = -1;
+	protected int oustandingRequest = -1;
 	
 	@Override
 	protected void setupAgent() 
@@ -24,22 +23,18 @@ public class CommunistAgent extends GridWorldAgent
 		
 
 		fsm.registerTransition("explore", "collect", ExtendedExploreBehaviour.KNOWS_APPLE_AND_HAS_NO_APPLE);
-		fsm.registerTransition("explore", "explore", ExtendedExploreBehaviour.KNOWS_APPLE_AND_HAS_APPLE);
-		fsm.registerTransition("collect", "explore", ExtendedCollectBehaviour.HAS_APPLE);
+		fsm.registerTransition("explore", "collect", ExtendedExploreBehaviour.KNOWS_APPLE_AND_HAS_APPLE);
+		fsm.registerTransition("collect", "collect", ExtendedCollectBehaviour.HAS_APPLE);
 		fsm.registerTransition("collect", "explore", ExtendedCollectBehaviour.DOESNT_KNOW_APPLES);
 		
 		addBehaviour(fsm);
+		
 	}
 
 	@Override
-	public boolean hasLackOfEnergy()
-	{
-		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
-	}
-	
-	@Override
 	public void handleRequests() 
 	{
+		// TODO Auto-generated method stub
 		if(mustTrade())
 		{
 				//do nothing leave proposals and requests.
@@ -64,9 +59,22 @@ public class CommunistAgent extends GridWorldAgent
 		}
 	}
 	
+	public int getRequestToBuyPrice()
+	{
+		return _startingMoney/8;
+	}
+	
+	public int getProposeToSellPrice()
+	{
+		return _startingMoney/4;
+	}
+	
+	
+	//Will sell if it has greater apples
 	@Override
 	public void handleProposals() 
 	{
+		// TODO Auto-generated method stub
 		if(mustTrade())
 		{
 			//leave
@@ -90,43 +98,24 @@ public class CommunistAgent extends GridWorldAgent
 		// has apples
 		else
 		{
-			if(outstandingProposal == -1)
+			if(_apples >= _maxAppleCapacity / 2)
 			{
-				int price = getProposeToSellPrice();
-				outstandingProposal = Environment.proposeToSell(getLocalName(), price);
+				if(outstandingProposal == -1)
+				{
+					int price = getProposeToSellPrice();
+					outstandingProposal = Environment.proposeToSell(getLocalName(), price);
+				}
 			}
+			
 		}
+		
+	}
+
+	@Override
+	public boolean hasLackOfEnergy() 
+	{
+		
+		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
 	}
 	
-	public int getRequestToBuyPrice() 
-	{
-		//The price is always an emergency bid.
-		//it should depend on how much energy left and money.
-		
-		//If energyleft for 1 round only then bid 100% of money.
-		//if erngyleft for 2 rounds pit 50% of money.
-		//If energyLeft for 3 rounds bid 25% of money,, etc..
-		int roundsLeft = getRoundsLeft();
-		
-		if(roundsLeft <= 0)
-			return _money;
-		else
-		{
-			double fraction = (1.0d / Math.pow(roundsLeft, 2));
-			int priceToPay = ((int) Math.ceil(fraction * _money));
-			
-			if(priceToPay == 0)
-				return 1;
-			else
-				return priceToPay;
-		}		
-		
-	}
-
-	public int getProposeToSellPrice()
-	{
-		return 1;
-	}
-
-
 }

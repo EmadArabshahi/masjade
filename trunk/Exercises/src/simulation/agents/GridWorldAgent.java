@@ -10,10 +10,8 @@ import jade.lang.acl.ACLMessage;
 
 public abstract class GridWorldAgent extends Agent 
 {
-	/**
-	 * A boolean indicating the agent is holding a bomb.
-	 */
-	private int _apples;
+	
+	protected int _apples;
 	
 	/** A set to hold the known bomb locations.
 	 * 
@@ -59,9 +57,8 @@ public abstract class GridWorldAgent extends Agent
 	
 	protected int _startingMoney = 100;
 	
-	//in order of time
-	protected int _outstandingRequest = -1;
-	protected int _outstandingProposal = -1;
+	protected List<Integer> _succesfullBuys = new ArrayList<Integer>();
+	protected List<Integer> _succesfullSells = new ArrayList<Integer>();
 	
 	
 	
@@ -108,45 +105,42 @@ public abstract class GridWorldAgent extends Agent
 	
 	protected abstract void setupAgent();
 	
-	public abstract int getRequestToBuyPrice();
+	public abstract void handleRequests();
 	
-	public abstract int getProposeToSellPrice();
+	public abstract void handleProposals();
+	
+	
+	public void beginRound()
+	{
+		_apples = Environment.getApples(getLocalName());
+		_money = Environment.getMoney(getLocalName());
+		List<Integer> succesfullBuys = Environment.getSuccesfullBuys(getLocalName());
+		List<Integer> succesfullSells = Environment.getSuccesfullSells(getLocalName());
+		
+		if(succesfullBuys != null)
+			_succesfullBuys = succesfullBuys;
+		if(succesfullSells != null)
+			_succesfullSells = succesfullSells;
+		
+	}
+	
+	
+	public int getRoundsLeft()
+	{
+		if(_energyCost != 0)
+		{
+			double roundsLeft = ((double) _energy) / ((double) _energyCost);
+			return ((int) Math.floor(roundsLeft));
+		}
+		else
+			return Integer.MAX_VALUE;
+	}
 	
 	public int getStartingMoney()
 	{
 		return _startingMoney;
 	}
 	
-	
-	public int getOutstandingRequest()
-	{
-		return _outstandingRequest;
-	}
-	
-	public int getOutstandingProposal()
-	{
-		return _outstandingProposal;
-	}
-	
-	public void appleRequested(int requestId)
-	{
-		_outstandingRequest = requestId;
-	}
-	
-	public void appleProposed(int proposalId)
-	{
-		_outstandingProposal = proposalId;
-	}
-	
-	public boolean hasOutstandingRequest()
-	{
-		return _outstandingRequest > -1;
-	}
-	
-	public boolean hasOutstandingProposal()
-	{
-		return _outstandingProposal > -1;
-	}
 	
 	public boolean mustTrade()
 	{
@@ -158,10 +152,8 @@ public abstract class GridWorldAgent extends Agent
 		return _knownApples.size() > 0;
 	}
 	
-	public boolean hasLackOfEnergy()
-	{
-		return (_energy <= (_maxEnergy - _energyGain + _energyCost));
-	}
+	public abstract boolean hasLackOfEnergy();
+
 	
 	public boolean isHungry()
 	{
@@ -259,12 +251,13 @@ public abstract class GridWorldAgent extends Agent
 	public void applesTraded(boolean success)
 	{
 		_energy -= _energyCost;
-		_money = Environment.getMoney(getLocalName());
-		_apples = Environment.getApples(getLocalName());
-		Market.getInstance().removeAllRequest(getLocalName());
-		Market.getInstance().removeAllProposals(getLocalName());
-		_outstandingProposal = -1;
-		_outstandingRequest = -1;
+		
+		//_money = Environment.getMoney(getLocalName());
+		//_apples = Environment.getApples(getLocalName());
+		//Market.getInstance().removeAllRequest(getLocalName());
+		//Market.getInstance().removeAllProposals(getLocalName());
+		//_outstandingProposal = -1;
+		//_outstandingRequest = -1;
 		
 	}
 	
