@@ -112,6 +112,8 @@ public class ContractorAgent extends Agent {
 	{
 		Action stopReceive = new AbstractAction() {
 			
+			private static final long serialVersionUID = 8522353902923967614L;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
