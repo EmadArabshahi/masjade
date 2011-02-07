@@ -236,6 +236,8 @@ public class Market
 		_sellProposals.clear();
 		_trades.clear();
 		_tradeOutcomes.clear();
+		_succesfullBuys.clear();
+		_succesfullSells.clear();
 	}
 	
 	//Is called at the end of each round and find matches between proposals and requeest.
@@ -249,18 +251,25 @@ public class Market
 		
 		for(TradeUnit buyRequest : _buyRequests.values())
 		{
-			System.out.println("BUYREQUEST: " + buyRequest.getAgentName() + " : " + buyRequest.getPrice());
 			buyRequest.setMarkedForTrade(false);
 		}
 		for(TradeUnit sellProposal : _sellProposals.values())
 		{
-			System.out.println("SELLPROPOSAL: " + sellProposal.getAgentName() + " : " + sellProposal.getPrice());
 			sellProposal.setMarkedForTrade(false);
 		}
-		//The map is so.
+		//The map is sorted randomly
 		Set<Integer> keys = _buyRequests.keySet();
 		
-		for(int requestId : keys)
+		List<Integer> randomSortedKeys = new ArrayList<Integer>();
+		
+		for(int key : keys)
+		{
+			randomSortedKeys.add(key);
+		}
+		
+		Collections.shuffle(randomSortedKeys);
+		
+		for(int requestId : randomSortedKeys)
 		{
 			TradeUnit buyRequest = _buyRequests.get(requestId);
 			List<Integer> sellProposals = getCheapestMatchingProposals(buyRequest.getPrice(), buyRequest.getAgentName());
@@ -280,11 +289,6 @@ public class Market
 				
 				_trades.add(new Tuple<Integer, Integer>(requestId, sellProposalId));
 			}
-		}
-		
-		for(Tuple<Integer,Integer> t : _trades)
-		{
-			System.out.println("In _trades: " + t.getFirst() + " - " + t.getSecond());
 		}
 		
 		System.out.println("************** END FIND MATCHES **************");
@@ -366,6 +370,16 @@ public class Market
 	{
 		List<Integer> pricesPaid = new ArrayList<Integer>();
 		
+		for(List<Integer> prices : _succesfullSells.values())
+		{
+			for(int price : prices)
+			{
+				
+				pricesPaid.add(price);
+			}
+		}
+	
+		/*
 		for(Tuple<Integer,Integer> tuple : _trades)
 		{
 			TradeUnit buyRequest = _buyRequests.get(tuple.getFirst());
@@ -381,7 +395,7 @@ public class Market
 				}
 			}
 		}
-		
+		*/
 		
 		//convert list<Integer> to int[].;
 		int[] intArray = new int[pricesPaid.size()];

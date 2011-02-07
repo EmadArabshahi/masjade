@@ -110,7 +110,7 @@ public class Agent
 	 * reset. \todo signalMove show become special signal enter/exit
 	 */
 	public void reset() {
-		System.out.println( "Agent reset!" );
+	
 		init();
 		
 		signalMove.emit();

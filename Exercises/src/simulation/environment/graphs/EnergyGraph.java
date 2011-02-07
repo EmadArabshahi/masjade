@@ -422,7 +422,7 @@ public class EnergyGraph extends JPanel
     	
     	for(int i=0; i<pricesPaidForApples.length; i++)
     	{
-    		totalDeviation += ((double) pricesPaidForApples[i]) - ((double) mean);
+    		totalDeviation += Math.abs(((double) pricesPaidForApples[i]) - ((double) mean));
     	}
     	
     	double varianceApplePrice = (totalDeviation / ((double)pricesPaidForApples.length));

@@ -230,6 +230,23 @@ public class Environment
 		}
 	}
 
+	public static int getEnergy(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			return LogicalEnv.getEnv().getEnergy(sAgent);
+		}
+	}
+	
+	public static void pleaseKillMe(String sAgent)
+	{
+		synchronized(lockObject)
+		{
+			LogicalEnv.getEnv()._blockingActions++;
+			LogicalEnv.getEnv().removeAgent(sAgent);
+		}
+	}
+	
 	public static int getApples(String sAgent)
 	{
 		synchronized(lockObject)
@@ -336,8 +353,6 @@ public class Environment
 		synchronized(lockObject)
 		{
 			boolean mustTrade = Market.getInstance().mustTrade(sAgent);
-			if(mustTrade)
-				System.out.println("" + sAgent + " must Trade!!!");
 			return mustTrade;
 		}
 	}

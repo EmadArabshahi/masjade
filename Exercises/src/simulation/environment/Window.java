@@ -660,7 +660,6 @@ public class Window extends JFrame{
 	private ImageIcon makeIcon(String sImage)
 	{
 		sImage	= "images/toolbar/"+sImage;
-		System.out.println("IMAGE: "+sImage);
 		return new ImageIcon(this.getClass().getResource(sImage));
 	}
 }

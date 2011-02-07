@@ -242,7 +242,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 			// Changed SA:
 			imgStone = createImage((ImageProducer)(this.getClass().getResource("images/stone.gif")).getContent());
 
-			System.out.println("Stone icon found - Vond pictogram van steen");
+			
 		} catch(Exception xEx) {
 			xEx.printStackTrace();
 		}
@@ -263,7 +263,6 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 			imgAgents[8] = createImage((ImageProducer)(this.getClass().getResource("images/agents/agent_teal.gif")).getContent());
 			imgAgents[9] = createImage((ImageProducer)(this.getClass().getResource("images/agents/agent_yellow.gif")).getContent());
 
-			System.out.println("Normal agent icon found - Vond pictogram van normale agent");
 		} 
 		catch(Exception xEx) 
 		{
@@ -285,7 +284,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 			imgAgentsHolding[8] = createImage((ImageProducer)(this.getClass().getResource("images/agents/holding_teal.gif")).getContent());
 			imgAgentsHolding[9] = createImage((ImageProducer)(this.getClass().getResource("images/agents/holding_yellow.gif")).getContent());
 
-			System.out.println("Bearing agent icon found - Vond pictogram van agent het dragen");
+		
 
 		} catch(Exception xEx) {
 			xEx.printStackTrace();
@@ -298,7 +297,7 @@ class EnvView extends JPanel implements ObsVectListener, Observer {
 		{
 			// Changed SA:
 			imgApple = createImage((ImageProducer)(this.getClass().getResource("images/apple32.gif")).getContent());
-			System.out.println("Apple icon found - Vond pictogram van bom");
+		
 		} catch(Exception xEx) {
 			xEx.printStackTrace();
 		}

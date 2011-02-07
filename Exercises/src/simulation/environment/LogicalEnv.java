@@ -72,7 +72,7 @@ public class LogicalEnv implements ObsVectListener
     // id for identifiable objects
     protected String                        _objType = "default";   
     
-    protected long						_sleepTimeInMs = 100;
+    protected long						_sleepTimeInMs = 500;
     
     protected volatile int							_round = 0;
     
@@ -260,7 +260,7 @@ public class LogicalEnv implements ObsVectListener
     	Market market = Market.getInstance();
     	Iterator<Agent> i = _agents.iterator();
     	
-    	System.out.println("*********** BEGIN OF OUTSTANDING TRADES **************");
+    	System.out.println("---------------- BEGIN OF OUTSTANDING TRADES --------------------------");
     	
     	while(i.hasNext())
     	{
@@ -317,7 +317,7 @@ public class LogicalEnv implements ObsVectListener
     	
     	market.clearTradedActions();
     	
-    	System.out.println("*********** BEGIN OF OUTSTANDING TRADES **************");
+    	System.out.println("----------------- END OF OUTSTANDING TRADES --------------------------");
     }
     
     public int[][] getEnergyLevels()
@@ -528,6 +528,14 @@ public class LogicalEnv implements ObsVectListener
     		return 0;
     }
     
+    public int getEnergy(String sAgent)
+    {
+    	Agent a = getAgent(sAgent);
+    	if(a != null)
+    		return a.getEnergylevel();
+    	else
+    		return 0;
+    }
     
     public int getStartingMoney()
     {
@@ -754,9 +762,7 @@ public class LogicalEnv implements ObsVectListener
         
         // Give a signal that we want to move
         agent.signalMove.emit();
-        
-        writeToLog( "Agent entered: " +agent.getName());
-        
+ 
 
         String pos = "("+x+","+y+")";
         
@@ -803,7 +809,7 @@ public class LogicalEnv implements ObsVectListener
         // Set the position for the agent
         if(! setAgentPosition( agent, p))
         {
-        	System.out.println(sAgent+" tries to go east but cannot !");
+       
         	return false;
         }
         
@@ -836,7 +842,7 @@ public class LogicalEnv implements ObsVectListener
         // Set the position for the agent
         if(! setAgentPosition( agent, p))
         {
-        	System.out.println(sAgent+" tries to go east but cannot !");
+ 
         	return false;
         }
         
@@ -870,7 +876,7 @@ public class LogicalEnv implements ObsVectListener
         // Set the position for the agent
         if(! setAgentPosition( agent, p))
         {
-        	System.out.println(sAgent+" tries to go east but cannot !");
+
         	return false;
         }
         
@@ -903,7 +909,7 @@ public class LogicalEnv implements ObsVectListener
         // Set the position for the agent
         if(! setAgentPosition( agent, p))
         {
-        	System.out.println(sAgent+" tries to go west but cannot !");
+
         	return false;
         }
         
@@ -936,8 +942,7 @@ public class LogicalEnv implements ObsVectListener
         // see if we are not already carrying too much apples
         if( agent.getApples() >= _maxAppleCapacity) 
         {
-        	System.out.println(sAgent+" is carying allready maximum apples.");
-            writeToLog( "Pickup apple failed" );
+
             return false;
         }
 
@@ -945,9 +950,7 @@ public class LogicalEnv implements ObsVectListener
         TypeObject apple = removeApple( agent.getPosition() );
         if( apple == null ) 
         {
-        	System.out.println(sAgent+
-        			" is trying to pick an apple in a place without apples");
-            writeToLog( "Pickup bomb failed" );
+
             return false;
         }
 
@@ -982,12 +985,14 @@ public class LogicalEnv implements ObsVectListener
     	//see if we have an apple
     	if(agent.getApples() < 1)
     	{
-    		System.out.println(sAgent + "tried to eat an apple but doenst have any.");
     		return false;
     	}
     	
     	agent._apples--;
     	agent._energyLevel += _energyGain;
+    	
+    	if(agent._energyLevel > Agent.startingEnergyLevel)
+    		agent._energyLevel = Agent.startingEnergyLevel;
     	
     	agent.signalEatSucces.emit();
     	
@@ -1043,7 +1048,7 @@ public class LogicalEnv implements ObsVectListener
     	//The agent should have a balance greater or equal of 0 at end of trade action.
     	if(((agent._moneyInEuroCents - totalCost) >= 0) && (appleCost <= agent._apples))
     	{
-    		System.out.println("TRADE action confirmed SUCCESFULL: " + sAgent);
+    		
     		
     		market.registerTradeOutcome(sAgent,true);
     		agent.signalTradeSucces.emit();
@@ -1051,7 +1056,6 @@ public class LogicalEnv implements ObsVectListener
     	}
     	else
     	{
-    		System.out.println("TRADE action UNSUCCESFULL: " + sAgent);
     		
     		market.registerTradeOutcome(sAgent,false);
     		return false;
