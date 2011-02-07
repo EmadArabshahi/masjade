@@ -60,6 +60,8 @@ public class AnnounceTaskBehaviour extends SimpleBehaviour {
 			Output.AgentMessage( agent, "Waiting contractors' offers.");
 			done = true;
 		}
+		else
+			block(300);
 	}
 
 	@Override

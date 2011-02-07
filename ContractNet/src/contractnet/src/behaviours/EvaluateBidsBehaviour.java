@@ -54,6 +54,8 @@ public class EvaluateBidsBehaviour extends SimpleBehaviour {
 			}
 			done = true;
 		}
+		else
+			block(300);
 	}
 	
 	private AID evaluateBids()
