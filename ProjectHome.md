@@ -1,0 +1,1 @@
+Project for exercises made during Multi Agent Systems class, with JADE.
